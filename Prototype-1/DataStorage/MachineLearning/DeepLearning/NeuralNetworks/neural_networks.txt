@@ -1,0 +1,25 @@
+Artificial Neural Networks (ANNs) are computing systems inspired by biological neural networks.
+An artificial neuron (perceptron) receives inputs, applies weights, adds bias, and passes through activation.
+Activation functions introduce non-linearity into neural networks, allowing them to learn complex patterns.
+Sigmoid activation function maps inputs to a range between 0 and 1, useful for binary classification.
+Tanh (hyperbolic tangent) activation function maps inputs to a range between -1 and 1.
+ReLU (Rectified Linear Unit) activation outputs the input if positive, and zero otherwise.
+Leaky ReLU prevents dying ReLU issues by allowing a small, non-zero gradient when input is negative.
+Feedforward neural networks propagate information forward through input, hidden, and output layers.
+Weights represent the strength of connection between neurons and are adjusted during training.
+Loss functions measure the difference between predicted outputs and actual target labels.
+Mean Squared Error (MSE) is a common loss function used for regression tasks.
+Binary Cross-Entropy is the standard loss function used for binary classification tasks.
+Categorical Cross-Entropy is used for multi-class classification problems.
+Backpropagation is the primary algorithm used to calculate gradients of the loss function.
+The chain rule of calculus is applied in backpropagation to compute gradients layer by layer.
+Optimization algorithms use gradients to update network weights to minimize the loss.
+Stochastic Gradient Descent (SGD) updates weights using a single training sample or mini-batch.
+Adam (Adaptive Moment Estimation) is an optimizer that computes adaptive learning rates for parameters.
+Learning rate is a hyperparameter controlling the step size taken during optimization updates.
+Overfitting occurs when a neural network performs exceptionally on training data but poorly on test data.
+Regularization techniques like L1 and L2 weight decay help prevent overfitting in networks.
+Dropout randomly deactivates a fraction of neurons during training to improve generalization.
+Batch Normalization normalizes activations of a layer across a mini-batch to speed up training.
+Vanishing gradient problem occurs when gradients become extremely small, halting weight updates.
+Exploding gradient problem occurs when gradients grow exponentially, causing numerical instability.

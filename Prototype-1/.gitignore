@@ -1,0 +1,21 @@
+# C++ Build Output
+build/
+*.exe
+*.o
+*.obj
+
+# Python Cache
+__pycache__/
+*.py[cod]
+
+# Binary Data Storage & Model Downloads
+BinStorage/*.bin
+bitdb/
+
+# Large ML Model Weights
+*.safetensors
+
+# Editor & OS Files
+.vscode/
+.DS_Store
+Thumbs.db

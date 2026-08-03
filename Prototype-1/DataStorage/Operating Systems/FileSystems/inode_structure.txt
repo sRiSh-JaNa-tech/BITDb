@@ -1,0 +1,25 @@
+Inodes are index nodes representing files in Unix systems.
+An inode stores file metadata but not the file name.
+Metadata includes file size, owner ID, group, and permissions.
+Timestamps track creation, access, and modification times.
+The inode contains pointers to the data blocks on disk.
+Direct blocks point directly to blocks containing file data.
+Indirect blocks point to blocks containing pointers to data.
+Double indirect blocks point to list of indirect blocks.
+Triple indirect blocks support extremely large file sizes.
+Directories map human-readable names to inode numbers.
+When opening a file, the OS searches directory for name.
+The resulting inode number is used to locate data blocks.
+Hard links create new names pointing to the same inode.
+The inode tracks reference count of links pointing to it.
+Deleting a file decrements link count on its inode.
+The inode and blocks are freed only when link count is zero.
+Symbolic links store a path string inside a new inode.
+Resolving symbolic link requires reading the target path.
+Inodes are pre-allocated during file system formatting.
+Running out of inodes prevents creating files, even if space remains.
+Inode caching keeps active inodes in RAM for speed.
+Stat system call returns metadata stored in the file inode.
+Modern file systems use extents instead of simple pointers.
+Extents represent contiguous blocks of disk space allocated.
+This reduces metadata size for large contiguous files.

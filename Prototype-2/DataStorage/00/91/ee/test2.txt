@@ -1,0 +1,1 @@
+Locality Sensitive Hashing (LSH) helps in grouping together documents that have a high semantic overlap, allowing for efficient approximate similarity search without comparing against the entire database.

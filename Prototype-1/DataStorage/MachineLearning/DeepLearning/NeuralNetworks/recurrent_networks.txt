@@ -1,0 +1,25 @@
+Recurrent Neural Networks (RNNs) process sequential input data.
+They maintain internal hidden state acting as network memory.
+RNNs process sequences step-by-step, updating hidden state.
+The recurrence formula combines current input with previous state.
+This allows handling variable-length inputs like sentences.
+Backpropagation Through Time (BPTT) calculates gradients over steps.
+Unrolling the network in time creates a very deep structure.
+This depth causes severe vanishing and exploding gradient problems.
+Standard RNNs struggle to learn long-term sequence dependencies.
+Long Short-Term Memory (LSTM) was designed to solve this.
+LSTMs introduce cell state to carry long-term information.
+Gates regulate information flow: forget, input, and output gates.
+Forget gate decides what information to discard from cell state.
+Input gate decides what new information to store in cell state.
+Output gate determines hidden state based on updated cell state.
+Gated Recurrent Unit (GRU) is a popular simplified LSTM variant.
+GRUs combine cell and hidden states into a single state.
+They use two gates: reset gate and update gate.
+GRUs have fewer parameters, training faster than standard LSTMs.
+Bidirectional RNNs process sequences in both forward and reverse.
+This captures future and past context for sequence labeling.
+Sequence-to-sequence (Seq2Seq) uses encoder-decoder RNN structures.
+Encoder compresses input sequence into a fixed-size context vector.
+Decoder generates target sequence from this context vector.
+RNN computations cannot be parallelized easily, limiting speed.

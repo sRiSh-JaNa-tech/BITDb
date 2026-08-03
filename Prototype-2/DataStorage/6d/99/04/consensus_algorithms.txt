@@ -1,0 +1,25 @@
+Consensus algorithms allow distributed systems to agree on values.
+They are essential for maintaining consistent database state replicas.
+Paxos is the classic consensus algorithm proposed by Leslie Lamport.
+Paxos is notoriously difficult to understand and implement correctly.
+Raft was designed as an alternative to Paxos, focusing on understandability.
+Raft structures consensus around a leader election mechanism.
+A Raft cluster has three states: Leader, Candidate, and Follower.
+Followers receive heartbeats and log entries from the Leader.
+Candidates initiate elections if leader heartbeats time out.
+A candidate needs a majority of votes to become the Leader.
+The Leader is responsible for managing the replicated log.
+Log replication ensures all follower logs match the leader log.
+Committing an entry requires replication to a majority of nodes.
+Term numbers are used to detect stale leaders and candidates.
+Safety guarantees ensure that committed entries are never modified.
+Consensus algorithms operate correctly as long as a majority is functional.
+They handle network partitions without violating safety properties.
+During partition, the side without a majority stops committing.
+Multi-Paxos optimizes basic Paxos for sequences of consensus decisions.
+ZooKeeper Atomic Broadcast (ZAB) is another consensus protocol variant.
+Byzantine Fault Tolerance (BFT) handles malicious or lying nodes.
+Practical Byzantine Fault Tolerance (PBFT) is used in blockchain.
+Consensus protocols require message exchanges that limit write throughput.
+Optimizing consensus message round-trips is a key research area.
+Distributed databases rely on these algorithms for strong consistency.

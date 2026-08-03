@@ -1,0 +1,25 @@
+A file system is the structure and logic used by an operating system to organize and store files.
+A file is a named collection of related information recorded on secondary storage devices.
+File attributes include name, identifier, type, location, size, protection, and timestamps.
+Directories are structural entities that contain mapping entries between file names and metadata nodes.
+Single-level directory structures store all files in a single directory, creating potential naming conflicts.
+Two-level directory structures provide a separate directory for each user to prevent naming collisions.
+Tree-structured directories allow users to organize files into hierarchically nested subdirectories.
+A file control block (FCB) or inode contains file ownership, permissions, size, and data block locations.
+Contiguous allocation stores files in consecutive blocks on the storage device, providing fast sequential access.
+Linked allocation stores files as a linked list of disk blocks, eliminating external fragmentation.
+Indexed allocation collects all block pointers into a single index block for each file.
+File allocation tables (FAT) use a centralized table to map linked blocks of files on the disk.
+Inodes (index nodes) are the standard Unix metadata structure representing files and directory structures.
+Hard links create multiple directory entries pointing directly to the same inode on the file system.
+Symbolic links (soft links) are special files that contain path strings to other files or directories.
+Journaling file systems log changes to a journal before applying them, protecting data against system crashes.
+Ext4 is the default journaling file system used in many Linux distributions.
+NTFS (New Technology File System) is the default journaling file system used by modern Windows OS.
+Virtual File System (VFS) is an kernel abstraction layer allowing uniform access to different file systems.
+File system mounting associates a file system structure with a specific directory location (mount point).
+Disk scheduling algorithms determine the order in which disk I/O requests are serviced to minimize seek time.
+FCFS (First-Come, First-Served) disk scheduling processes I/O requests in their order of arrival.
+SSTF (Shortest Seek Time First) schedules requests closest to the current disk head position.
+SCAN (Elevator algorithm) moves the head in one direction servicing requests, then reverses direction.
+C-SCAN (Circular SCAN) moves the head in one direction servicing requests, then jumps back to start.

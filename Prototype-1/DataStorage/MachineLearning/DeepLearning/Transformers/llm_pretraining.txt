@@ -1,0 +1,25 @@
+Pretraining is the first phase of training large models.
+It uses massive unlabeled text corpora from the internet.
+Common crawl, books, and code datasets are cleaned and tokenized.
+Autoregressive language modeling predicts next token in sequence.
+Masked language modeling predicts randomly hidden tokens in context.
+Pretraining teaches models grammar, facts, and reasoning abilities.
+Compute optimal scaling laws define model size and data budgets.
+Chinchilla scaling suggests data should scale equally with parameters.
+Tokenizer translates raw text strings into numerical token IDs.
+Byte-Pair Encoding (BPE) is a popular subword tokenization algorithm.
+WordPiece and SentencePiece are other standard tokenizer variants.
+Positional embedding methods preserve token order in self-attention.
+Rotary Position Embeddings (RoPE) rotate query and key vectors.
+RoPE generalizes better to longer context sequence lengths.
+Distributed training is required to fit models on GPUs.
+Data parallelism replicates model, splitting batch across GPUs.
+Tensor parallelism splits individual layer weights across GPUs.
+Pipeline parallelism partitions network layers across GPU nodes.
+ZeRO memory optimizer reduces redundant optimizer state memory allocations.
+Mixed-precision training (FP16/BF16) speeds up GPU compute steps.
+Pretrained base models generate fluent but uncontrolled text completions.
+They require alignment tuning before safe deployment to users.
+Evaluating base models uses benchmarks like MMLU and GSM8K.
+Pretraining is highly resource-intensive, costing millions of dollars.
+Open-source base models allow researchers to customize custom architectures.

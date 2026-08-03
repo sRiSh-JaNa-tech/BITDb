@@ -1,0 +1,45 @@
+# C++ Build Output
+build/
+bin/
+obj/
+*.exe
+*.out
+*.app
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+
+# Python Artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+env/
+ENV/
+
+# Database Storage & Model Downloads
+bitdb/
+BinStorage/*.bin
+
+# Large ML Model Weights
+*.safetensors
+
+# Editor & IDE Files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini

@@ -1,0 +1,25 @@
+Logistic regression outputs probabilities between zero and one.
+Classification thresholds map these probabilities to binary classes.
+Default threshold of zero point five is standard choice.
+If probability exceeds threshold, positive class is assigned.
+Otherwise, the negative class label is assigned to sample.
+Tuning this threshold changes the balance of error types.
+Lowering threshold increases positive predictions, raising recall.
+This also increases false positives, reducing model precision.
+Raising threshold decreases positive predictions, raising precision.
+This also increases false negatives, reducing model recall.
+ROC curve visualizes performance across all possible thresholds.
+Precision-Recall curve is preferred for highly imbalanced datasets.
+Optimal threshold can be chosen using Youden's J statistic.
+Youden's index maximizes true positive minus false positive rate.
+F-score optimization searches for threshold maximizing F1 metric.
+Business cost matrices define costs for different error types.
+In medical tests, false negatives are costlier than false positives.
+This requires setting a low threshold to ensure safety.
+In spam filters, false positives (blocking mail) are costlier.
+This requires setting a high threshold to protect mail.
+Platt scaling calibrates classification scores to true probabilities.
+Brier score evaluates accuracy of predicted probability values.
+Threshold selection is a post-processing step after training.
+It allows adapting one model to changing business requirements.
+Understanding thresholds is essential for practical classification applications.

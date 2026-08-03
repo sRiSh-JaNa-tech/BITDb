@@ -1,0 +1,25 @@
+Logistic regression is a statistical model used for binary classification tasks by predicting probability.
+Unlike linear regression, logistic regression limits outputs to a range between zero and one.
+The logistic function (sigmoid function) maps any real-valued number to a probability value.
+The sigmoid function formula is one divided by the quantity of one plus e raised to negative z.
+Odds ratio represents the probability of an event occurring divided by probability of not occurring.
+The log-odds (logit) of the probability is modeled as a linear combination of independent variables.
+Maximum Likelihood Estimation (MLE) is used to estimate parameters by maximizing probability of observed data.
+The loss function for logistic regression is cross-entropy loss, also known as log loss.
+Decision boundaries partition the feature space into classes based on predicted probability thresholds.
+A default classification threshold of zero point five is commonly used to assign binary labels.
+Receiver Operating Characteristic (ROC) curves plot true positive rate against false positive rate.
+Area Under the ROC Curve (AUC) measures overall classification performance across all thresholds.
+Precision measures the proportion of identified positives that were actually correct.
+Recall (sensitivity) measures the proportion of actual positives that were correctly identified.
+F1-score is the harmonic mean of precision and recall, providing a balanced performance metric.
+Confusion matrices summarize classification predictions against actual ground truth outcomes.
+Multinomial logistic regression extends binary classification to handle three or more nominal classes.
+One-vs-Rest (OvR) strategy trains separate binary classifiers for each class against all others.
+L1 and L2 regularization are applied to logistic regression to prevent overfitting on features.
+Logistic regression does not require a linear relationship between dependent and independent variables.
+Independent variables should not be highly correlated to prevent unstable coefficient estimates.
+Sigmoid function saturation occurs at extreme inputs, leading to vanishing update gradients.
+Logistic regression is widely used in medical diagnosis, spam detection, and credit scoring.
+It serves as an excellent baseline classification model due to simplicity and speed.
+Coefficients in logistic regression represent the change in log-odds per unit change in predictors.

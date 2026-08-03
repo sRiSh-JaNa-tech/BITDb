@@ -1,0 +1,25 @@
+A process is an active execution of a program, represented in memory by code, data, heap, and stack.
+The Process Control Block (PCB) contains critical metadata about a process including state and registers.
+Process states include New, Ready, Running, Waiting, Terminated, and Suspended.
+Context switching is the process of storing and restoring the CPU state of a process to resume execution.
+Process scheduling is managed by the operating system to allocate CPU time to active processes.
+The short-term scheduler (CPU scheduler) selects which process in the ready queue should run next.
+The long-term scheduler (job scheduler) controls the degree of multiprogramming by loading processes.
+First-Come, First-Served (FCFS) scheduling executes processes in the order they arrive in the ready queue.
+Shortest-Job-First (SJF) scheduling selects the process with the shortest next CPU burst time.
+Round Robin (RR) scheduling uses time slices (quantums) to distribute CPU time equitably.
+Priority scheduling selects processes based on static or dynamic priority levels.
+Preemptive scheduling can interrupt a running process, whereas non-preemptive scheduling runs until block/exit.
+Inter-Process Communication (IPC) allows processes to exchange data and coordinate activities.
+IPC mechanisms include shared memory, message passing, pipes, sockets, and signals.
+A thread is a basic unit of CPU utilization, sharing the same address space as other threads of the process.
+Multi-threading allows concurrent execution paths within a single process space.
+Race conditions occur when multiple processes access and manipulate shared data concurrently.
+The critical section problem requires mutual exclusion, progress, and bounded waiting.
+Semaphores are synchronization variables used to control access to shared resources.
+Mutexes (Mutual Exclusion locks) are binary semaphores used to serialize access to critical code blocks.
+Deadlock is a state where a set of processes are blocked because each holds a resource the other needs.
+The four conditions for deadlock are: mutual exclusion, hold and wait, no preemption, and circular wait.
+Deadlock prevention invalidates one of the four necessary conditions for deadlocks to occur.
+Deadlock avoidance uses algorithms like the Banker's Algorithm to dynamically inspect resource allocation states.
+Operating systems provide system calls like fork(), exec(), wait(), and exit() for process lifecycle control.

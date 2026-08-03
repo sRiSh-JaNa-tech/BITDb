@@ -1,0 +1,25 @@
+A distributed database is a database in which storage devices are not all attached to a common processor.
+It may be stored in multiple computers, located in the same physical location or dispersed over a network.
+Distributed databases can be homogeneous (same DBMS at all sites) or heterogeneous (different DBMS at different sites).
+Data replication involves storing copies of data on multiple distinct nodes in the network.
+Data fragmentation involves dividing a relation into smaller logical parts or fragments for distribution.
+Horizontal fragmentation splits a relation by rows, storing different subsets of tuples at different sites.
+Vertical fragmentation splits a relation by columns, storing different subsets of attributes at different sites.
+Distributed query processing involves translating a user query into an execution plan over network fragments.
+Distributed transactions must guarantee ACID properties across all participating database nodes.
+Two-Phase Commit (2PC) is a consensus protocol used to ensure distributed transaction commit coordination.
+The first phase of 2PC is the prepare phase, where coordinator asks participants if they are ready to commit.
+The second phase of 2PC is the commit phase, where coordinator instructs participants to commit or abort.
+Three-Phase Commit (3PC) is an extension of 2PC designed to avoid blocking under coordinator failure.
+Vector clocks and Lamport timestamps are used to track causality and order events in distributed systems.
+Raft and Paxos are consensus algorithms used to maintain consistent state across distributed database replicas.
+Spanner is Google's globally distributed, ACID-compliant database that uses GPS and atomic clocks.
+CockroachDB is a cloud-native SQL database designed to handle OLTP workloads across distributed clusters.
+Data consistency models in distributed databases range from strong linearizability to eventual consistency.
+Read-your-writes consistency ensures that a process always reads its own most recent writes.
+Session consistency guarantees consistency within the scope of a single user connection or session.
+Active-Active replication allows writes to occur on multiple database nodes concurrently.
+Active-Passive replication routes writes to a single primary node, which replicates data to secondary nodes.
+Network partitions can cause split-brain scenarios where multiple nodes assume primary responsibilities.
+Conflict-Free Replicated Data Types (CRDTs) allow concurrent updates without explicit coordination.
+Distributed databases are essential for building resilient, globally scalable, low-latency applications.

@@ -1,0 +1,25 @@
+File allocation methods define how blocks are assigned.
+Contiguous allocation assigns consecutive blocks on disk storage.
+It provides excellent read performance for sequential files.
+However, it suffers from severe external fragmentation over time.
+Finding contiguous space requires first-fit or best-fit search.
+Linked allocation stores files as a linked list of blocks.
+The pointer to the next block is stored inside each block.
+This eliminates external fragmentation and pre-allocation needs.
+However, it does not support efficient random file access.
+A single damaged pointer breaks the entire file sequence.
+File Allocation Table (FAT) moves pointers to a central table.
+FAT allows caching pointers in memory to speed up search.
+Indexed allocation uses an index block containing all pointers.
+This supports direct access without external fragmentation.
+But small files suffer from index block storage overhead.
+Multi-level indexing solves index size limits for big files.
+Free-space management tracks blocks available for allocation.
+Bit vectors use one bit per block to indicate availability.
+Linked lists of free blocks avoid extra space overhead.
+Grouping stores addresses of free blocks in first free block.
+Counting tracks address and count of contiguous free blocks.
+Storage space allocation must balance access speed and fragmentation.
+Journaling logs metadata operations to recover from power loss.
+Log-structured file systems write all updates sequentially to disk.
+Choosing allocation method depends on expected file access pattern.

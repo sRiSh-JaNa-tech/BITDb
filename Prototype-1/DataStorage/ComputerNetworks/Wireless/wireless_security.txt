@@ -1,0 +1,25 @@
+Wireless security protects radio transmissions from eavesdropping.
+Wired Equivalent Privacy (WEP) was the earliest security standard.
+WEP used RC4 stream cipher but was easily cracked.
+Wi-Fi Protected Access (WPA) replaced WEP using TKIP protocol.
+WPA2 made AES encryption mandatory, providing strong security.
+WPA2 uses 4-way handshake to generate unique session keys.
+KRACK attack revealed vulnerabilities in WPA2 handshake handling.
+WPA3 introduces Simultaneous Authentication of Equals (SAE).
+SAE replaces Pre-Shared Key (PSK), protecting against offline cracking.
+Forward secrecy guarantees old traffic remains secure if key leaks.
+WPA3 uses 192-bit cryptographic strength for enterprise protection.
+Protected Management Frames (PMF) block deauthentication attacks.
+Deauthentication attacks force clients off network by spoofing AP.
+Rogue access points are unauthorized APs connected to networks.
+Evil Twin attacks mimic legitimate SSID to steal credentials.
+MAC filtering allows only registered MAC addresses to connect.
+However, MAC addresses are easily spoofed by attackers.
+Disabling SSID broadcast hides network name but is insecure.
+Wireless intrusion prevention systems (WIPS) detect rogue APs.
+802.1X authentication verifies users via centralized RADIUS servers.
+Captive portals redirect new users to login webpages.
+Wi-Fi Protected Setup (WPS) allowed easy pin-connection but was vulnerable.
+WPS should be disabled to prevent brute-force pin attacks.
+VPNs add an extra layer of security on public Wi-Fi.
+Wireless security requires combining strong encryption with user awareness.

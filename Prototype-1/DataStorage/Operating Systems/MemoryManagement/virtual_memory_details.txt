@@ -1,0 +1,25 @@
+Virtual memory abstracts physical RAM into a large contiguous space.
+It allows running programs larger than the physical memory size.
+Processes reference logical addresses, mapped to physical by MMU.
+Virtual memory simplifies loading, sharing, and memory protection.
+Demand paging loads pages into physical memory only when requested.
+Page faults occur when a logical page is not in physical RAM.
+The OS handles page faults by reading the page from disk.
+Page replacement algorithms choose which frame to free when full.
+Modified (dirty) bit tracks if a page has been written to.
+Only dirty pages must be written back to disk on swap-out.
+Copy-on-Write (COW) allows parent and child to share pages initially.
+Pages are duplicated only when one process attempts modification.
+Thrashing happens when a process spends all time swapping pages.
+It occurs when physical memory is less than the working set.
+Working set model tracks pages actively used by a process.
+Page Fault Frequency (PFF) controls frame allocation to prevent thrashing.
+Memory-mapped files treat file I/O as routine memory accesses.
+This avoids repeated system calls and speeds up file operations.
+Kernel memory allocation uses Buddy System or Slab Allocation.
+Buddy system divides memory into power-of-two sized blocks.
+Slab allocator pre-allocates caches for specific kernel objects.
+Prepaging loads anticipated pages before they are actually accessed.
+Page size is a critical design trade-off for OS developers.
+Small pages reduce internal fragmentation but increase table size.
+Large pages reduce table size but increase page fault transfer.

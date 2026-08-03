@@ -1,0 +1,25 @@
+NoSQL databases provide a mechanism for storage and retrieval of data that is modeled other than tabular.
+NoSQL databases are increasingly used in big data and real-time web applications.
+There are four primary types of NoSQL databases: document, key-value, wide-column, and graph.
+Document databases store data as documents, typically using formats like JSON, BSON, or XML.
+Key-value databases store data as a collection of key-value pairs, where the key is a unique identifier.
+Wide-column stores organize data into flexible columns that can vary from row to row within a table.
+Graph databases use graph structures with nodes, edges, and properties to represent and store data.
+NoSQL databases are designed for horizontal scalability, allowing distribution across many servers.
+Schema-less nature allows NoSQL databases to handle unstructured and semi-structured data easily.
+The CAP Theorem states that a distributed system can guarantee at most two of: Consistency, Availability, Partition tolerance.
+Consistent systems ensure all nodes see the same data at the same time.
+Available systems guarantee that every non-failing node returns a response for every request.
+Partition tolerant systems continue to operate despite arbitrary message loss or system division.
+BASE properties are often used in NoSQL: Basically Available, Soft state, Eventual consistency.
+Soft state implies the state of the system may change over time without input due to eventual consistency.
+Eventual consistency ensures that the system will eventually become consistent if no new updates are made.
+MongoDB is a popular document-oriented NoSQL database that stores data in JSON-like documents.
+Redis is an open-source, in-memory key-value data structure store used as a database, cache, and broker.
+Apache Cassandra is a highly scalable, high-performance wide-column distributed NoSQL database.
+Neo4j is a highly popular native graph database engine designed for high performance.
+NoSQL query languages vary widely, ranging from MongoDB's Query Language (MQL) to Neo4j's Cypher.
+NoSQL databases are often optimized for specific access patterns like high-throughput writes.
+Data replication is a core feature of NoSQL databases to ensure high availability and fault tolerance.
+Sharding is the process of storing data records across multiple machines to handle growing datasets.
+Choosing between SQL and NoSQL depends heavily on the specific requirements of the application workload.

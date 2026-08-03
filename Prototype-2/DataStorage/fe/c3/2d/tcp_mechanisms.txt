@@ -1,0 +1,25 @@
+TCP provides reliable connection-oriented transport layer services.
+It uses sequence numbers to order arriving packet segments.
+Acknowledgment numbers confirm successful receipt of segment bytes.
+Three-way handshake establishes connection: SYN, SYN-ACK, ACK.
+Four-way handshake closes connection: FIN, ACK, FIN, ACK.
+Sliding window controls flow rate to match receiver capacity.
+Receiver advertises window size (rwnd) in ACK headers.
+Sender cannot transmit more bytes than the advertised window.
+Congestion control limits transmission based on network capacity.
+Congestion window (cwnd) tracks estimated network buffer limits.
+Slow start doubles cwnd every round-trip time (RTT) step.
+Slow start ends when cwnd reaches slow start threshold (ssthresh).
+Congestion avoidance increases cwnd linearly (one segment per RTT).
+Packet loss is detected by timeout or triple duplicate ACKs.
+Timeout triggers slow start, resetting cwnd to one segment.
+Triple duplicate ACKs trigger fast retransmit and fast recovery.
+Fast recovery halves cwnd instead of resetting to one.
+TCP checksum detects corruption in header and payload data.
+Retransmission timer (RTO) is calculated dynamically using RTT variance.
+Karn's algorithm ignores RTT of retransmitted segments for accuracy.
+Selective Acknowledgment (SACK) identifies specific missing blocks.
+This avoids retransmitting successfully received segments during recovery.
+Nagle's algorithm delays sending small packets to save bandwidth.
+Delayed ACK delays sending ACKs, combining them with payload.
+TCP mechanisms ensure reliable data delivery over unreliable links.

@@ -1,0 +1,25 @@
+Apache Cassandra is a highly scalable distributed NoSQL database.
+It was designed at Facebook to handle massive amounts of data.
+Cassandra uses a masterless, decentralized peer-to-peer architecture.
+Every node in a Cassandra cluster performs the same role.
+Data is distributed across nodes using a partitioner hash function.
+Consistent hashing maps partition keys to specific cluster nodes.
+The token ring represents the total hash space of the cluster.
+Gossip protocol is used by nodes to share state and detect failures.
+Replication factor determines the number of nodes storing data copies.
+Snitches define the network topology to place replicas across racks.
+Tunable consistency allows developers to trade latency for consistency.
+Write consistency levels include ANY, ONE, QUORUM, and ALL.
+Read consistency levels verify replicas before returning results.
+Quorum requires a majority of replica nodes to agree on data.
+Cassandra is optimized for write performance using LSM-trees.
+Writes are recorded to a commit log for durability first.
+Data is then written to an in-memory structure called Memtable.
+Memtables are periodically flushed to immutable SSTables on disk.
+Compaction merges SSTables, removing deleted items and duplicates.
+Tombstones are markers indicating that data has been deleted.
+Cassandra Query Language (CQL) provides a SQL-like query interface.
+Secondary indexes are supported but should be used with caution.
+Cassandra scales linearly as new nodes are added to the cluster.
+It handles node failures gracefully with zero downtime.
+Common use cases include IoT data streams and messaging platforms.

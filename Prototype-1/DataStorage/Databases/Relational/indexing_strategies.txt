@@ -1,0 +1,25 @@
+Indexing strategies are crucial for scaling relational databases.
+A primary index is automatically created on the primary key column.
+Secondary indexes are created on non-key columns to speed up filters.
+B-Tree indexes are the default, supporting equality and range filters.
+Hash indexes store hashes of keys, ideal for exact match queries.
+Bitmap indexes use bit arrays, highly efficient for low-cardinality columns.
+Clustered indexes determine the physical storage order of table data rows.
+A table can have only one clustered index since data is sorted physically.
+Non-clustered indexes maintain a separate structure pointing to physical rows.
+Covering indexes store all selected columns, avoiding row lookup steps.
+Partial indexes are created on a filtered subset of rows (using WHERE).
+Expression indexes index the output of functions applied to columns.
+Composite indexes index multiple columns in a specific left-to-right order.
+Leftmost prefix rule dictates that composite indexes require the first column to be filtered.
+Index selectivity measures how unique index values are across the table.
+Highly selective indexes are much more useful to the query optimizer.
+Over-indexing degrades write performance due to index maintenance costs.
+Under-indexing results in slow queries due to full table scans.
+Unique indexes enforce value uniqueness constraints on indexed columns.
+Spatial indexes (like R-trees) speed up queries on geographic coordinates.
+Full-text indexes enable searching complex text columns for keywords.
+Index statistics are gathered by database engines to estimate scan costs.
+Analyzing query plans shows whether indexes are used (Index Scan vs Table Scan).
+Unused indexes should be dropped to save storage and write overhead.
+Smart indexing is a primary pillar of database performance tuning.

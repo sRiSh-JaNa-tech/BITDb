@@ -1,0 +1,25 @@
+A deadlock is a situation where processes are permanently blocked.
+It happens when processes hold resources and wait for others.
+Mutual exclusion means resources can only be held by one process.
+Hold and wait means a process holds resources while requesting more.
+No preemption means resources cannot be forcibly taken from processes.
+Circular wait means a chain of processes exists waiting circularly.
+Resource Allocation Graphs (RAG) visualize resource allocation states.
+Cycles in RAG indicate potential deadlocks if resources are single-unit.
+Deadlock prevention invalidates one of the four deadlock conditions.
+Preventing mutual exclusion is difficult for inherently non-shareable devices.
+Preventing hold and wait requires requesting all resources at startup.
+Preventing no preemption means releasing held resources if blocked.
+Preventing circular wait imposes a strict global ordering on resources.
+Deadlock avoidance requires dynamic knowledge of future resource requests.
+Safe state means the system can allocate resources without deadlock.
+Unsafe state does not guarantee deadlock, but deadlock is possible.
+Banker's Algorithm determines if resource requests keep system safe.
+It uses matrices representing allocation, max demand, and availability.
+Deadlock detection runs periodically to identify active deadlocks.
+Once detected, recovery mechanisms must resolve the deadlock state.
+Process termination kills deadlocked processes to break the cycle.
+Resource preemption rolls back processes to reclaim needed resources.
+Ostrich algorithm ignores deadlocks, assuming they occur very rarely.
+Many general-purpose operating systems use the ostrich approach.
+Robust database engines implement custom active deadlock detection.

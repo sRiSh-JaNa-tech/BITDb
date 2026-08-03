@@ -1,0 +1,25 @@
+Multilayer Perceptrons (MLPs) are feedforward neural networks.
+They consist of at least three layers: input, hidden, output.
+Each node in a layer is connected to all nodes in next layer.
+This dense connectivity is why they are called fully connected.
+Input layer passes raw features without any computational change.
+Hidden layers apply weights, bias, and activation functions.
+Weights scale input signals, representing connection strengths.
+Biases shift activation functions to control neuron trigger rates.
+Without activations, MLPs collapse into simple linear models.
+Universal Approximation Theorem states MLPs can approximate any function.
+This holds for single hidden layer with non-linear activation.
+However, deep networks are more parameter-efficient than shallow.
+Output layer format depends on the machine learning task.
+Linear outputs are used for continuous value regression.
+Sigmoid outputs are used for binary classification probabilities.
+Softmax outputs normalize multi-class outputs to sum to one.
+Training MLPs involves forward propagation and backward passes.
+Forward pass calculates layer activations to generate prediction.
+Loss layer compares prediction with ground truth target label.
+Backward pass calculates partial derivatives of loss to weights.
+Weights are updated using gradient descent optimization rules.
+MLPs are sensitive to feature scaling and weight initialization.
+Vanishing gradients can occur if hidden layers are too deep.
+They serve as fundamental building blocks for complex nets.
+Modern architectures use MLPs alongside conv or attention layers.

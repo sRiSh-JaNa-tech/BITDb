@@ -1,0 +1,25 @@
+Image segmentation partitions images into multiple meaningful segments.
+It classifies pixels, providing fine-grained spatial understanding.
+Semantic segmentation classifies pixels without distinguishing distinct object instances.
+Instance segmentation detects and segments each individual object instance.
+Panoptic segmentation combines semantic and instance segmentation tasks.
+Fully Convolutional Networks (FCN) replaced dense layers with convolutions.
+FCN outputs spatial label maps matching input image dimensions.
+Encoder-decoder structures compress features, then upsample spatial resolution.
+U-Net is a classic encoder-decoder with skip connections.
+Skip connections copy high-resolution features directly to decoder.
+This preserves precise boundaries during spatial upsampling steps.
+Dilated (atrous) convolutions expand receptive field without resolution loss.
+DeepLab uses atrous spatial pyramid pooling to capture context.
+Mask R-CNN extends Faster R-CNN by adding segmentation branch.
+It uses RoIAlign to preserve exact spatial pixel locations.
+Loss functions for segmentation include cross-entropy and Dice loss.
+Dice loss measures overlap similarity, handling class imbalances well.
+Mean Intersection over Union (mIoU) is standard evaluation metric.
+Boundary refinement techniques improve segmentation detail on edges.
+Segmentation models require pixel-level annotations for model training.
+Annotating segmentation datasets is highly labor-intensive and expensive.
+Synthetic data generation helps train models when annotations are scarce.
+Real-time segmentation is achieved using lightweight backbones (MobileNet).
+Applications include medical imaging, satellite analysis, and robotics.
+Transformer-based segmentation models (like Segment Anything) show extreme generalization.

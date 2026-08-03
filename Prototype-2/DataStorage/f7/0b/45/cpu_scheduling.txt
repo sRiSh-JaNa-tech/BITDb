@@ -1,0 +1,25 @@
+CPU scheduling decides which process gets CPU cores next.
+It aims to maximize CPU utilization and minimize response time.
+Preemptive scheduling can interrupt a running process mid-execution.
+Non-preemptive scheduling waits for the process to yield or exit.
+The dispatcher is the module that gives control to the process.
+Dispatcher latency is the time to stop one process and start another.
+First-Come, First-Served (FCFS) suffers from the convoy effect.
+Convoy effect occurs when short processes wait behind long ones.
+Shortest Job First (SJF) is optimal but difficult to predict.
+Exponential smoothing is used to estimate future CPU burst lengths.
+Shortest Remaining Time First (SRTF) is the preemptive SJF variant.
+Round Robin (RR) allocates a fixed time quantum per process.
+If the time quantum is too large, RR behaves like FCFS.
+If the time quantum is too small, context switch overhead dominates.
+Priority scheduling can lead to starvation of low-priority tasks.
+Aging resolves starvation by gradually increasing priority over time.
+Multilevel Queue scheduling partitions processes into separate queues.
+Multilevel Feedback Queue allows processes to move between queues.
+It dynamically adjusts based on CPU burst history of processes.
+Multiple-processor scheduling must manage load balancing across cores.
+Asymmetric multiprocessing has one master processor scheduling all.
+Symmetric multiprocessing (SMP) has each processor schedule itself.
+Processor affinity keeps a process running on the same CPU.
+Soft affinity attempts to keep process on CPU but permits migration.
+Hard affinity guarantees the process runs only on specified CPUs.
