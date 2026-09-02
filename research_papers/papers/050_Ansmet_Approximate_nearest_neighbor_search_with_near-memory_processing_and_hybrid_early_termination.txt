@@ -1,0 +1,39 @@
+TITLE
+=====
+Ansmet: Approximate nearest neighbor search with near-memory processing and hybrid early termination
+
+PAPER ID
+========
+HKEUFWwS-5QJ
+
+AUTHORS
+=======
+Y Li, Y Jin, B Tian, H Zhang, M Gao
+
+YEAR
+====
+2025
+
+PUBLICATION INFORMATION
+=======================
+Y Li, Y Jin, B Tian, H Zhang, M Gao - Proceedings of the 52nd Annual …, 2025 - dl.acm.org
+
+CITATION COUNT
+==============
+21
+
+FOUND BY QUERIES
+================
+- memory efficient approximate nearest neighbor search
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/3695053.3731013
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/3695053.3731013
+
+SNIPPET
+=======
+… Approximate nearest neighbor search (ANNS) is a fundamental operation in modern vector databases to efficiently retrieve nearby … of approximate nearest neighbor search and near-…

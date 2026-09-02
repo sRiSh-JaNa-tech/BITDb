@@ -1,0 +1,39 @@
+TITLE
+=====
+Search-in-Memory (SiM): Reliable, Versatile, and Efficient Data Matching in SSD's NAND Flash Memory Chip for Data Indexing Acceleration
+
+PAPER ID
+========
+D42U2hPBdAwJ
+
+AUTHORS
+=======
+YC Chen, YH Chang, TW Kuo
+
+YEAR
+====
+2024
+
+PUBLICATION INFORMATION
+=======================
+YC Chen, YH Chang, TW Kuo - arXiv preprint arXiv:2408.00327, 2024 - arxiv.org
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- RAM SSD tiering vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://arxiv.org/abs/2408.00327
+
+PDF URL
+=======
+https://arxiv.org/pdf/2408.00327
+
+SNIPPET
+=======
+… page cache. SiM, on the other hand, bypasses the page cache by sending a search command … 3d nand-based in-memory computing for vector similarity search acceleration,” in MICRO, …

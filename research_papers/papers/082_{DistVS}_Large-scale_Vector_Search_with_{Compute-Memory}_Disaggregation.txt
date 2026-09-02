@@ -1,0 +1,39 @@
+TITLE
+=====
+{DistVS}: Large-scale Vector Search with {Compute-Memory} Disaggregation
+
+PAPER ID
+========
+5qSG5_MPBdoJ
+
+AUTHORS
+=======
+P Yin, X Yan, S Deng, H Li, Y Zhu, X Zhi, J Mao
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+P Yin, X Yan, S Deng, H Li, Y Zhu, X Zhi, J Mao… - … USENIX Symposium on …, 2026 - usenix.org
+
+CITATION COUNT
+==============
+3
+
+FOUND BY QUERIES
+================
+- disk resident vector index
+
+GOOGLE SCHOLAR URL
+==================
+https://www.usenix.org/conference/nsdi26/presentation/yin
+
+PDF URL
+=======
+https://www.usenix.org/system/files/nsdi26-yin.pdf
+
+SNIPPET
+=======
+… -of-the-art disk-based and distributed vector search systems and … vectors reside in memory, while the index graph and exact … DistVS uses a global vector index on the entire dataset, and …

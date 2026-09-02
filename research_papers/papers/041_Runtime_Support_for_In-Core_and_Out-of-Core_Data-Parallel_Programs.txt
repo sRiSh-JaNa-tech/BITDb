@@ -1,0 +1,39 @@
+TITLE
+=====
+Runtime Support for In-Core and Out-of-Core Data-Parallel Programs
+
+PAPER ID
+========
+l7iKDPnD79UJ
+
+AUTHORS
+=======
+R Thakur
+
+YEAR
+====
+1995
+
+PUBLICATION INFORMATION
+=======================
+R Thakur - 1995 - surface.syr.edu
+
+CITATION COUNT
+==============
+24
+
+FOUND BY QUERIES
+================
+- out-of-core vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://surface.syr.edu/cgi/viewcontent.cgi?article=1117&context=eecs
+
+PDF URL
+=======
+https://surface.syr.edu/cgi/viewcontent.cgi?article=1117&context=eecs
+
+SNIPPET
+=======
+… It is widely recognized that rather than conventional vector supercomputers, parallel … For each new o -processor data reference required, a search through the hash table is performed in …

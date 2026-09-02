@@ -1,0 +1,39 @@
+TITLE
+=====
+Out-of-core streamline visualization on large unstructured meshes
+
+PAPER ID
+========
+csZPHOqKrJAJ
+
+AUTHORS
+=======
+SK Ueng, C Sikorski, KL Ma
+
+YEAR
+====
+1997
+
+PUBLICATION INFORMATION
+=======================
+SK Ueng, C Sikorski, KL Ma - IEEE Transactions on …, 1997 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+156
+
+FOUND BY QUERIES
+================
+- out-of-core vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/646239/
+
+PDF URL
+=======
+https://ntrs.nasa.gov/api/citations/19970023493/downloads/19970023493.pdf
+
+SNIPPET
+=======
+… is searched to find a memory block that is large enough to hold the octant. This searching starts at the … algorithm for visualizing very large unstructured vector field data sets on a single …

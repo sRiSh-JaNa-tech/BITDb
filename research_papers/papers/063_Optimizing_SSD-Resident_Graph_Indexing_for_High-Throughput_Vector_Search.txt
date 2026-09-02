@@ -1,0 +1,39 @@
+TITLE
+=====
+Optimizing SSD-Resident Graph Indexing for High-Throughput Vector Search
+
+PAPER ID
+========
+ioGOWQs1bZkJ
+
+AUTHORS
+=======
+W Zhao, Y Lu, Y Tian, H Zhang, J Li, M Zhao
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+W Zhao, Y Lu, Y Tian, H Zhang, J Li, M Zhao… - arXiv preprint arXiv …, 2026 - arxiv.org
+
+CITATION COUNT
+==============
+6
+
+FOUND BY QUERIES
+================
+- SSD ANN vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://arxiv.org/abs/2602.22805
+
+PDF URL
+=======
+https://arxiv.org/pdf/2602.22805
+
+SNIPPET
+=======
+… , and each record contains a vector and its neighbor identifiers. The search process follows the … the access characteristics of graph-based ANN search, and thus fail to deliver satisfactory …

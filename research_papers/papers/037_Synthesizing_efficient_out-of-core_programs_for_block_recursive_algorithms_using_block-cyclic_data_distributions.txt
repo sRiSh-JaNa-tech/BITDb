@@ -1,0 +1,39 @@
+TITLE
+=====
+Synthesizing efficient out-of-core programs for block recursive algorithms using block-cyclic data distributions
+
+PAPER ID
+========
+QHzjHpDRfhUJ
+
+AUTHORS
+=======
+Z Li, JH Reif, SKS Gupta
+
+YEAR
+====
+1999
+
+PUBLICATION INFORMATION
+=======================
+Z Li, JH Reif, SKS Gupta - IEEE Transactions on Parallel and …, 1999 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+22
+
+FOUND BY QUERIES
+================
+- out-of-core vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/755830/
+
+PDF URL
+=======
+Not available
+
+SNIPPET
+=======
+… out-of-core FFT program. We further investigate the implications of various block-cyclic distributions y li f on the performance of out-of-core … by the order of the vector bases in the loop …

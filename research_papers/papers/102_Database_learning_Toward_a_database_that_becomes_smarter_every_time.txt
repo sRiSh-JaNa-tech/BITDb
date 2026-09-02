@@ -1,0 +1,39 @@
+TITLE
+=====
+Database learning: Toward a database that becomes smarter every time
+
+PAPER ID
+========
+iUvT1qJQ0tUJ
+
+AUTHORS
+=======
+Y Park, AS Tajik, M Cafarella, B Mozafari
+
+YEAR
+====
+2017
+
+PUBLICATION INFORMATION
+=======================
+Y Park, AS Tajik, M Cafarella, B Mozafari - Proceedings of the 2017 ACM …, 2017 - dl.acm.org
+
+CITATION COUNT
+==============
+102
+
+FOUND BY QUERIES
+================
+- SSD-backed vector database
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/3035918.3064013
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/3035918.3064013
+
+SNIPPET
+=======
+… 1 (thus, we can obtain the elements of the column vector kn+1 and the variance κ2 as well). … Our cluster also included SSD-backed HDFS [68] for Spark’s data loading. For experiments …

@@ -1,0 +1,39 @@
+TITLE
+=====
+Lsm-vec: A large-scale disk-based system for dynamic vector search
+
+PAPER ID
+========
+epLi2xZdY-IJ
+
+AUTHORS
+=======
+S Zhong, D Mo, S Luo
+
+YEAR
+====
+2025
+
+PUBLICATION INFORMATION
+=======================
+S Zhong, D Mo, S Luo - arXiv preprint arXiv:2505.17152, 2025 - arxiv.org
+
+CITATION COUNT
+==============
+20
+
+FOUND BY QUERIES
+================
+- SSD-based vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://arxiv.org/abs/2505.17152
+
+PDF URL
+=======
+https://arxiv.org/pdf/2505.17152
+
+SNIPPET
+=======
+… We propose LSM-VEC, a disk-based vector search system that integrates hierarchical graph indexing with LSM-tree storage. LSM-VEC supports billionscale datasets with efficient …

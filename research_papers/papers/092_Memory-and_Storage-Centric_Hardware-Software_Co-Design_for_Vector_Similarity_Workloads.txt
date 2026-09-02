@@ -1,0 +1,39 @@
+TITLE
+=====
+Memory-and Storage-Centric Hardware-Software Co-Design for Vector Similarity Workloads
+
+PAPER ID
+========
+s0tCtgEFcdAJ
+
+AUTHORS
+=======
+S Pinge
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+S Pinge - 2026 - search.proquest.com
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- SSD-backed vector database
+
+GOOGLE SCHOLAR URL
+==================
+https://search.proquest.com/openview/9d330575e1e0e684425d7291568dae8d/1?pq-origsite=gscholar&cbl=18750&diss=y
+
+PDF URL
+=======
+Not available
+
+SNIPPET
+=======
+… embed an incoming query, search a large vector database, and retrieve a small set of relevant … In practical deployments, where libraries may reside behind NAS or large SSD-backed …

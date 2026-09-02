@@ -1,0 +1,39 @@
+TITLE
+=====
+CS-PQ: Cache-Friendly SIMD Product Quantization for Large-Scale ANNS Index Construction
+
+PAPER ID
+========
+UVvJB22SUw0J
+
+AUTHORS
+=======
+YT Ma, KC Huang, XK Jiang, ML Wang, X Yao
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+YT Ma, KC Huang, XK Jiang, ML Wang, X Yao… - arXiv preprint arXiv …, 2026 - arxiv.org
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- ANN cache SSD
+
+GOOGLE SCHOLAR URL
+==================
+https://arxiv.org/abs/2605.25521
+
+PDF URL
+=======
+https://arxiv.org/pdf/2605.25521
+
+SNIPPET
+=======
+… main memory, and a high-performance SSD array with approximately 1.7 TB capacity. The … This compression setting is commonly used in large-scale ANN systems and provides a …

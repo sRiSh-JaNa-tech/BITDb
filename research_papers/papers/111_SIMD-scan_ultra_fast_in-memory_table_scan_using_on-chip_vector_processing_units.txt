@@ -1,0 +1,39 @@
+TITLE
+=====
+SIMD-scan: ultra fast in-memory table scan using on-chip vector processing units
+
+PAPER ID
+========
+QYs5EtKTHb0J
+
+AUTHORS
+=======
+T Willhalm, N Popovici, Y Boshmaf
+
+YEAR
+====
+2009
+
+PUBLICATION INFORMATION
+=======================
+T Willhalm, N Popovici, Y Boshmaf… - … of the VLDB …, 2009 - 15721.courses.cs.cmu.edu
+
+CITATION COUNT
+==============
+342
+
+FOUND BY QUERIES
+================
+- RAM SSD tiering vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://15721.courses.cs.cmu.edu/spring2018/papers/21-vectorization1/willhalm-vldb2009.pdf
+
+PDF URL
+=======
+https://15721.courses.cs.cmu.edu/spring2018/papers/21-vectorization1/willhalm-vldb2009.pdf
+
+SNIPPET
+=======
+… column-oriented main memory storage. We then discuss how … and implementation of SIMD predicate search. Here, we … improved compression ratio, RAM/CPU cache compression, and …

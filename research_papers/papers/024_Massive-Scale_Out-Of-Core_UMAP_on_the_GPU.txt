@@ -1,0 +1,39 @@
+TITLE
+=====
+Massive-Scale Out-Of-Core UMAP on the GPU
+
+PAPER ID
+========
+wV5fXSLnqZsJ
+
+AUTHORS
+=======
+J Park, CJ Nolet, E Raff, T Oates
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+J Park, CJ Nolet, E Raff, T Oates… - … of Machine Learning …, 2026 - proceedings.mlsys.org
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- out-of-core vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://proceedings.mlsys.org/paper_files/paper/2026/hash/0badcb4e95306df76a719409155e46e8-Abstract-Conference.html
+
+PDF URL
+=======
+https://proceedings.mlsys.org/paper_files/paper/2026/file/0badcb4e95306df76a719409155e46e8-Paper-Conference.pdf
+
+SNIPPET
+=======
+… Second, we introduce a scalable out-of-core, multi-GPU all-neighbors graph construction … upon popular techniques for accelerated vector search and ultimately benefits many other …

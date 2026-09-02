@@ -1,0 +1,39 @@
+TITLE
+=====
+HAVEN: High-Bandwidth Flash Augmented Vector Engine for Large-Scale Approximate Nearest-Neighbor Search Acceleration
+
+PAPER ID
+========
+fwelp7lJ5wYJ
+
+AUTHORS
+=======
+PK Hsu, W Xu, Q Liu, T Rosing, S Yu
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+PK Hsu, W Xu, Q Liu, T Rosing, S Yu - arXiv preprint arXiv:2603.01175, 2026 - arxiv.org
+
+CITATION COUNT
+==============
+4
+
+FOUND BY QUERIES
+================
+- SSD-backed vector database
+
+GOOGLE SCHOLAR URL
+==================
+https://arxiv.org/abs/2603.01175
+
+PDF URL
+=======
+https://arxiv.org/pdf/2603.01175
+
+SNIPPET
+=======
+… seen in CPU backed or SSD backed systems. Larger batches … vector search engine that stores and processes raw vectors in … To maintain design margin for more vector databases and …

@@ -1,0 +1,39 @@
+TITLE
+=====
+A Survey on the Use of AI/ML for Storage System Design and Optimization
+
+PAPER ID
+========
+pvECjl0YMUkJ
+
+AUTHORS
+=======
+J Boukhobza, S Byna, YH Chang, S Ibrahim, S Jamil
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+J Boukhobza, S Byna, YH Chang, S Ibrahim, S Jamil… - 2026 - hal.science
+
+CITATION COUNT
+==============
+1
+
+FOUND BY QUERIES
+================
+- ANN cache SSD
+
+GOOGLE SCHOLAR URL
+==================
+https://hal.science/hal-05528520/
+
+PDF URL
+=======
+https://hal.science/hal-05528520v1/file/Survey_about_AI_for_storage__preprint.pdf
+
+SNIPPET
+=======
+… address mapping table, enhancing caching efficiency within the SSD controller. The linear … designed to improve SSD performance in multi-tenant environments. It uses an ANN model, …

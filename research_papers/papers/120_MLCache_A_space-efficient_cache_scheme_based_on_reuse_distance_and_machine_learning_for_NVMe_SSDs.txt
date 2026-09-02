@@ -1,0 +1,39 @@
+TITLE
+=====
+MLCache: A space-efficient cache scheme based on reuse distance and machine learning for NVMe SSDs
+
+PAPER ID
+========
+LRQrSEA8koMJ
+
+AUTHORS
+=======
+W Liu, J Cui, J Liu, LT Yang
+
+YEAR
+====
+2020
+
+PUBLICATION INFORMATION
+=======================
+W Liu, J Cui, J Liu, LT Yang - … of the 39th International Conference on …, 2020 - dl.acm.org
+
+CITATION COUNT
+==============
+25
+
+FOUND BY QUERIES
+================
+- ANN cache SSD
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/3400302.3415652
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/3400302.3415652
+
+SNIPPET
+=======
+… shared cache management scheme for NVMe SSDs, which maximizes the write hit ratios, as well as enhances the SSD … Secondly, MLCache uses artificial neural network techniques to …

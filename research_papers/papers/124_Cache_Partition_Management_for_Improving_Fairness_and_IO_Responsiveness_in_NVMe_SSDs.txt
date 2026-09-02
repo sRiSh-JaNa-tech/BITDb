@@ -1,0 +1,39 @@
+TITLE
+=====
+Cache Partition Management for Improving Fairness and I/O Responsiveness in NVMe SSDs
+
+PAPER ID
+========
+l4vIBqIxjv4J
+
+AUTHORS
+=======
+J Wu, F Yang, Z Sha, L Cai, Z Cai
+
+YEAR
+====
+2025
+
+PUBLICATION INFORMATION
+=======================
+J Wu, F Yang, Z Sha, L Cai, Z Cai… - … on Parallel and …, 2025 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- ANN cache SSD
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/11197598/
+
+PDF URL
+=======
+Not available
+
+SNIPPET
+=======
+… It uses an artificial neural network (ANN) model to direct cache space partition. By taking reuse distance and distribution as inputs, the neural network model predicts the allocation ratio …

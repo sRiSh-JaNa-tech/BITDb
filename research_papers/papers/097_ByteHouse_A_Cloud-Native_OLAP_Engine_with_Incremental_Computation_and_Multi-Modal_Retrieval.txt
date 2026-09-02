@@ -1,0 +1,39 @@
+TITLE
+=====
+ByteHouse: A Cloud-Native OLAP Engine with Incremental Computation and Multi-Modal Retrieval
+
+PAPER ID
+========
+xtgB8k0OY0wJ
+
+AUTHORS
+=======
+Y Han, Y Lin, Y Dong, X Zhou, X Peng, X Tian
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+Y Han, Y Lin, Y Dong, X Zhou, X Peng, X Tian… - arXiv e …, 2026 - ui.adsabs.harvard.edu
+
+CITATION COUNT
+==============
+1
+
+FOUND BY QUERIES
+================
+- SSD-backed vector database
+
+GOOGLE SCHOLAR URL
+==================
+https://ui.adsabs.harvard.edu/abs/2026arXiv260208226H/abstract
+
+PDF URL
+=======
+Not available
+
+SNIPPET
+=======
+… abstraction and physically consistent layout, SSD-backed cluster-scale cache (CrossCache) … queries (eg, runtime filtering over tiered vector indexes). The control layer coordinates …

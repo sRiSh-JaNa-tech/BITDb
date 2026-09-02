@@ -1,0 +1,39 @@
+TITLE
+=====
+Scalable Disk-Based Approximate Nearest Neighbor Search with Page-Aligned Graph
+
+PAPER ID
+========
+i9_3oCCm2HUJ
+
+AUTHORS
+=======
+D Kang, D Jiang, H Yang, H Liu, B Li
+
+YEAR
+====
+2025
+
+PUBLICATION INFORMATION
+=======================
+D Kang, D Jiang, H Yang, H Liu, B LiarXiv preprint arXiv:2509.25487, 2025•arxiv.org
+
+CITATION COUNT
+==============
+12
+
+FOUND BY QUERIES
+================
+- disk-based approximate nearest neighbor search
+
+GOOGLE SCHOLAR URL
+==================
+https://arxiv.org/abs/2509.25487
+
+PDF URL
+=======
+https://arxiv.org/pdf/2509.25487?
+
+SNIPPET
+=======
+Approximate Nearest Neighbor Search (ANNS), as the core of vector databases (VectorDBs), has become widely used in modern AI and ML systems, powering applications from information retrieval to bio-informatics. While graph-based ANNS methods achieve high query efficiency, their scalability is constrained by the available host memory. Recent disk-based ANNS approaches mitigate memory usage by offloading data to Solid-State Drives (SSDs). However, they still suffer from issues such as long I/O traversal path, misalignment with storage I/O granularity, and high in-memory indexing overhead, leading to significant I/O latency and ultimately limiting scalability for large-scale vector search. In this paper, we propose PageANN, a disk-based approximate nearest neighbor search (ANNS) framework designed for high performance and scalability. PageANN introduces a page-node graph structure that aligns logical graph nodes with physical SSD pages, thereby shortening I/O traversal paths and reducing I/O operations. Specifically, similar vectors are clustered into page nodes, and a co-designed disk data layout leverages this structure with a merging technique to store only representative vectors and topology information, avoiding unnecessary reads. To further improve efficiency, we design a memory management strategy that combines lightweight indexing with coordinated memory-disk data allocation, maximizing host memory utilization while minimizing query latency and storage overhead. Experimental results show that PageANN significantly outperforms state-of-the-art (SOTA) disk-based ANNS methods, achieving 1.85x-10.83x higher throughput and 51.7%-91.9% lower latency across different datasets and memory budgets, while maintaining comparable high recall accuracy.

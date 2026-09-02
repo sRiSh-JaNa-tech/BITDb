@@ -1,0 +1,39 @@
+TITLE
+=====
+Fast approximate nearest neighbors with automatic algorithm configuration
+
+PAPER ID
+========
+Ge72Vl0DpVcJ
+
+AUTHORS
+=======
+M Muja, DG Lowe
+
+YEAR
+====
+2009
+
+PUBLICATION INFORMATION
+=======================
+M Muja, DG Lowe - … conference on computer vision theory and …, 2009 - scitepress.org
+
+CITATION COUNT
+==============
+4419
+
+FOUND BY QUERIES
+================
+- memory efficient approximate nearest neighbor search
+
+GOOGLE SCHOLAR URL
+==================
+https://www.scitepress.org/PublishedPapers/2009/17878/
+
+PDF URL
+=======
+https://www.scitepress.org/PublishedPapers/2009/17878/17878.pdf
+
+SNIPPET
+=======
+… as the optimal search and build time if memory usage is not a … fastest search and build time without any regard to memory … in memory use as to the same percentage increase in search …

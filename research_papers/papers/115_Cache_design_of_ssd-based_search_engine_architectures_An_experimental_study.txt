@@ -1,0 +1,39 @@
+TITLE
+=====
+Cache design of ssd-based search engine architectures: An experimental study
+
+PAPER ID
+========
+s1XNo3fecaIJ
+
+AUTHORS
+=======
+J Wang, E Lo, ML Yiu, J Tong, G Wang
+
+YEAR
+====
+2014
+
+PUBLICATION INFORMATION
+=======================
+J Wang, E Lo, ML Yiu, J Tong, G Wang… - ACM Transactions on …, 2014 - dl.acm.org
+
+CITATION COUNT
+==============
+21
+
+FOUND BY QUERIES
+================
+- vector search cache SSD
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/2661629
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/2661629
+
+SNIPPET
+=======
+… may void the cache management of existing search engines. In … the impact of SSD on search engine cache management. Based on … and caching policies for SSD-based search engines. …

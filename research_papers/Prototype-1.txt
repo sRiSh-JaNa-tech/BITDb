@@ -1,0 +1,323 @@
+BITDB PROTOTYPE-1
+AI-NATIVE, SSD-FIRST INFERENCE DATABASE
+Design and implementation specification
+Date: 2026-08-22
+
+1. PURPOSE AND RESEARCH HYPOTHESIS
+
+BitDB is a storage and retrieval engine that sits beside an AI model. It stores
+embeddings, metadata, relationships, text chunks, and original files under one
+logical identity, then returns an AI-ready evidence bundle in one retrieval
+operation.
+
+The research hypothesis is not that SSD vector search is new. DiskANN, PageANN,
+Zoom, SPANN, PipeANN, Starling, and related systems already establish that
+direction. The testable BitDB hypothesis is:
+
+An AI-native storage layout and query planner that jointly optimizes vector
+search, metadata filtering, chunk retrieval, caching, prefetching, and context
+assembly can reduce AI time-to-context and total coordination overhead under a
+fixed RAM budget, while preserving recall and evidence accuracy.
+
+The primary optimization target is time-to-answer, not an isolated ANN number.
+BitDB must therefore expose both low-level database operations and a high-level
+AI_SEARCH operation.
+
+2. DESIGN PRINCIPLES
+
+1. SSD-first persistence: the full corpus and durable indexes live on SSD; RAM
+   contains a bounded, adaptive working set.
+2. One identity across data types: document_id and chunk_id connect blobs,
+   metadata, vectors, provenance, and access history.
+3. Read the minimum useful bytes: use compressed preview vectors for routing,
+   page-aligned graph records for traversal, and full vectors/content only for
+   candidates that survive filtering and reranking.
+4. Co-design logical and physical locality: items likely to be retrieved
+   together should share pages or nearby extents.
+5. Asynchronous by default: batch and overlap SSD reads using io_uring or an
+   equivalent asynchronous I/O interface.
+6. Dynamic and measurable: updates are first-class, index quality is monitored,
+   and every result carries provenance and retrieval telemetry.
+7. Evidence before generation: BitDB returns source spans, scores, filters,
+   versions, and confidence signals so the AI can cite and validate content.
+
+3. UNIQUE BITDB CONTRIBUTION
+
+The unique prototype feature is the Retrieval Capsule. A Retrieval Capsule is a
+physically co-located, versioned record containing:
+
+  - a small quantized preview embedding;
+  - graph/page routing information;
+  - document and chunk identifiers;
+  - compact filterable metadata;
+  - a pointer to the full vector;
+  - a pointer to the source-content extent;
+  - provenance, version, ACL, and freshness fields.
+
+The vector index does not return an orphan vector ID. It returns a capsule ID
+that lets BitDB fetch metadata and content through the same locality-aware read
+plan. This is the architectural bridge between vector databases, KV stores,
+and object stores.
+
+BitDB also introduces a Context Utility Score for cache and prefetch decisions:
+
+  utility = predicted_reuse * answer_value * freshness_value
+            - read_cost - memory_cost - staleness_risk
+
+The score is initially computed with an interpretable heuristic. Later it can
+be replaced by a small online model. This keeps Prototype-1 reproducible while
+leaving a clear research contribution: learning which data is useful to the AI,
+not merely which page was recently touched.
+
+4. SYSTEM ARCHITECTURE
+
+Client / AI agent
+        |
+BitDB API and AI query planner
+        |
+Query execution pipeline
+  1. normalize request and compile metadata/ACL filters
+  2. check result and capsule caches
+  3. preview search over in-RAM quantized vectors and page centroids
+  4. page-graph traversal with batched asynchronous reads
+  5. filter candidates using compact metadata
+  6. full-vector reranking on SSD candidates or GPU/CPU
+  7. fetch only winning content spans
+  8. assemble ordered evidence capsules with citations
+        |
+Storage manager
+  RAM: query state, hot capsules, centroids, compact preview vectors,
+       routing table, bloom/filter structures, recent content
+  SSD: WAL, immutable segments, page graph, full vectors, metadata, blobs,
+       manifests, statistics
+
+The engine should be a single local process for Prototype-1 to remove network
+round trips. A future distributed mode can shard page ranges and retain the
+same API.
+
+5. ON-DISK FORMAT
+
+Use a segment-based format inspired by LSM storage, but specialized for AI
+retrieval. Each segment is immutable after sealing and has a manifest.
+
+Segment files:
+
+  manifest.bin       magic, version, counts, checksums, model/dimension IDs
+  capsules.bin       fixed-size capsule headers and variable metadata pointers
+  preview.bin        int8/PQ preview vectors, SIMD-friendly and page packed
+  pages.bin          page-aligned graph nodes, representatives, neighbor IDs
+  full_vectors.bin   float16/float32 vectors, grouped by capsule/page locality
+  metadata.bin       compact typed columns and filter indexes
+  content.bin        compressed chunk text or blob references
+  stats.bin          centroids, quantization parameters, access statistics
+
+All offsets are 64-bit relative offsets. Pages have a fixed configurable size
+(start with 16 KiB or the device's useful read unit). Each page contains its
+own neighbor IDs and compressed routing data so graph traversal does not need a
+second metadata read. Every record has a checksum and generation number.
+
+The WAL records PUT, DELETE, UPDATE, and model/schema changes. On restart,
+BitDB replays the WAL, opens valid manifests, and ignores incomplete segments.
+Background compaction merges segments, removes tombstones, rebuilds locality,
+and atomically publishes a new manifest.
+
+6. INDEXING STRATEGY
+
+Prototype-1 uses a two-level page graph:
+
+  A. Build page nodes by clustering nearby embeddings and packing their
+     representatives into one physical SSD page.
+  B. Connect page nodes with a bounded navigable graph.
+  C. Keep a small centroid/routing index in RAM.
+  D. Store a compact preview vector for every capsule in RAM when budget allows;
+     otherwise store previews by page and promote hot pages.
+  E. Use full vectors only for final reranking.
+
+This combines the ideas supported by the corpus: page-aligned graphs and
+representatives, preview/full-view search, compressed vectors, locality-aware
+colocation, SSD parallelism, and lightweight memory indexes.
+
+To support updates, new writes first enter a mutable memory buffer and WAL.
+When the buffer reaches a threshold it becomes a small immutable segment. Query
+execution searches the base index plus recent segments and merges results.
+Deletes are tombstones. Compaction restores graph quality and removes stale
+records. This avoids requiring a full rebuild for every document update.
+
+7. QUERY EXECUTION
+
+Low-level operations:
+
+  put(key, value)
+  get(key)
+  delete(key)
+  put_document(document_id, metadata, content)
+  put_chunk(document_id, chunk_id, text, embedding, metadata)
+  search_vector(vector, k, filters, rerank=true)
+  fetch_content(chunk_ids, byte_budget)
+
+The principal operation is:
+
+  AI_SEARCH(query_vector, filters, top_k, content_mode, token_budget,
+            freshness, diversity, return_provenance=true)
+
+Execution details:
+
+  1. Parse filters into a fast typed predicate. Reject unauthorized capsules
+     before content reads.
+  2. Generate a query preview and probe the result/capsule cache.
+  3. Search centroids and preview vectors to produce an oversampled candidate
+     set, for example 10x top_k.
+  4. Traverse page nodes. Submit independent SSD reads concurrently; do not
+     force a strict compute-read-compute sequence.
+  5. Apply metadata, tenant, ACL, time, and freshness filters before expensive
+     reranking whenever safe.
+  6. Rerank candidates with full vectors. Optionally use GPU batches when the
+     queue and batch size justify transfer cost.
+  7. Fetch only the selected chunk spans. Prefer neighboring chunks when the
+     token budget permits and the access model predicts they improve context.
+  8. Deduplicate by document, apply diversity/MMR, enforce token budget, and
+     return capsules ordered by evidence utility.
+  9. Record latency, bytes, page reads, cache decisions, scores, and misses.
+
+Result shape:
+
+  {chunk_id, document_id, text, metadata, similarity, rerank_score,
+   source_uri, page_or_offset, model_id, content_version, freshness,
+   access_reason, evidence_hash}
+
+8. CACHE, PREFETCH, AND I/O CONTROL
+
+Use separate bounded pools for routing pages, preview vectors, capsules,
+metadata, full vectors, and content. A single global LRU would let large blobs
+evict the small structures needed for routing.
+
+Start with segmented CLOCK/LRU plus admission control. Track reuse distance,
+query locality, filter selectivity, co-accessed capsule IDs, and cache hit rate.
+Promote a page only when its utility exceeds the admission threshold.
+
+Prefetch rules for Prototype-1:
+
+  - prefetch neighboring page nodes when graph traversal confidence is high;
+  - prefetch metadata and content extents co-accessed by recent queries;
+  - never prefetch content that fails a known filter or ACL;
+  - limit prefetch queue depth and cancel stale requests;
+  - compare predicted usefulness with actual usefulness.
+
+Use asynchronous batched reads, aligned buffers, direct I/O where measured to
+be beneficial, and per-device queue-depth control. The scheduler should avoid
+head-of-line blocking between latency-sensitive AI_SEARCH requests and bulk
+ingestion/compaction.
+
+9. IMPLEMENTATION PLAN
+
+Recommended first implementation language: Rust or C++ for the storage and I/O
+core, with a Python SDK and benchmark harness. Rust is preferred for memory
+safety and a clean async interface. Use Apache Arrow or a simple binary ABI for
+zero-copy result transfer.
+
+Phase 1: single-node foundation
+  - repository layout, configuration, checksums, fixed-size pages;
+  - WAL, recovery, segment manifest, atomic publish;
+  - KV and blob/chunk APIs;
+  - RAM cache and metrics endpoint.
+
+Phase 2: retrieval capsules and ingestion
+  - document/chunk schema and provenance;
+  - deterministic chunking and embedding-model ID tracking;
+  - typed metadata columns, ACL fields, tombstones;
+  - capsule packing and locality statistics.
+
+Phase 3: vector search
+  - page graph builder;
+  - int8/PQ preview vectors;
+  - centroid routing index;
+  - asynchronous page reads;
+  - full-vector reranking and Recall@K tests.
+
+Phase 4: unified AI retrieval
+  - AI_SEARCH planner;
+  - filter pushdown, capsule cache, content fetch;
+  - token-aware context assembly, deduplication, MMR;
+  - provenance and evidence hashes.
+
+Phase 5: adaptive storage manager
+  - co-access graph;
+  - utility-based admission and prefetch;
+  - page placement and compaction optimization;
+  - optional learned policy trained only from logged outcomes.
+
+Phase 6: research evaluation and paper
+  - reproducible datasets, fixed RAM budgets, baselines, ablations;
+  - publish the workload model, layout, policies, and negative results.
+
+10. EXPERIMENTAL DESIGN
+
+Baselines:
+  - FAISS or an equivalent in-memory ANN baseline;
+  - DiskANN/PageANN-style disk ANN baseline;
+  - a conventional vector DB + KV DB + object store pipeline;
+  - a simple BitDB ablation without co-location and adaptive caching.
+
+Measure:
+  - Recall@K and nDCG/answer-evidence precision;
+  - P50/P95/P99 vector and AI_SEARCH latency;
+  - QPS and concurrent-request throughput;
+  - peak RAM, bytes per vector, SSD footprint, and index build time;
+  - SSD reads, bytes read, read amplification, queue depth;
+  - cache hit/miss rate, eviction rate, useful-prefetch rate;
+  - time-to-context, context assembly time, network calls, and time-to-answer;
+  - update freshness, delete visibility, compaction cost, and crash recovery.
+
+Run controlled experiments at several dataset/RAM ratios, query distributions,
+filter selectivities, update rates, and token budgets. Report confidence
+intervals and separate cold-cache from warm-cache results. Never present the
+illustrative overview numbers as measured results.
+
+Critical ablations:
+  1. unified retrieval versus three independent services;
+  2. co-located capsules versus random placement;
+  3. page graph versus vector-node graph;
+  4. preview/full-view versus full-vector search;
+  5. adaptive utility cache versus LRU/CLOCK;
+  6. asynchronous batched I/O versus synchronous reads;
+  7. dynamic segments versus periodic full rebuilds.
+
+11. ACCURACY AND SAFETY REQUIREMENTS
+
+BitDB must not silently return stale or unauthorized information. Every capsule
+has a content version, embedding model ID, ACL/tenant scope, source location,
+and hash. Updates invalidate affected caches. Filter and ACL checks happen
+before content exposure. If a result is approximate, the response says so and
+includes the search configuration.
+
+For RAG, preserve exact source spans and document identifiers. The LLM adapter
+must receive structured evidence rather than only concatenated text. This
+allows citation, debugging, groundedness evaluation, and replay of a retrieval
+decision.
+
+12. EXPECTED RESEARCH PAPER CLAIM
+
+The defensible paper claim for Prototype-1 is conditional and measurable:
+
+BitDB presents an AI-native SSD-first storage layout and retrieval planner that
+co-locates vector previews, routing information, metadata, and content pointers
+in retrieval capsules. Under bounded RAM and dynamic RAG workloads, we evaluate
+whether joint placement, page-aware asynchronous search, and workload-aware
+cache/prefetch decisions reduce time-to-context and storage coordination cost
+while preserving retrieval quality.
+
+Do not claim that BitDB replaces DiskANN, invents SSD ANN, or is universally
+faster. The research value is the unified end-to-end hypothesis and the
+controlled evidence showing when the design helps and when it does not.
+
+13. CORPUS USED FOR THIS SPECIFICATION
+
+This specification was derived from BitDB_Complete_Idea_Overview.pdf, 130
+paper summaries in papers/, 64 PDFs in pdfs/, and six close-topic PDFs. The
+dominant research themes were disk-resident ANN, page-aligned graphs, modern
+SSD parallelism, in-storage/near-data processing, quantization and reranking,
+dynamic vector indexing, out-of-core execution, heterogeneous memory tiers,
+locality-aware placement, and adaptive/ML cache management.
+
+Prototype-1 is an implementation and research plan, not a claim that the
+system has already been built or benchmarked.

@@ -1,0 +1,39 @@
+TITLE
+=====
+Micronn: An on-device disk-resident updatable vector database
+
+PAPER ID
+========
+yI9mze6KcqgJ
+
+AUTHORS
+=======
+J Pound, F Chabert, A Bhushan, A Goswami
+
+YEAR
+====
+2025
+
+PUBLICATION INFORMATION
+=======================
+J Pound, F Chabert, A Bhushan, A Goswami… - Companion of the 2025 …, 2025 - dl.acm.org
+
+CITATION COUNT
+==============
+17
+
+FOUND BY QUERIES
+================
+- disk resident vector index
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/3722212.3724444
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/3722212.3724444
+
+SNIPPET
+=======
+… embedded vector search engine that implements disk-resident vector indexing and vector search … We have shown that the overhead of a disk-resident vector index can be mitigated by …

@@ -1,0 +1,39 @@
+TITLE
+=====
+Ndsearch: Accelerating graph-traversal-based approximate nearest neighbor search through near data processing
+
+PAPER ID
+========
+H7wnNNKqUiIJ
+
+AUTHORS
+=======
+Y Wang, S Li, Q Zheng, L Song, Z Li
+
+YEAR
+====
+2024
+
+PUBLICATION INFORMATION
+=======================
+Y Wang, S Li, Q Zheng, L Song, Z Li… - 2024 ACM/IEEE 51st …, 2024 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+38
+
+FOUND BY QUERIES
+================
+- SSD ANN vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/10609615/
+
+PDF URL
+=======
+https://arxiv.org/pdf/2312.03141
+
+SNIPPET
+=======
+… neighbor search (ANNS) is the fundamental technique of the similarity search in the vector … query-wise and batchwise search of ANNS at different levels of SSD organization. Fig. 4 (a) …

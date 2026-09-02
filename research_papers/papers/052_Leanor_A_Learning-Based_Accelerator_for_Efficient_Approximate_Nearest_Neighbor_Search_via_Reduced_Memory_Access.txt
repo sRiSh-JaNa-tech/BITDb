@@ -1,0 +1,39 @@
+TITLE
+=====
+Leanor: A Learning-Based Accelerator for Efficient Approximate Nearest Neighbor Search via Reduced Memory Access
+
+PAPER ID
+========
+_G96O1C6R30J
+
+AUTHORS
+=======
+Y Wang, H Liu, J Yuan, J Chen, T Wang, C Ma
+
+YEAR
+====
+2024
+
+PUBLICATION INFORMATION
+=======================
+Y Wang, H Liu, J Yuan, J Chen, T Wang, C Ma… - Proceedings of the 61st …, 2024 - dl.acm.org
+
+CITATION COUNT
+==============
+7
+
+FOUND BY QUERIES
+================
+- memory efficient approximate nearest neighbor search
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/3649329.3657357
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/3649329.3657357
+
+SNIPPET
+=======
+… uted to our reduction of redundant memory access by filtering out non-nearest neighbor vectors. To further understand how Leanor improves search efficiency, we test the normalized …

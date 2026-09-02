@@ -1,0 +1,39 @@
+TITLE
+=====
+A space-efficient fair cache scheme based on machine learning for NVMe SSDs
+
+PAPER ID
+========
+XGKHFRu-QHQJ
+
+AUTHORS
+=======
+W Liu, J Cui, T Li, J Liu, LT Yang
+
+YEAR
+====
+2022
+
+PUBLICATION INFORMATION
+=======================
+W Liu, J Cui, T Li, J Liu, LT Yang - IEEE Transactions on …, 2022 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+26
+
+FOUND BY QUERIES
+================
+- ANN cache SSD
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/9946404/
+
+PDF URL
+=======
+Not available
+
+SNIPPET
+=======
+… studies use ANN to optimize SSD, including cache replacement … As a heuristic algorithm, ANN can effectively obtain the … cache partition and obtain the approximate optimal cache …

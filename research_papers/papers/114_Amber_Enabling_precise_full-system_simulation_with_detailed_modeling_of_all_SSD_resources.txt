@@ -1,0 +1,39 @@
+TITLE
+=====
+Amber: Enabling precise full-system simulation with detailed modeling of all SSD resources
+
+PAPER ID
+========
+HKClK-ll5AIJ
+
+AUTHORS
+=======
+D Gouk, M Kwon, J Zhang, S Koh
+
+YEAR
+====
+2018
+
+PUBLICATION INFORMATION
+=======================
+D Gouk, M Kwon, J Zhang, S Koh… - 2018 51st Annual …, 2018 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+128
+
+FOUND BY QUERIES
+================
+- RAM SSD tiering vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/8574562/
+
+PDF URL
+=======
+https://arxiv.org/pdf/1811.01544
+
+SNIPPET
+=======
+… of storage subsystems in modern memory/storage systems. … performance computers leverage SSDs as a cache or as a … , it needs to search all page table entries to find out other pages, …

@@ -1,0 +1,39 @@
+TITLE
+=====
+The Clustering Strikes Back: Building {Cost-Effective} and {High-Performance}{ANNS} at Scale with Helmsman (Operational Systems)
+
+PAPER ID
+========
+G6r1OtQZ62oJ
+
+AUTHORS
+=======
+Y Huang, B Ma, Y Sun, Y Shi, X Chen
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+Y Huang, B Ma, Y Sun, Y Shi, X Chen… - … USENIX Symposium on …, 2026 - usenix.org
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- SSD-backed vector database
+
+GOOGLE SCHOLAR URL
+==================
+https://www.usenix.org/conference/osdi26/presentation/huang-yuchen
+
+PDF URL
+=======
+https://www.usenix.org/system/files/osdi26-huang-yuchen.pdf
+
+SNIPPET
+=======
+… RAG), we instead employ hybrid DRAM–SSD nodes with SSD-backed graph indexes [22… stored vector corpus to be doubled annually. The more than billions of new vectors persisted …

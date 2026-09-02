@@ -1,0 +1,39 @@
+TITLE
+=====
+High-Throughput, Cost-Effective Billion-Scale Vector Search with a Single GPU
+
+PAPER ID
+========
+v82IpLVnn6IJ
+
+AUTHORS
+=======
+H Jiang, H Guo, M Xie, J Shu, Y Lu
+
+YEAR
+====
+2025
+
+PUBLICATION INFORMATION
+=======================
+H Jiang, H Guo, M Xie, J Shu, Y Lu - … of the ACM on Management of …, 2025 - dl.acm.org
+
+CITATION COUNT
+==============
+10
+
+FOUND BY QUERIES
+================
+- SSD-based vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/3769799
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/3769799
+
+SNIPPET
+=======
+… GustANN has significantly higher multiSSD utilization than other SSD-based ANNS systems. GustANN reaches a maximum of 83.6% SSD bandwidth utilization (with each SSD offering …

@@ -1,0 +1,39 @@
+TITLE
+=====
+MCGI: Manifold-Consistent Graph Indexing for Billion-Scale Disk-Resident Vector Search
+
+PAPER ID
+========
+YmChUeqkXq0J
+
+AUTHORS
+=======
+D Zhao
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+D Zhao - arXiv preprint arXiv:2601.01930, 2026 - arxiv.org
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- disk resident vector index
+
+GOOGLE SCHOLAR URL
+==================
+https://arxiv.org/abs/2601.01930
+
+PDF URL
+=======
+https://arxiv.org/pdf/2601.01930
+
+SNIPPET
+=======
+… We thus argue that an optimal indexing strategy must be manifold-aware, dynamically … -Consistent Graph Indexing (MCGI), a geometry-aware disk-based indexing method crafted to …

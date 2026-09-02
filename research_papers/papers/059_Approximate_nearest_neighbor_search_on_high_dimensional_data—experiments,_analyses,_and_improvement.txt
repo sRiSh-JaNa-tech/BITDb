@@ -1,0 +1,39 @@
+TITLE
+=====
+Approximate nearest neighbor search on high dimensional data—experiments, analyses, and improvement
+
+PAPER ID
+========
+VmOQJ0BH-lQJ
+
+AUTHORS
+=======
+W Li, Y Zhang, Y Sun, W Wang, M Li
+
+YEAR
+====
+2019
+
+PUBLICATION INFORMATION
+=======================
+W Li, Y Zhang, Y Sun, W Wang, M Li… - … on Knowledge and …, 2019 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+795
+
+FOUND BY QUERIES
+================
+- memory efficient approximate nearest neighbor search
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/8681160/
+
+PDF URL
+=======
+https://arxiv.org/pdf/1610.02455
+
+SNIPPET
+=======
+… As both algorithms are originally external memory based approaches, we evaluate the speedup by means of the total number of pages of the dataset divided by the number of pages …

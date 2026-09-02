@@ -1,0 +1,39 @@
+TITLE
+=====
+A smartssd-based near data processing architecture for scalable billion-point approximate nearest neighbor search
+
+PAPER ID
+========
+TrwyIfgf_WoJ
+
+AUTHORS
+=======
+H Liu, B Tian, Z Duan, X Liao, Y Zhang
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+H Liu, B Tian, Z Duan, X Liao, Y Zhang - ACM Transactions on Storage, 2026 - dl.acm.org
+
+CITATION COUNT
+==============
+3
+
+FOUND BY QUERIES
+================
+- SSD-based vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/3736589
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/3736589
+
+SNIPPET
+=======
+… At last, we present the FPGA implementation of the vector search engine within SmartSSDs. … -of-the-art SSD-based solutionśSPANN, which searches the graph-based index composed …

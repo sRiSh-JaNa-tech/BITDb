@@ -1,0 +1,3056 @@
+{
+    "total_queries": 18,
+    "papers_per_query": 20,
+    "unique_papers": 130,
+    "queries": [
+        "SSD-based vector search",
+        "disk-based approximate nearest neighbor search",
+        "out-of-core vector search",
+        "memory efficient approximate nearest neighbor search",
+        "SSD ANN vector search",
+        "disk resident vector index",
+        "SSD-backed vector database",
+        "RAM SSD tiering vector search",
+        "vector search cache SSD",
+        "ANN cache SSD",
+        "adaptive caching vector search",
+        "memory constrained vector search",
+        "workload aware caching\" \"vector search",
+        "\"hot cold\" \"vector search\" SSD",
+        "adaptive cache",
+        "approximate nearest neighbor",
+        "SSD I/O optimization",
+        "vector search"
+    ],
+    "papers": [
+        {
+            "paper_id": "1Zmaf-LRE3IJ",
+            "title": "Achieving low-latency graph-based vector search via aligning best-first search algorithm with SSD",
+            "authors": [
+                "H Guo",
+                "Y Lu"
+            ],
+            "year": 2026,
+            "publication_summary": "H Guo, Y Lu - ACM Transactions on Storage, 2026 - dl.acm.org",
+            "citation_count": 53,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3793926",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3793926",
+            "snippet": "We propose PipeANN, an on-disk graph-based approximate nearest neighbor search (ANNS) … search algorithm with SSD characteristics, avoiding strict compute-I/O order across search …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "SSD ANN vector search",
+                "RAM SSD tiering vector search",
+                "vector search cache SSD"
+            ],
+            "best_rank": 1,
+            "local_number": 1,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\001_Achieving_low-latency_graph-based_vector_search_via_aligning_best-first_search_algorithm_with_SSD.txt"
+        },
+        {
+            "paper_id": "GHkY9NfAahYJ",
+            "title": "Turbocharging vector databases using modern SSDs",
+            "authors": [
+                "J Shim",
+                "J Oh",
+                "H Roh",
+                "J Do",
+                "SW Lee"
+            ],
+            "year": 2025,
+            "publication_summary": "J Shim, J Oh, H Roh, J Do, SW Lee - Proceedings of the VLDB Endowment, 2025 - vldb.org",
+            "citation_count": 17,
+            "google_scholar_url": "https://www.vldb.org/pvldb/vol18/p4710-do.pdf",
+            "pdf_url": "https://www.vldb.org/pvldb/vol18/p4710-do.pdf",
+            "snippet": "… Efficient and scalable vector search is critical for modern AI applications, particularly in … for graph-based HNSW indices in SSD-based vector databases, providing an in-depth analysis of …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "SSD ANN vector search",
+                "disk resident vector index",
+                "RAM SSD tiering vector search",
+                "vector search cache SSD",
+                "ANN cache SSD"
+            ],
+            "best_rank": 1,
+            "local_number": 2,
+            "local_pdf": "research_papers\\pdfs\\GHkY9NfAahYJ.pdf",
+            "local_text": "research_papers\\papers\\002_Turbocharging_vector_databases_using_modern_SSDs.txt"
+        },
+        {
+            "paper_id": "GVpt5AzFVAQJ",
+            "title": "Towards high-throughput and low-latency billion-scale vector search via {CPU/GPU} collaborative filtering and re-ranking",
+            "authors": [
+                "B Tian",
+                "H Liu",
+                "Y Tang",
+                "S Xiao",
+                "Z Duan",
+                "X Liao"
+            ],
+            "year": 2025,
+            "publication_summary": "B Tian, H Liu, Y Tang, S Xiao, Z Duan, X Liao… - … USENIX Conference on …, 2025 - usenix.org",
+            "citation_count": 57,
+            "google_scholar_url": "https://www.usenix.org/conference/fast25/presentation/tian-bing",
+            "pdf_url": "https://www.usenix.org/system/files/fast25-tian-bing.pdf",
+            "snippet": "… For FusionANNS and other SSD-based ANNS solutions, we only use 64 GB main memory to accommodate the in-memory index and intermediate results. Benchmarks. In our …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "SSD ANN vector search"
+            ],
+            "best_rank": 3,
+            "local_number": 3,
+            "local_pdf": "research_papers\\pdfs\\GVpt5AzFVAQJ.pdf",
+            "local_text": "research_papers\\papers\\003_Towards_high-throughput_and_low-latency_billion-scale_vector_search_via_{CPUGPU}_collaborative_filtering_and_re-ranking.txt"
+        },
+        {
+            "paper_id": "P2aKMuFG4rsJ",
+            "title": "Characterizing the dilemma of performance and index size in billion-scale vector search and breaking it with second-tier memory",
+            "authors": [
+                "R Cheng",
+                "Y Peng",
+                "X Wei",
+                "H Xie",
+                "R Chen"
+            ],
+            "year": 2024,
+            "publication_summary": "R Cheng, Y Peng, X Wei, H Xie, R Chen… - arXiv preprint arXiv …, 2024 - arxiv.org",
+            "citation_count": 20,
+            "google_scholar_url": "https://arxiv.org/abs/2405.03267",
+            "pdf_url": "https://arxiv.org/pdf/2405.03267",
+            "snippet": "… than DRAM, SSD-based vector search is I/O bound. For example, a commodify 64-core server can search 3,624–5,212 Mvectors/sec with SIMD1 on common vector datasets with 100–…",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "disk resident vector index",
+                "RAM SSD tiering vector search"
+            ],
+            "best_rank": 4,
+            "local_number": 4,
+            "local_pdf": "research_papers\\pdfs\\P2aKMuFG4rsJ.pdf",
+            "local_text": "research_papers\\papers\\004_Characterizing_the_dilemma_of_performance_and_index_size_in_billion-scale_vector_search_and_breaking_it_with_second-tier_memory.txt"
+        },
+        {
+            "paper_id": "nTuBsZ4oJ1UJ",
+            "title": "VStore: in-storage graph based vector search accelerator",
+            "authors": [
+                "S Liang",
+                "Y Wang",
+                "Z Yuan",
+                "C Liu",
+                "H Li",
+                "X Li"
+            ],
+            "year": 2022,
+            "publication_summary": "S Liang, Y Wang, Z Yuan, C Liu, H Li, X Li - … of the 59th ACM/IEEE Design …, 2022 - dl.acm.org",
+            "citation_count": 32,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3489517.3530560",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3489517.3530560",
+            "snippet": "… In order to reduce memory footprint and data movement overhead, we construct VStore, a graph-based vector search solution within SSD based on the in-storage computing technique. …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "vector search cache SSD"
+            ],
+            "best_rank": 5,
+            "local_number": 5,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\005_VStore_in-storage_graph_based_vector_search_accelerator.txt"
+        },
+        {
+            "paper_id": "v82IpLVnn6IJ",
+            "title": "High-Throughput, Cost-Effective Billion-Scale Vector Search with a Single GPU",
+            "authors": [
+                "H Jiang",
+                "H Guo",
+                "M Xie",
+                "J Shu",
+                "Y Lu"
+            ],
+            "year": 2025,
+            "publication_summary": "H Jiang, H Guo, M Xie, J Shu, Y Lu - … of the ACM on Management of …, 2025 - dl.acm.org",
+            "citation_count": 10,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3769799",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3769799",
+            "snippet": "… GustANN has significantly higher multiSSD utilization than other SSD-based ANNS systems. GustANN reaches a maximum of 83.6% SSD bandwidth utilization (with each SSD offering …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "SSD ANN vector search",
+                "vector search cache SSD"
+            ],
+            "best_rank": 6,
+            "local_number": 6,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\006_High-Throughput,_Cost-Effective_Billion-Scale_Vector_Search_with_a_Single_GPU.txt"
+        },
+        {
+            "paper_id": "EwbvQvw9BpwJ",
+            "title": "Vector Search for the Future: From Memory-Resident, Static Heterogeneous Storage, to Cloud-Native Architectures",
+            "authors": [
+                "Y Song",
+                "X Zhou",
+                "CS Jensen",
+                "J Xu"
+            ],
+            "year": 2026,
+            "publication_summary": "Y Song, X Zhou, CS Jensen, J Xu - Companion of the International …, 2026 - dl.acm.org",
+            "citation_count": 4,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3788853.3801879",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3788853.3801879",
+            "snippet": "… Zoom: SSD-based vector search for optimizing accuracy, latency and memory. arXiv preprint arXiv:1809.04067 (2018). [61] Xi Zhao, Yao Tian, Kai Huang, Bolong Zheng, and Xiaofang …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "SSD ANN vector search",
+                "disk resident vector index",
+                "vector search cache SSD"
+            ],
+            "best_rank": 5,
+            "local_number": 7,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\007_Vector_Search_for_the_Future_From_Memory-Resident,_Static_Heterogeneous_Storage,_to_Cloud-Native_Architectures.txt"
+        },
+        {
+            "paper_id": "Y2x4ChG7kGYJ",
+            "title": "DiskJoin: Large-scale Vector Similarity Join with SSD",
+            "authors": [
+                "Y Chen",
+                "X Yan",
+                "A Meliou",
+                "E Lo"
+            ],
+            "year": 2025,
+            "publication_summary": "Y Chen, X Yan, A Meliou, E Lo - … of the ACM on Management of Data, 2025 - dl.acm.org",
+            "citation_count": 8,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3769780",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3769780",
+            "snippet": "… -of-the-art SSD-based vector index DiskANN [47] to perform vector similarity join—and our … read amplification, and for each vector 𝑥 in the block, we search for its nearest center 𝑐 in X …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "vector search cache SSD"
+            ],
+            "best_rank": 4,
+            "local_number": 8,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\008_DiskJoin_Large-scale_Vector_Similarity_Join_with_SSD.txt"
+        },
+        {
+            "paper_id": "h_0encVnamQJ",
+            "title": "Zoom: Ssd-based vector search for optimizing accuracy, latency and memory",
+            "authors": [
+                "M Zhang",
+                "Y He"
+            ],
+            "year": 2018,
+            "publication_summary": "M Zhang, Y He - arXiv preprint arXiv:1809.04067, 2018 - arxiv.org",
+            "citation_count": 14,
+            "google_scholar_url": "https://arxiv.org/abs/1809.04067",
+            "pdf_url": "https://arxiv.org/pdf/1809.04067",
+            "snippet": "… , to search and find best matches to user queries based on their semantic similarities. These online services require the search … We develop, Zoom, a new vector search solution that …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "SSD ANN vector search",
+                "vector search cache SSD"
+            ],
+            "best_rank": 9,
+            "local_number": 9,
+            "local_pdf": "research_papers\\pdfs\\h_0encVnamQJ.pdf",
+            "local_text": "research_papers\\papers\\009_Zoom_Ssd-based_vector_search_for_optimizing_accuracy,_latency_and_memory.txt"
+        },
+        {
+            "paper_id": "KROc8c-npLUJ",
+            "title": "GateANN: I/O-Efficient Filtered Vector Search on SSDs",
+            "authors": [
+                "N Lee",
+                "S Cho",
+                "J Park",
+                "G Kim"
+            ],
+            "year": 2026,
+            "publication_summary": "N Lee, S Cho, J Park, G Kim - arXiv preprint arXiv:2603.21466, 2026 - arxiv.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://arxiv.org/abs/2603.21466",
+            "pdf_url": "https://arxiv.org/pdf/2603.21466",
+            "snippet": "… , an I/O-efficient SSD-based graph ANNS system that supports filtered vector search on an … This paper presented GateANN, an I/O-efficient SSD-based system for filtered vector search. …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "SSD ANN vector search",
+                "vector search cache SSD"
+            ],
+            "best_rank": 9,
+            "local_number": 10,
+            "local_pdf": "research_papers\\pdfs\\KROc8c-npLUJ.pdf",
+            "local_text": "research_papers\\papers\\010_GateANN_IO-Efficient_Filtered_Vector_Search_on_SSDs.txt"
+        },
+        {
+            "paper_id": "8ZGqpu9UX04J",
+            "title": "Grip: Multi-store capacity-optimized high-performance nearest neighbor search for vector search engine",
+            "authors": [
+                "M Zhang",
+                "Y He"
+            ],
+            "year": 2019,
+            "publication_summary": "M Zhang, Y He - Proceedings of the 28th ACM International Conference …, 2019 - dl.acm.org",
+            "citation_count": 55,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3357384.3357938",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3357384.3357938",
+            "snippet": "… Intuitively, the multi-store design achieves memory savings, through storing quantized data in memory, and high recall through SSD-based validation to enhance accuracy given the …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "SSD ANN vector search"
+            ],
+            "best_rank": 2,
+            "local_number": 11,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\011_Grip_Multi-store_capacity-optimized_high-performance_nearest_neighbor_search_for_vector_search_engine.txt"
+        },
+        {
+            "paper_id": "HKc0uKl8ziAJ",
+            "title": "GraphAccel: An In-Storage Accelerator for Efficient Graph-Based Vector Similarity Search Using Page Packing and Speculative Search Optimization",
+            "authors": [
+                "Y Kwon",
+                "Y Boo",
+                "H Cho"
+            ],
+            "year": 2025,
+            "publication_summary": "Y Kwon, Y Boo, H Cho - 2025 62nd ACM/IEEE Design …, 2025 - ieeexplore.ieee.org",
+            "citation_count": 2,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/11132788/",
+            "pdf_url": null,
+            "snippet": "… Through these optimizations, GraphAccel achieves notable performance improvements over existing SSD-based graph search solutions, including DiskANN and DiskANN++. …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "SSD ANN vector search",
+                "vector search cache SSD"
+            ],
+            "best_rank": 3,
+            "local_number": 12,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\012_GraphAccel_An_In-Storage_Accelerator_for_Efficient_Graph-Based_Vector_Similarity_Search_Using_Page_Packing_and_Speculative_Search_Optimization.txt"
+        },
+        {
+            "paper_id": "oIcWZnLYPagJ",
+            "title": "Es4d: Accelerating exact similarity search for high-dimensional vectors via vector slicing and in-ssd computation",
+            "authors": [
+                "J Kim",
+                "J Seo",
+                "J Park",
+                "SW Lee",
+                "H Roh"
+            ],
+            "year": 2022,
+            "publication_summary": "J Kim, J Seo, J Park, SW Lee, H Roh… - 2022 IEEE 40th …, 2022 - ieeexplore.ieee.org",
+            "citation_count": 4,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/9978526/",
+            "pdf_url": null,
+            "snippet": "… Several SSD-based similarity search platforms were proposed to reduce flash storage … are also targeting ANN search. Other than using flash as the vector dataset storage, memory-…",
+            "found_by_queries": [
+                "SSD-based vector search"
+            ],
+            "best_rank": 13,
+            "local_number": 13,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\013_Es4d_Accelerating_exact_similarity_search_for_high-dimensional_vectors_via_vector_slicing_and_in-ssd_computation.txt"
+        },
+        {
+            "paper_id": "TrwyIfgf_WoJ",
+            "title": "A smartssd-based near data processing architecture for scalable billion-point approximate nearest neighbor search",
+            "authors": [
+                "H Liu",
+                "B Tian",
+                "Z Duan",
+                "X Liao",
+                "Y Zhang"
+            ],
+            "year": 2026,
+            "publication_summary": "H Liu, B Tian, Z Duan, X Liao, Y Zhang - ACM Transactions on Storage, 2026 - dl.acm.org",
+            "citation_count": 3,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3736589",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3736589",
+            "snippet": "… At last, we present the FPGA implementation of the vector search engine within SmartSSDs. … -of-the-art SSD-based solutionśSPANN, which searches the graph-based index composed …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "SSD ANN vector search",
+                "RAM SSD tiering vector search",
+                "ANN cache SSD"
+            ],
+            "best_rank": 1,
+            "local_number": 14,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\014_A_smartssd-based_near_data_processing_architecture_for_scalable_billion-point_approximate_nearest_neighbor_search.txt"
+        },
+        {
+            "paper_id": "92GHW70ROsUJ",
+            "title": "Cognitive SSD+: a deep learning engine for energy-efficient unstructured data retrieval: S. Liang et al.",
+            "authors": [
+                "S Liang",
+                "Y Wang",
+                "H Li",
+                "X Li"
+            ],
+            "year": 2022,
+            "publication_summary": "S Liang, Y Wang, H Li, X Li - CCF Transactions on High Performance …, 2022 - Springer",
+            "citation_count": 4,
+            "google_scholar_url": "https://link.springer.com/article/10.1007/s42514-022-00103-1",
+            "pdf_url": null,
+            "snippet": "… search, KD-tree search, and graph-based search. In view of customizing separate units for each vector search … overhead, we unify these vector search methods into one computation …",
+            "found_by_queries": [
+                "SSD-based vector search"
+            ],
+            "best_rank": 15,
+            "local_number": 15,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\015_Cognitive_SSD+_a_deep_learning_engine_for_energy-efficient_unstructured_data_retrieval_S._Liang_et_al..txt"
+        },
+        {
+            "paper_id": "iQXImLwgVygJ",
+            "title": "Disk-Resident Vector Similarity Search: A Survey",
+            "authors": [
+                "Y Song",
+                "H Li",
+                "Z Wu",
+                "L Yi",
+                "B Zhu",
+                "X Zhou",
+                "X Huang",
+                "J Xu"
+            ],
+            "year": null,
+            "publication_summary": "Y Song, H Li, Z Wu, L Yi, B Zhu, X Zhou, X Huang, J Xu - hkbudb.github.io",
+            "citation_count": 0,
+            "google_scholar_url": "https://hkbudb.github.io/disk-vss-survey/Disk-Resident%20Vector%20Similarity%20Search-%20A%20Survey.pdf",
+            "pdf_url": "https://hkbudb.github.io/disk-vss-survey/Disk-Resident%20Vector%20Similarity%20Search-%20A%20Survey.pdf",
+            "snippet": "… , Disk-resident search … INTRODUCTION Vector Similarity Search (VSS) retrieves the vectors most similar to a given query from large-scale, high-dimensional datasets. It has become a …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "disk resident vector index"
+            ],
+            "best_rank": 9,
+            "local_number": 16,
+            "local_pdf": "research_papers\\pdfs\\iQXImLwgVygJ.pdf",
+            "local_text": "research_papers\\papers\\016_Disk-Resident_Vector_Similarity_Search_A_Survey.txt"
+        },
+        {
+            "paper_id": "A32y7cZCKCUJ",
+            "title": "TCAM-SSD: A framework for search-based computing in solid-state drives",
+            "authors": [
+                "R Wong",
+                "N Kim",
+                "K Higgs",
+                "S Agarwal",
+                "E Ipek"
+            ],
+            "year": 2024,
+            "publication_summary": "R Wong, N Kim, K Higgs, S Agarwal, E Ipek… - arXiv preprint arXiv …, 2024 - arxiv.org",
+            "citation_count": 5,
+            "google_scholar_url": "https://arxiv.org/abs/2403.06938",
+            "pdf_url": "https://arxiv.org/pdf/2403.06938",
+            "snippet": "… 3Note that we can store and search for shorter data elements, by setting the search key bits … of the match vectors to return no matches. Therefore, storing a match vector of 0s and …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "vector search cache SSD"
+            ],
+            "best_rank": 14,
+            "local_number": 17,
+            "local_pdf": "research_papers\\pdfs\\A32y7cZCKCUJ.pdf",
+            "local_text": "research_papers\\papers\\017_TCAM-SSD_A_framework_for_search-based_computing_in_solid-state_drives.txt"
+        },
+        {
+            "paper_id": "dgEd9oyukOQJ",
+            "title": "Cognitive {SSD}: A deep learning engine for {In-Storage} data retrieval",
+            "authors": [
+                "S Liang",
+                "Y Wang",
+                "Y Lu",
+                "Z Yang",
+                "H Li",
+                "X Li"
+            ],
+            "year": 2019,
+            "publication_summary": "S Liang, Y Wang, Y Lu, Z Yang, H Li, X Li - 2019 USENIX Annual …, 2019 - usenix.org",
+            "citation_count": 95,
+            "google_scholar_url": "https://www.usenix.org/conference/atc19/presentation/liang",
+            "pdf_url": "https://www.usenix.org/system/files/atc19-liang.pdf",
+            "snippet": "… vector for the query data, and database indexing searches … In summary, deep hashing followed by graph search can … NAND flash on the Cognitive SSD based on the parameter of data …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "RAM SSD tiering vector search",
+                "vector search cache SSD"
+            ],
+            "best_rank": 14,
+            "local_number": 18,
+            "local_pdf": "research_papers\\pdfs\\dgEd9oyukOQJ.pdf",
+            "local_text": "research_papers\\papers\\018_Cognitive_{SSD}_A_deep_learning_engine_for_{In-Storage}_data_retrieval.txt"
+        },
+        {
+            "paper_id": "epLi2xZdY-IJ",
+            "title": "Lsm-vec: A large-scale disk-based system for dynamic vector search",
+            "authors": [
+                "S Zhong",
+                "D Mo",
+                "S Luo"
+            ],
+            "year": 2025,
+            "publication_summary": "S Zhong, D Mo, S Luo - arXiv preprint arXiv:2505.17152, 2025 - arxiv.org",
+            "citation_count": 20,
+            "google_scholar_url": "https://arxiv.org/abs/2505.17152",
+            "pdf_url": "https://arxiv.org/pdf/2505.17152",
+            "snippet": "… We propose LSM-VEC, a disk-based vector search system that integrates hierarchical graph indexing with LSM-tree storage. LSM-VEC supports billionscale datasets with efficient …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "disk resident vector index"
+            ],
+            "best_rank": 2,
+            "local_number": 19,
+            "local_pdf": "research_papers\\pdfs\\epLi2xZdY-IJ.pdf",
+            "local_text": "research_papers\\papers\\019_Lsm-vec_A_large-scale_disk-based_system_for_dynamic_vector_search.txt"
+        },
+        {
+            "paper_id": "w_gvA83bgyoJ",
+            "title": "An efficient SSD-based hybrid storage architecture for large-scale search engines",
+            "authors": [
+                "R Li",
+                "C Li",
+                "W Xiao",
+                "H Jin",
+                "H He",
+                "X Gu"
+            ],
+            "year": 2012,
+            "publication_summary": "R Li, C Li, W Xiao, H Jin, H He, X Gu… - 2012 41st …, 2012 - ieeexplore.ieee.org",
+            "citation_count": 13,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/6337606/",
+            "pdf_url": "https://www.academia.edu/download/32160226/06337606.pdf",
+            "snippet": "Large-scale search engines use hard disk drives (HDD) to … I/O patterns of search engines and propose SSD-based data … Our main goal is to improve the performance of search engines …",
+            "found_by_queries": [
+                "SSD-based vector search",
+                "vector search cache SSD"
+            ],
+            "best_rank": 17,
+            "local_number": 20,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\020_An_efficient_SSD-based_hybrid_storage_architecture_for_large-scale_search_engines.txt"
+        },
+        {
+            "paper_id": "i9_3oCCm2HUJ",
+            "title": "Scalable Disk-Based Approximate Nearest Neighbor Search with Page-Aligned Graph",
+            "authors": [
+                "D Kang",
+                "D Jiang",
+                "H Yang",
+                "H Liu",
+                "B Li"
+            ],
+            "year": 2025,
+            "publication_summary": "D Kang, D Jiang, H Yang, H Liu, B LiarXiv preprint arXiv:2509.25487, 2025•arxiv.org",
+            "citation_count": 12,
+            "google_scholar_url": "https://arxiv.org/abs/2509.25487",
+            "pdf_url": "https://arxiv.org/pdf/2509.25487?",
+            "snippet": "Approximate Nearest Neighbor Search (ANNS), as the core of vector databases (VectorDBs), has become widely used in modern AI and ML systems, powering applications from information retrieval to bio-informatics. While graph-based ANNS methods achieve high query efficiency, their scalability is constrained by the available host memory. Recent disk-based ANNS approaches mitigate memory usage by offloading data to Solid-State Drives (SSDs). However, they still suffer from issues such as long I/O traversal path, misalignment with storage I/O granularity, and high in-memory indexing overhead, leading to significant I/O latency and ultimately limiting scalability for large-scale vector search. In this paper, we propose PageANN, a disk-based approximate nearest neighbor search (ANNS) framework designed for high performance and scalability. PageANN introduces a page-node graph structure that aligns logical graph nodes with physical SSD pages, thereby shortening I/O traversal paths and reducing I/O operations. Specifically, similar vectors are clustered into page nodes, and a co-designed disk data layout leverages this structure with a merging technique to store only representative vectors and topology information, avoiding unnecessary reads. To further improve efficiency, we design a memory management strategy that combines lightweight indexing with coordinated memory-disk data allocation, maximizing host memory utilization while minimizing query latency and storage overhead. Experimental results show that PageANN significantly outperforms state-of-the-art (SOTA) disk-based ANNS methods, achieving 1.85x-10.83x higher throughput and 51.7%-91.9% lower latency across different datasets and memory budgets, while maintaining comparable high recall accuracy.",
+            "found_by_queries": [
+                "disk-based approximate nearest neighbor search",
+                "SSD ANN vector search"
+            ],
+            "best_rank": 1,
+            "local_number": 21,
+            "local_pdf": "research_papers\\pdfs\\i9_3oCCm2HUJ.pdf",
+            "local_text": "research_papers\\papers\\021_Scalable_Disk-Based_Approximate_Nearest_Neighbor_Search_with_Page-Aligned_Graph.txt"
+        },
+        {
+            "paper_id": "wEl5oKWLM80J",
+            "title": "OrchANN: A Unified I/O Orchestration Framework for Skewed Out-of-Core Vector Search",
+            "authors": [
+                "C Huan",
+                "L Chen",
+                "Z Yang",
+                "S Ma",
+                "R Gu"
+            ],
+            "year": 2025,
+            "publication_summary": "C Huan, L Chen, Z Yang, S Ma, R Gu… - arXiv preprint arXiv …, 2025 - wzbxpy.github.io",
+            "citation_count": 3,
+            "google_scholar_url": "https://wzbxpy.github.io/paper/ArXiv25-Chengying-OrchANN.pdf",
+            "pdf_url": "https://wzbxpy.github.io/paper/ArXiv25-Chengying-OrchANN.pdf",
+            "snippet": "… at the vector level, triggering “fetch-to-discard” reranking on raw vectors. We present OrchANN, an out-of-core … Across five standard datasets under strict out-of-core constraints, OrchANN …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 1,
+            "local_number": 22,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\022_OrchANN_A_Unified_IO_Orchestration_Framework_for_Skewed_Out-of-Core_Vector_Search.txt"
+        },
+        {
+            "paper_id": "Fm3k3olO-DkJ",
+            "title": "OrchANN: Hierarchical Orchestration for Skewed Out-of-Core Vector Search",
+            "authors": [
+                "L Chen",
+                "P Wang",
+                "S Ma",
+                "J Zhang",
+                "Q Wang"
+            ],
+            "year": 2025,
+            "publication_summary": "L Chen, P Wang, S Ma, J Zhang, Q Wang… - arXiv preprint arXiv …, 2025 - arxiv.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://arxiv.org/abs/2512.22838",
+            "pdf_url": "https://arxiv.org/pdf/2512.22838",
+            "snippet": "… problem: the full vector collection and index structures exceed memory … -vector reranking from SSD to preserve recall. We present OrchANN (Orchestrated ANN Search), an out-of-core …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 2,
+            "local_number": 23,
+            "local_pdf": "research_papers\\pdfs\\Fm3k3olO-DkJ.pdf",
+            "local_text": "research_papers\\papers\\023_OrchANN_Hierarchical_Orchestration_for_Skewed_Out-of-Core_Vector_Search.txt"
+        },
+        {
+            "paper_id": "wV5fXSLnqZsJ",
+            "title": "Massive-Scale Out-Of-Core UMAP on the GPU",
+            "authors": [
+                "J Park",
+                "CJ Nolet",
+                "E Raff",
+                "T Oates"
+            ],
+            "year": 2026,
+            "publication_summary": "J Park, CJ Nolet, E Raff, T Oates… - … of Machine Learning …, 2026 - proceedings.mlsys.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://proceedings.mlsys.org/paper_files/paper/2026/hash/0badcb4e95306df76a719409155e46e8-Abstract-Conference.html",
+            "pdf_url": "https://proceedings.mlsys.org/paper_files/paper/2026/file/0badcb4e95306df76a719409155e46e8-Paper-Conference.pdf",
+            "snippet": "… Second, we introduce a scalable out-of-core, multi-GPU all-neighbors graph construction … upon popular techniques for accelerated vector search and ultimately benefits many other …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 3,
+            "local_number": 24,
+            "local_pdf": "research_papers\\pdfs\\wV5fXSLnqZsJ.pdf",
+            "local_text": "research_papers\\papers\\024_Massive-Scale_Out-Of-Core_UMAP_on_the_GPU.txt"
+        },
+        {
+            "paper_id": "SmseQq44_n0J",
+            "title": "Low-Latency Out-of-Core ANN Search in High-Dimensional Space",
+            "authors": [
+                "Z Song",
+                "B Wang",
+                "X Yang",
+                "J Zhang"
+            ],
+            "year": 2026,
+            "publication_summary": "Z Song, B Wang, X Yang, J Zhang - arXiv preprint arXiv:2605.05787, 2026 - arxiv.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://arxiv.org/abs/2605.05787",
+            "pdf_url": "https://arxiv.org/pdf/2605.05787",
+            "snippet": "… For the vector information used in memory for computing neighbor distances, we apply Principal Component Analysis (PCA) to each data point for dimensionality reduction, and our …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 4,
+            "local_number": 25,
+            "local_pdf": "research_papers\\pdfs\\SmseQq44_n0J.pdf",
+            "local_text": "research_papers\\papers\\025_Low-Latency_Out-of-Core_ANN_Search_in_High-Dimensional_Space.txt"
+        },
+        {
+            "paper_id": "_e8bK75aWPQJ",
+            "title": "iqan: Fast and accurate vector search with efficient intra-query parallelism on multi-core architectures",
+            "authors": [
+                "Z Peng",
+                "M Zhang",
+                "K Li",
+                "R Jin",
+                "B Ren"
+            ],
+            "year": 2023,
+            "publication_summary": "Z Peng, M Zhang, K Li, R Jin, B Ren - … of the 28th ACM SIGPLAN Annual …, 2023 - dl.acm.org",
+            "citation_count": 47,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3572848.3577527",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3572848.3577527",
+            "snippet": "… to handle them to allow vector-based similarity search to scale on … We have applied Δ-stepping to vector search and will … Some efforts focus on out-of-core designs (eg, GraphChi [31] …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 5,
+            "local_number": 26,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\026_iqan_Fast_and_accurate_vector_search_with_efficient_intra-query_parallelism_on_multi-core_architectures.txt"
+        },
+        {
+            "paper_id": "-ybE87fLOkAJ",
+            "title": "Out-of-core SVD performance for document indexing",
+            "authors": [
+                "DI Martin",
+                "JC Martin",
+                "MW Berry",
+                "M Browne"
+            ],
+            "year": 2007,
+            "publication_summary": "DI Martin, JC Martin, MW Berry, M Browne - Applied Numerical …, 2007 - Elsevier",
+            "citation_count": 15,
+            "google_scholar_url": "https://www.sciencedirect.com/science/article/pii/S0168927407000256",
+            "pdf_url": null,
+            "snippet": "… are then used to capture meanings and find similarities of terms and documents. This … vector and the previous two vectors are kept in memory, but the remainder are stored out-of-core…",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 6,
+            "local_number": 27,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\027_Out-of-core_SVD_performance_for_document_indexing.txt"
+        },
+        {
+            "paper_id": "9CgppuuTwwcJ",
+            "title": "Quake: adaptive indexing for vector search",
+            "authors": [
+                "J Mohoney",
+                "D Sarda",
+                "M Tang",
+                "SR Chowdhury"
+            ],
+            "year": 2025,
+            "publication_summary": "J Mohoney, D Sarda, M Tang, SR Chowdhury… - … USENIX Symposium on …, 2025 - usenix.org",
+            "citation_count": 41,
+            "google_scholar_url": "https://www.usenix.org/conference/osdi25/presentation/mohoney",
+            "pdf_url": "https://www.usenix.org/system/files/osdi25-mohoney.pdf",
+            "snippet": "… during search. To evaluate Quake, we prepare a Wikipedia vector search workload and … Mariusgnn: Resourceefficient out-of-core training of graph neural networks. In ACM SIGOPS …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 7,
+            "local_number": 28,
+            "local_pdf": "research_papers\\pdfs\\9CgppuuTwwcJ.pdf",
+            "local_text": "research_papers\\papers\\028_Quake_adaptive_indexing_for_vector_search.txt"
+        },
+        {
+            "paper_id": "DZTC0npQSsQJ",
+            "title": "An out-of-core dataflow middleware to reduce the cost of large scale iterative solvers",
+            "authors": [
+                "Z Zhou",
+                "E Saule",
+                "HM Aktulga",
+                "C Yang"
+            ],
+            "year": 2012,
+            "publication_summary": "Z Zhou, E Saule, HM Aktulga, C Yang… - 2012 41st …, 2012 - ieeexplore.ieee.org",
+            "citation_count": 16,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/6337465/",
+            "pdf_url": "https://www.academia.edu/download/49762536/An_Out-of-Core_Dataflow_Middleware_to_Re20161021-7694-ie2lc6.pdf",
+            "snippet": "… This problem is NP-Hard and it is difficult to find a good … a distributed sparse matrix vector multiplication (SpMV), y = Ax, … The iterated SpMV process is seeded with an initial x vector …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 8,
+            "local_number": 29,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\029_An_out-of-core_dataflow_middleware_to_reduce_the_cost_of_large_scale_iterative_solvers.txt"
+        },
+        {
+            "paper_id": "53zV9jpe7_cJ",
+            "title": "Out-of-core solver for large dense nonsymmetric linear systems",
+            "authors": [
+                "N Geers",
+                "R Klees"
+            ],
+            "year": 1993,
+            "publication_summary": "N Geers, R Klees - Manuscripta geodaetica, 1993 - Springer",
+            "citation_count": 7,
+            "google_scholar_url": "https://link.springer.com/article/10.1007/BF03655340",
+            "pdf_url": null,
+            "snippet": "… fast out-ofcore solver for dense nonsymmetric linear systems on pipelined SIMD machines (\"vector … We can use equation (15) to find reasonable values for NB. Let Pt1 be the sustained …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 9,
+            "local_number": 30,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\030_Out-of-core_solver_for_large_dense_nonsymmetric_linear_systems.txt"
+        },
+        {
+            "paper_id": "H8XZgPnNELkJ",
+            "title": "An out-of-core eigensolver on SSD-equipped clusters",
+            "authors": [
+                "Z Zhou",
+                "E Saule",
+                "HM Aktulga",
+                "C Yang"
+            ],
+            "year": 2012,
+            "publication_summary": "Z Zhou, E Saule, HM Aktulga, C Yang… - 2012 IEEE …, 2012 - ieeexplore.ieee.org",
+            "citation_count": 20,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/6337786/",
+            "pdf_url": "https://webpages.charlotte.edu/~esaule/public-website/papers/cluster12-ZSAYNMVC.pdf",
+            "snippet": "… In order to find the lowest nev number of eigenvalues and eigenvectors of ˆH, we … our out-of-core eigensolver. We choose to use at most 5 GB of the usable memory for hosting the vector …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 10,
+            "local_number": 31,
+            "local_pdf": "research_papers\\pdfs\\H8XZgPnNELkJ.pdf",
+            "local_text": "research_papers\\papers\\031_An_out-of-core_eigensolver_on_SSD-equipped_clusters.txt"
+        },
+        {
+            "paper_id": "wYfSxCXIN_wJ",
+            "title": "Out-of-core detection of periodicity from sequence databases",
+            "authors": [
+                "F Rasheed",
+                "M Adnan",
+                "R Alhajj"
+            ],
+            "year": 2013,
+            "publication_summary": "F Rasheed, M Adnan, R Alhajj - Knowledge and information systems, 2013 - Springer",
+            "citation_count": 4,
+            "google_scholar_url": "https://link.springer.com/article/10.1007/s10115-012-0546-1",
+            "pdf_url": null,
+            "snippet": "… searching in the buffer in O(log n) time using binary search. Recall that we might need to search … Rather, we make just one occurrence vector for each symbol (for each subtree rooted at …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 11,
+            "local_number": 32,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\032_Out-of-core_detection_of_periodicity_from_sequence_databases.txt"
+        },
+        {
+            "paper_id": "LrUrKqt9-cIJ",
+            "title": "A survey of out-of-core algorithms in numerical linear algebra",
+            "authors": [
+                "S Toledo"
+            ],
+            "year": 1999,
+            "publication_summary": "S Toledo - External Memory Algorithms and Visualization, 1999 - books.google.com",
+            "citation_count": 208,
+            "google_scholar_url": "https://books.google.com/books?hl=en&lr=&id=6hvT7BFqq5QC&oi=fnd&pg=PA161&dq=out-of-core+vector+search&ots=rTuk78ECSz&sig=ld3FSyxwwRf1X-5eJj4UBLmkfiY",
+            "pdf_url": "https://tau.ac.il/~stoledo/Pubs/oocsurvey.pdf",
+            "snippet": "… memory a subset 1 of the state vector x , perform more than one … iteration to the entire state vector before starting the next … One can thus find in the literature algorithms with a high level…",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 12,
+            "local_number": 33,
+            "local_pdf": "research_papers\\pdfs\\LrUrKqt9-cIJ.pdf",
+            "local_text": "research_papers\\papers\\033_A_survey_of_out-of-core_algorithms_in_numerical_linear_algebra.txt"
+        },
+        {
+            "paper_id": "QhhiOvZrtewJ",
+            "title": "Efficient synthesis of out-of-core algorithms using a nonlinear optimization solver",
+            "authors": [
+                "S Krishnan",
+                "S Krishnamoorthy"
+            ],
+            "year": 2004,
+            "publication_summary": "S Krishnan, S Krishnamoorthy… - 18th International …, 2004 - ieeexplore.ieee.org",
+            "citation_count": 11,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/1302948/",
+            "pdf_url": "https://www.researchgate.net/profile/Gerald-Baumgartner/publication/4077726_Efficient_synthesis_of_out-of-core_algorithms_using_a_nonlinear_optimization_solver/links/0912f5111433632506000000/Efficient-synthesis-of-out-of-core-algorithms-using-a-nonlinear-optimization-solver.pdf",
+            "snippet": "… proposed for out-of-core code generation. We use the Discrete Constrained Search (DCS) [… of the input array to be a scalar or a vector. This is because, the resulting concrete code will …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 13,
+            "local_number": 34,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\034_Efficient_synthesis_of_out-of-core_algorithms_using_a_nonlinear_optimization_solver.txt"
+        },
+        {
+            "paper_id": "csZPHOqKrJAJ",
+            "title": "Out-of-core streamline visualization on large unstructured meshes",
+            "authors": [
+                "SK Ueng",
+                "C Sikorski",
+                "KL Ma"
+            ],
+            "year": 1997,
+            "publication_summary": "SK Ueng, C Sikorski, KL Ma - IEEE Transactions on …, 1997 - ieeexplore.ieee.org",
+            "citation_count": 156,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/646239/",
+            "pdf_url": "https://ntrs.nasa.gov/api/citations/19970023493/downloads/19970023493.pdf",
+            "snippet": "… is searched to find a memory block that is large enough to hold the octant. This searching starts at the … algorithm for visualizing very large unstructured vector field data sets on a single …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 14,
+            "local_number": 35,
+            "local_pdf": "research_papers\\pdfs\\csZPHOqKrJAJ.pdf",
+            "local_text": "research_papers\\papers\\035_Out-of-core_streamline_visualization_on_large_unstructured_meshes.txt"
+        },
+        {
+            "paper_id": "8Hkn4xrr6NEJ",
+            "title": "A Survey of Large-Scale Out-of-Core Graph Processing",
+            "authors": [
+                "X Xu",
+                "F Wang",
+                "Y Cheng",
+                "Y Zhang"
+            ],
+            "year": 2026,
+            "publication_summary": "X Xu, F Wang, Y Cheng, Y Zhang - ACM Computing Surveys, 2026 - dl.acm.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3838595",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3838595",
+            "snippet": "… A prominent example is Approximate Nearest-Neighbor Search (ANNS) on large-scale … with SSD-aware vector index layouts, co-designing the search process and data placement …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 15,
+            "local_number": 36,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\036_A_Survey_of_Large-Scale_Out-of-Core_Graph_Processing.txt"
+        },
+        {
+            "paper_id": "QHzjHpDRfhUJ",
+            "title": "Synthesizing efficient out-of-core programs for block recursive algorithms using block-cyclic data distributions",
+            "authors": [
+                "Z Li",
+                "JH Reif",
+                "SKS Gupta"
+            ],
+            "year": 1999,
+            "publication_summary": "Z Li, JH Reif, SKS Gupta - IEEE Transactions on Parallel and …, 1999 - ieeexplore.ieee.org",
+            "citation_count": 22,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/755830/",
+            "pdf_url": null,
+            "snippet": "… out-of-core FFT program. We further investigate the implications of various block-cyclic distributions y li f on the performance of out-of-core … by the order of the vector bases in the loop …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 16,
+            "local_number": 37,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\037_Synthesizing_efficient_out-of-core_programs_for_block_recursive_algorithms_using_block-cyclic_data_distributions.txt"
+        },
+        {
+            "paper_id": "g4P0wLrP-vUJ",
+            "title": "Efficient synthesis of out-of-core algorithms using a nonlinear optimization solver",
+            "authors": [
+                "S Krishnan",
+                "S Krishnamoorthy",
+                "G Baumgartner"
+            ],
+            "year": 2006,
+            "publication_summary": "S Krishnan, S Krishnamoorthy, G Baumgartner… - Journal of Parallel and …, 2006 - Elsevier",
+            "citation_count": 12,
+            "google_scholar_url": "https://www.sciencedirect.com/science/article/pii/S0743731505001656",
+            "pdf_url": null,
+            "snippet": "… explore the search space of disk I/O placements and tile sizes by formulating the search as a … of the input array to be a scalar or a vector. This is because the resulting concrete code will …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 17,
+            "local_number": 38,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\038_Efficient_synthesis_of_out-of-core_algorithms_using_a_nonlinear_optimization_solver.txt"
+        },
+        {
+            "paper_id": "sNbVpNImGYQJ",
+            "title": "Optimization of out-of-core computations using chain vectors",
+            "authors": [
+                "M Kandemir",
+                "J Ramanujam",
+                "A Choudhary"
+            ],
+            "year": 1997,
+            "publication_summary": "M Kandemir, J Ramanujam, A Choudhary - European Conference on …, 1997 - Springer",
+            "citation_count": 1,
+            "google_scholar_url": "https://link.springer.com/chapter/10.1007/BFb0002789",
+            "pdf_url": "https://repository.lsu.edu/cgi/viewcontent.cgi?article=2693&context=eecs_pubs",
+            "snippet": "… vector is a chain vector implied by a flow dependence. The chain matrix C is a matrix, each column of which is a chain vector. On … a simple assumption in order to find a fast heuristic: We …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 18,
+            "local_number": 39,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\039_Optimization_of_out-of-core_computations_using_chain_vectors.txt"
+        },
+        {
+            "paper_id": "11KpQbttdBwJ",
+            "title": "Automatic synthesis of out-of-core algorithms",
+            "authors": [
+                "Y Klonatos",
+                "A Nötzli",
+                "A Spielmann",
+                "C Koch"
+            ],
+            "year": 2013,
+            "publication_summary": "Y Klonatos, A Nötzli, A Spielmann, C Koch… - Proceedings of the 2013 …, 2013 - dl.acm.org",
+            "citation_count": 16,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/2463676.2465334",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/2463676.2465334",
+            "snippet": "… The research literature describes numerous out-of-core algorithms designed and optimized for a … or memory technology requires the development of new versions of most out-of-core …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 19,
+            "local_number": 40,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\040_Automatic_synthesis_of_out-of-core_algorithms.txt"
+        },
+        {
+            "paper_id": "l7iKDPnD79UJ",
+            "title": "Runtime Support for In-Core and Out-of-Core Data-Parallel Programs",
+            "authors": [
+                "R Thakur"
+            ],
+            "year": 1995,
+            "publication_summary": "R Thakur - 1995 - surface.syr.edu",
+            "citation_count": 24,
+            "google_scholar_url": "https://surface.syr.edu/cgi/viewcontent.cgi?article=1117&context=eecs",
+            "pdf_url": "https://surface.syr.edu/cgi/viewcontent.cgi?article=1117&context=eecs",
+            "snippet": "… It is widely recognized that rather than conventional vector supercomputers, parallel … For each new o -processor data reference required, a search through the hash table is performed in …",
+            "found_by_queries": [
+                "out-of-core vector search"
+            ],
+            "best_rank": 20,
+            "local_number": 41,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\041_Runtime_Support_for_In-Core_and_Out-of-Core_Data-Parallel_Programs.txt"
+        },
+        {
+            "paper_id": "5FKYB737YPEJ",
+            "title": "Spann: Highly-efficient billion-scale approximate nearest neighborhood search",
+            "authors": [
+                "Q Chen",
+                "B Zhao",
+                "H Wang",
+                "M Li",
+                "C Liu"
+            ],
+            "year": 2021,
+            "publication_summary": "Q Chen, B Zhao, H Wang, M Li, C Liu… - Advances in …, 2021 - proceedings.neurips.cc",
+            "citation_count": 403,
+            "google_scholar_url": "https://proceedings.neurips.cc/paper_files/paper/2021/hash/299dc35e747eb77177d9cea10a802da2-Abstract.html",
+            "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2021/file/299dc35e747eb77177d9cea10a802da2-Paper.pdf",
+            "snippet": "… -memory algorithms for approximate nearest neighbor search (ANNS) have achieved great success for fast high-recall search, … ANNS solutions with small memory and inexpensive solid-…",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 1,
+            "local_number": 42,
+            "local_pdf": "research_papers\\pdfs\\5FKYB737YPEJ.pdf",
+            "local_text": "research_papers\\papers\\042_Spann_Highly-efficient_billion-scale_approximate_nearest_neighborhood_search.txt"
+        },
+        {
+            "paper_id": "FPLUfDN97RAJ",
+            "title": "Hm-ann: Efficient billion-point nearest neighbor search on heterogeneous memory",
+            "authors": [
+                "J Ren",
+                "M Zhang",
+                "D Li"
+            ],
+            "year": 2020,
+            "publication_summary": "J Ren, M Zhang, D Li - Advances in Neural Information …, 2020 - proceedings.neurips.cc",
+            "citation_count": 156,
+            "google_scholar_url": "https://proceedings.neurips.cc/paper_files/paper/2020/hash/788d986905533aba051261497ecffcbb-Abstract.html",
+            "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2020/file/788d986905533aba051261497ecffcbb-Paper.pdf",
+            "snippet": "… , we present a fast and accurate approximate nearest neighbor search algorithm for extremely large scale ANN search, called HM-ANN, which is built on top of Heterogeneous Memory. …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search",
+                "ANN cache SSD"
+            ],
+            "best_rank": 2,
+            "local_number": 43,
+            "local_pdf": "research_papers\\pdfs\\FPLUfDN97RAJ.pdf",
+            "local_text": "research_papers\\papers\\043_Hm-ann_Efficient_billion-point_nearest_neighbor_search_on_heterogeneous_memory.txt"
+        },
+        {
+            "paper_id": "MMLItI2_3U8J",
+            "title": "Processing-in-hierarchical-memory architecture for billion-scale approximate nearest neighbor search",
+            "authors": [
+                "Z Zhu",
+                "J Liu",
+                "G Dai",
+                "S Zeng",
+                "B Li"
+            ],
+            "year": 2023,
+            "publication_summary": "Z Zhu, J Liu, G Dai, S Zeng, B Li… - 2023 60th ACM/IEEE …, 2023 - ieeexplore.ieee.org",
+            "citation_count": 25,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/10247946/",
+            "pdf_url": "https://dai.sjtu.edu.cn/my_file/pdf/5a310acf-75a8-402a-84d2-063b7c29d8b7.pdf",
+            "snippet": "… We propose Pyramid to enable efficient near-memory ANNS. At the main memory level, … [5] YA Malkov and DA Yashunin, “Efficient and robust approximate nearest neighbor search …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 3,
+            "local_number": 44,
+            "local_pdf": "research_papers\\pdfs\\MMLItI2_3U8J.pdf",
+            "local_text": "research_papers\\papers\\044_Processing-in-hierarchical-memory_architecture_for_billion-scale_approximate_nearest_neighbor_search.txt"
+        },
+        {
+            "paper_id": "Azt_ae52drgJ",
+            "title": "VSAG: An optimized search framework for graph-based approximate nearest neighbor search",
+            "authors": [
+                "X Zhong",
+                "H Li",
+                "J Jin",
+                "M Yang",
+                "D Chu",
+                "X Wang"
+            ],
+            "year": 2025,
+            "publication_summary": "X Zhong, H Li, J Jin, M Yang, D Chu, X Wang… - arXiv preprint arXiv …, 2025 - arxiv.org",
+            "citation_count": 34,
+            "google_scholar_url": "https://arxiv.org/abs/2503.17911",
+            "pdf_url": "https://arxiv.org/pdf/2503.17911",
+            "snippet": "… process when exploring a vector, we employ Deterministic Access Greedy Search to accelerate memory access by minimizing cache misses. Finally, the visited results are pushed into …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 4,
+            "local_number": 45,
+            "local_pdf": "research_papers\\pdfs\\Azt_ae52drgJ.pdf",
+            "local_text": "research_papers\\papers\\045_VSAG_An_optimized_search_framework_for_graph-based_approximate_nearest_neighbor_search.txt"
+        },
+        {
+            "paper_id": "tOLUYxfNFusJ",
+            "title": "Webanns: Fast and efficient approximate nearest neighbor search in web browsers",
+            "authors": [
+                "M Liu",
+                "S Zhong",
+                "Q Yang",
+                "Y Han",
+                "X Liu"
+            ],
+            "year": 2025,
+            "publication_summary": "M Liu, S Zhong, Q Yang, Y Han, X Liu… - Proceedings of the 48th …, 2025 - dl.acm.org",
+            "citation_count": 12,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3726302.3730115",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3726302.3730115",
+            "snippet": "… To address these limitations, we propose WebANNS, a fast and memory-efficient ANNS engine specifically designed for browsers, which incorporates three key designs. First, …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 5,
+            "local_number": 46,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\046_Webanns_Fast_and_efficient_approximate_nearest_neighbor_search_in_web_browsers.txt"
+        },
+        {
+            "paper_id": "Ik9bP90aPAsJ",
+            "title": "Efficient large-scale approximate nearest neighbor search on the gpu",
+            "authors": [
+                "P Wieschollek",
+                "O Wang"
+            ],
+            "year": 2016,
+            "publication_summary": "P Wieschollek, O Wang… - Proceedings of the …, 2016 - cv-foundation.org",
+            "citation_count": 94,
+            "google_scholar_url": "https://www.cv-foundation.org/openaccess/content_cvpr_2016/html/Wieschollek_Efficient_Large-Scale_Approximate_CVPR_2016_paper.html",
+            "pdf_url": "https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Wieschollek_Efficient_Large-Scale_Approximate_CVPR_2016_paper.pdf",
+            "snippet": "… We present a new approach for efficient approximate nearest neighbor (ANN) search in … Due to its small memory footprint during traversal the method lends itself to an efficient, parallel …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 6,
+            "local_number": 47,
+            "local_pdf": "research_papers\\pdfs\\Ik9bP90aPAsJ.pdf",
+            "local_text": "research_papers\\papers\\047_Efficient_large-scale_approximate_nearest_neighbor_search_on_the_gpu.txt"
+        },
+        {
+            "paper_id": "1xlj9HNOjZcJ",
+            "title": "Song: Approximate nearest neighbor search on gpu",
+            "authors": [
+                "W Zhao",
+                "S Tan",
+                "P Li"
+            ],
+            "year": 2020,
+            "publication_summary": "W Zhao, S Tan, P Li - 2020 IEEE 36th International Conference …, 2020 - ieeexplore.ieee.org",
+            "citation_count": 226,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/9101583/",
+            "pdf_url": "https://www.cs.rit.edu/~wjz/papers/conference/2020-icde-song.pdf",
+            "snippet": "… In order to efficiently parallel the searching, we have to limit the memory consumption of the priority queues and the hash table in Algorithm 1. High-level approach. Here we introduce …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 7,
+            "local_number": 48,
+            "local_pdf": "research_papers\\pdfs\\1xlj9HNOjZcJ.pdf",
+            "local_text": "research_papers\\papers\\048_Song_Approximate_nearest_neighbor_search_on_gpu.txt"
+        },
+        {
+            "paper_id": "zBDp1wB4kMIJ",
+            "title": "Approximate nearest neighbor search in high dimensions",
+            "authors": [
+                "A Andoni",
+                "P Indyk",
+                "I Razenshteyn"
+            ],
+            "year": 2018,
+            "publication_summary": "A Andoni, P Indyk, I Razenshteyn - Proceedings of the International …, 2018 - World Scientific",
+            "citation_count": 231,
+            "google_scholar_url": "https://www.worldscientific.com/doi/abs/10.1142/9789813272880_0182",
+            "pdf_url": "https://arxiv.org/pdf/1806.09823",
+            "snippet": "… used to find the nearest neighbor without computing … find nearest neighbors and the amount of memory used by the data structure, one can formulate the approximate nearest neighbor …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 8,
+            "local_number": 49,
+            "local_pdf": "research_papers\\pdfs\\zBDp1wB4kMIJ.pdf",
+            "local_text": "research_papers\\papers\\049_Approximate_nearest_neighbor_search_in_high_dimensions.txt"
+        },
+        {
+            "paper_id": "HKEUFWwS-5QJ",
+            "title": "Ansmet: Approximate nearest neighbor search with near-memory processing and hybrid early termination",
+            "authors": [
+                "Y Li",
+                "Y Jin",
+                "B Tian",
+                "H Zhang",
+                "M Gao"
+            ],
+            "year": 2025,
+            "publication_summary": "Y Li, Y Jin, B Tian, H Zhang, M Gao - Proceedings of the 52nd Annual …, 2025 - dl.acm.org",
+            "citation_count": 21,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3695053.3731013",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3695053.3731013",
+            "snippet": "… Approximate nearest neighbor search (ANNS) is a fundamental operation in modern vector databases to efficiently retrieve nearby … of approximate nearest neighbor search and near-…",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 9,
+            "local_number": 50,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\050_Ansmet_Approximate_nearest_neighbor_search_with_near-memory_processing_and_hybrid_early_termination.txt"
+        },
+        {
+            "paper_id": "GcAJBZf_KgwJ",
+            "title": "SeIM: In-Memory Acceleration for Approximate Nearest Neighbor Search",
+            "authors": [
+                "C Liu",
+                "D Chen",
+                "Y Huang",
+                "W Xiao",
+                "H Liu"
+            ],
+            "year": 2025,
+            "publication_summary": "C Liu, D Chen, Y Huang, W Xiao, H Liu… - 2025 62nd ACM …, 2025 - ieeexplore.ieee.org",
+            "citation_count": 5,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/11132620/",
+            "pdf_url": null,
+            "snippet": "… Abstract—Approximate nearest neighbor search (ANNS) is crucial in many applications to find … An in-depth analysis of ANNS reveals that its diverse operations, from extensive memory …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 10,
+            "local_number": 51,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\051_SeIM_In-Memory_Acceleration_for_Approximate_Nearest_Neighbor_Search.txt"
+        },
+        {
+            "paper_id": "_G96O1C6R30J",
+            "title": "Leanor: A Learning-Based Accelerator for Efficient Approximate Nearest Neighbor Search via Reduced Memory Access",
+            "authors": [
+                "Y Wang",
+                "H Liu",
+                "J Yuan",
+                "J Chen",
+                "T Wang",
+                "C Ma"
+            ],
+            "year": 2024,
+            "publication_summary": "Y Wang, H Liu, J Yuan, J Chen, T Wang, C Ma… - Proceedings of the 61st …, 2024 - dl.acm.org",
+            "citation_count": 7,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3649329.3657357",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3649329.3657357",
+            "snippet": "… uted to our reduction of redundant memory access by filtering out non-nearest neighbor vectors. To further understand how Leanor improves search efficiency, we test the normalized …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 11,
+            "local_number": 52,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\052_Leanor_A_Learning-Based_Accelerator_for_Efficient_Approximate_Nearest_Neighbor_Search_via_Reduced_Memory_Access.txt"
+        },
+        {
+            "paper_id": "Ge72Vl0DpVcJ",
+            "title": "Fast approximate nearest neighbors with automatic algorithm configuration",
+            "authors": [
+                "M Muja",
+                "DG Lowe"
+            ],
+            "year": 2009,
+            "publication_summary": "M Muja, DG Lowe - … conference on computer vision theory and …, 2009 - scitepress.org",
+            "citation_count": 4419,
+            "google_scholar_url": "https://www.scitepress.org/PublishedPapers/2009/17878/",
+            "pdf_url": "https://www.scitepress.org/PublishedPapers/2009/17878/17878.pdf",
+            "snippet": "… as the optimal search and build time if memory usage is not a … fastest search and build time without any regard to memory … in memory use as to the same percentage increase in search …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 12,
+            "local_number": 53,
+            "local_pdf": "research_papers\\pdfs\\Ge72Vl0DpVcJ.pdf",
+            "local_text": "research_papers\\papers\\053_Fast_approximate_nearest_neighbors_with_automatic_algorithm_configuration.txt"
+        },
+        {
+            "paper_id": "qybK5AaBuYgJ",
+            "title": "I/O efficient approximate nearest neighbour search based on learned functions",
+            "authors": [
+                "M Li",
+                "Y Zhang",
+                "Y Sun",
+                "W Wang"
+            ],
+            "year": 2020,
+            "publication_summary": "M Li, Y Zhang, Y Sun, W Wang… - 2020 IEEE 36th …, 2020 - ieeexplore.ieee.org",
+            "citation_count": 41,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/9101839/",
+            "pdf_url": "https://opus.lib.uts.edu.au/bitstream/10453/141874/2/Binder1.pdf",
+            "snippet": "… compact hash codes which is efficient for nearest neighbor search in main memory but cannot trivially be extended to support I/O efficient nearest neighbor search in external memory. …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 13,
+            "local_number": 54,
+            "local_pdf": "research_papers\\pdfs\\qybK5AaBuYgJ.pdf",
+            "local_text": "research_papers\\papers\\054_IO_efficient_approximate_nearest_neighbour_search_based_on_learned_functions.txt"
+        },
+        {
+            "paper_id": "GQnjeU14axgJ",
+            "title": "Fast approximate nearest neighbor search with the navigating spreading-out graph",
+            "authors": [
+                "C Fu",
+                "C Xiang",
+                "C Wang",
+                "D Cai"
+            ],
+            "year": 2017,
+            "publication_summary": "C Fu, C Xiang, C Wang, D Cai - arXiv preprint arXiv:1707.00143, 2017 - arxiv.org",
+            "citation_count": 791,
+            "google_scholar_url": "https://arxiv.org/abs/1707.00143",
+            "pdf_url": "https://arxiv.org/pdf/1707.00143",
+            "snippet": "… Approximate nearest neighbor search (ANNS) is a fundamental problem in databases and data mining. A scalable ANNS algorithm should be both memory efficient and fast. Some …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 14,
+            "local_number": 55,
+            "local_pdf": "research_papers\\pdfs\\GQnjeU14axgJ.pdf",
+            "local_text": "research_papers\\papers\\055_Fast_approximate_nearest_neighbor_search_with_the_navigating_spreading-out_graph.txt"
+        },
+        {
+            "paper_id": "2jYaxX9gRO8J",
+            "title": "Optimizing Memory Bandwidth for Efficient Approximate Nearest Neighbor Search",
+            "authors": [
+                "T Zhang"
+            ],
+            "year": 2025,
+            "publication_summary": "T Zhang - … Consortium (UMC). Toronto, Canada. Best Student …, 2025 - kdd2025.kdd.org",
+            "citation_count": 2,
+            "google_scholar_url": "https://kdd2025.kdd.org/wp-content/uploads/2025/07/CameraReady-06.pdf",
+            "pdf_url": "https://kdd2025.kdd.org/wp-content/uploads/2025/07/CameraReady-06.pdf",
+            "snippet": "… Approximate Nearest Neighbor (ANN) search is fundamental … , yet its efficiency is often limited by memory bandwidth, given its𝑂(1… a memory-centric approach to optimize ANN search by …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 15,
+            "local_number": 56,
+            "local_pdf": "research_papers\\pdfs\\2jYaxX9gRO8J.pdf",
+            "local_text": "research_papers\\papers\\056_Optimizing_Memory_Bandwidth_for_Efficient_Approximate_Nearest_Neighbor_Search.txt"
+        },
+        {
+            "paper_id": "MqQszYLxxwkJ",
+            "title": "ACRONYM: Accelerated Approximate Nearest Neighbor Search in Memory for Dynamic Vector Databases",
+            "authors": [
+                "MMR Nayan",
+                "T Zhang",
+                "F Ponzina",
+                "T Rosing"
+            ],
+            "year": 2026,
+            "publication_summary": "MMR Nayan, T Zhang, F Ponzina, T Rosing… - arXiv preprint arXiv …, 2026 - arxiv.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://arxiv.org/abs/2606.03151",
+            "pdf_url": "https://arxiv.org/pdf/2606.03151",
+            "snippet": "… search for efficient hardware acceleration. Architecturally, we propose CAM-based in-memory … approximated top-k selection to enable the exhaustive search. We propose two-stage …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 16,
+            "local_number": 57,
+            "local_pdf": "research_papers\\pdfs\\MqQszYLxxwkJ.pdf",
+            "local_text": "research_papers\\papers\\057_ACRONYM_Accelerated_Approximate_Nearest_Neighbor_Search_in_Memory_for_Dynamic_Vector_Databases.txt"
+        },
+        {
+            "paper_id": "4jCoyInwCJgJ",
+            "title": "Associative memories to accelerate approximate nearest neighbor search",
+            "authors": [
+                "V Gripon",
+                "M Löwe",
+                "F Vermet"
+            ],
+            "year": 2018,
+            "publication_summary": "V Gripon, M Löwe, F Vermet - Applied Sciences, 2018 - mdpi.com",
+            "citation_count": 24,
+            "google_scholar_url": "https://www.mdpi.com/2076-3417/8/9/1676",
+            "pdf_url": null,
+            "snippet": "… In Section 5, we will support our findings with simulations on classical approximate nearest neighbor search benchmarks. These will also reveal the interplay between the various …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 17,
+            "local_number": 58,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\058_Associative_memories_to_accelerate_approximate_nearest_neighbor_search.txt"
+        },
+        {
+            "paper_id": "VmOQJ0BH-lQJ",
+            "title": "Approximate nearest neighbor search on high dimensional data—experiments, analyses, and improvement",
+            "authors": [
+                "W Li",
+                "Y Zhang",
+                "Y Sun",
+                "W Wang",
+                "M Li"
+            ],
+            "year": 2019,
+            "publication_summary": "W Li, Y Zhang, Y Sun, W Wang, M Li… - … on Knowledge and …, 2019 - ieeexplore.ieee.org",
+            "citation_count": 795,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/8681160/",
+            "pdf_url": "https://arxiv.org/pdf/1610.02455",
+            "snippet": "… As both algorithms are originally external memory based approaches, we evaluate the speedup by means of the total number of pages of the dataset divided by the number of pages …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 18,
+            "local_number": 59,
+            "local_pdf": "research_papers\\pdfs\\VmOQJ0BH-lQJ.pdf",
+            "local_text": "research_papers\\papers\\059_Approximate_nearest_neighbor_search_on_high_dimensional_data—experiments,_analyses,_and_improvement.txt"
+        },
+        {
+            "paper_id": "AKjsl_E8Q6UJ",
+            "title": "High-dimensional approximate nearest neighbor search: with reliable and efficient distance comparison operations",
+            "authors": [
+                "J Gao",
+                "C Long"
+            ],
+            "year": 2023,
+            "publication_summary": "J Gao, C Long - Proceedings of the ACM on Management of Data, 2023 - dl.acm.org",
+            "citation_count": 156,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3589282",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3589282?utm_source=consensus",
+            "snippet": "… version, namely approximate K nearest neighbor (AKNN) search [15, … -memory AKNN algorithms which assume that all raw data vectors and indexes can be hosted in the main memory […",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 19,
+            "local_number": 60,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\060_High-dimensional_approximate_nearest_neighbor_search_with_reliable_and_efficient_distance_comparison_operations.txt"
+        },
+        {
+            "paper_id": "syoY742HocQJ",
+            "title": "Efficient approximate nearest neighbor search in multi-dimensional databases",
+            "authors": [
+                "Y Peng",
+                "B Choi",
+                "TN Chan",
+                "J Yang",
+                "J Xu"
+            ],
+            "year": 2023,
+            "publication_summary": "Y Peng, B Choi, TN Chan, J Yang, J Xu - … of the ACM on Management of …, 2023 - dl.acm.org",
+            "citation_count": 148,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3588908",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3588908",
+            "snippet": "… nearest neighbor is less than a constant 𝜏, the search on 𝜏-MG guarantees to find the exact nearest neighbor … and external-memory ANN search methods into our proposed techniques. …",
+            "found_by_queries": [
+                "memory efficient approximate nearest neighbor search"
+            ],
+            "best_rank": 20,
+            "local_number": 61,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\061_Efficient_approximate_nearest_neighbor_search_in_multi-dimensional_databases.txt"
+        },
+        {
+            "paper_id": "slc4NF9E3KIJ",
+            "title": "Diskann: Fast accurate billion-point nearest neighbor search on a single node",
+            "authors": [
+                "S Jayaram Subramanya",
+                "F Devvrit"
+            ],
+            "year": 2019,
+            "publication_summary": "S Jayaram Subramanya, F Devvrit… - Advances in neural …, 2019 - proceedings.neurips.cc",
+            "citation_count": 787,
+            "google_scholar_url": "https://proceedings.neurips.cc/paper_files/paper/2019/hash/09853c7fb1d3f8ee67a61b6bf4a7f8e6-Abstract.html",
+            "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2019/file/09853c7fb1d3f8ee67a61b6bf4a7f8e6-Paper.pdf",
+            "snippet": "… finding the approximate nearest neighbors (ANN) where the goal is … At search time, for a query vector xq, search employs a … this work is on the SSD-based search, we did not implement …",
+            "found_by_queries": [
+                "SSD ANN vector search",
+                "RAM SSD tiering vector search"
+            ],
+            "best_rank": 3,
+            "local_number": 62,
+            "local_pdf": "research_papers\\pdfs\\slc4NF9E3KIJ.pdf",
+            "local_text": "research_papers\\papers\\062_Diskann_Fast_accurate_billion-point_nearest_neighbor_search_on_a_single_node.txt"
+        },
+        {
+            "paper_id": "ioGOWQs1bZkJ",
+            "title": "Optimizing SSD-Resident Graph Indexing for High-Throughput Vector Search",
+            "authors": [
+                "W Zhao",
+                "Y Lu",
+                "Y Tian",
+                "H Zhang",
+                "J Li",
+                "M Zhao"
+            ],
+            "year": 2026,
+            "publication_summary": "W Zhao, Y Lu, Y Tian, H Zhang, J Li, M Zhao… - arXiv preprint arXiv …, 2026 - arxiv.org",
+            "citation_count": 6,
+            "google_scholar_url": "https://arxiv.org/abs/2602.22805",
+            "pdf_url": "https://arxiv.org/pdf/2602.22805",
+            "snippet": "… , and each record contains a vector and its neighbor identifiers. The search process follows the … the access characteristics of graph-based ANN search, and thus fail to deliver satisfactory …",
+            "found_by_queries": [
+                "SSD ANN vector search",
+                "disk resident vector index",
+                "RAM SSD tiering vector search",
+                "vector search cache SSD",
+                "ANN cache SSD"
+            ],
+            "best_rank": 2,
+            "local_number": 63,
+            "local_pdf": "research_papers\\pdfs\\ioGOWQs1bZkJ.pdf",
+            "local_text": "research_papers\\papers\\063_Optimizing_SSD-Resident_Graph_Indexing_for_High-Throughput_Vector_Search.txt"
+        },
+        {
+            "paper_id": "JJqhr4NWPR0J",
+            "title": "Scalable billion-point approximate nearest neighbor search using {SmartSSDs}",
+            "authors": [
+                "B Tian",
+                "H Liu",
+                "Z Duan",
+                "X Liao",
+                "H Jin"
+            ],
+            "year": 2024,
+            "publication_summary": "B Tian, H Liu, Z Duan, X Liao, H Jin… - 2024 USENIX Annual …, 2024 - usenix.org",
+            "citation_count": 69,
+            "google_scholar_url": "https://www.usenix.org/conference/atc24/presentation/tian",
+            "pdf_url": "https://www.usenix.org/system/files/atc24-tian.pdf",
+            "snippet": "… To reduce the cost of ANNS services, a practical approach is to store the majority of vector indices on SSDs while using a moderately-sized DRAM as working memory [19, 20]. However…",
+            "found_by_queries": [
+                "SSD ANN vector search",
+                "ANN cache SSD"
+            ],
+            "best_rank": 6,
+            "local_number": 64,
+            "local_pdf": "research_papers\\pdfs\\JJqhr4NWPR0J.pdf",
+            "local_text": "research_papers\\papers\\064_Scalable_billion-point_approximate_nearest_neighbor_search_using_{SmartSSDs}.txt"
+        },
+        {
+            "paper_id": "H7wnNNKqUiIJ",
+            "title": "Ndsearch: Accelerating graph-traversal-based approximate nearest neighbor search through near data processing",
+            "authors": [
+                "Y Wang",
+                "S Li",
+                "Q Zheng",
+                "L Song",
+                "Z Li"
+            ],
+            "year": 2024,
+            "publication_summary": "Y Wang, S Li, Q Zheng, L Song, Z Li… - 2024 ACM/IEEE 51st …, 2024 - ieeexplore.ieee.org",
+            "citation_count": 38,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/10609615/",
+            "pdf_url": "https://arxiv.org/pdf/2312.03141",
+            "snippet": "… neighbor search (ANNS) is the fundamental technique of the similarity search in the vector … query-wise and batchwise search of ANNS at different levels of SSD organization. Fig. 4 (a) …",
+            "found_by_queries": [
+                "SSD ANN vector search"
+            ],
+            "best_rank": 8,
+            "local_number": 65,
+            "local_pdf": "research_papers\\pdfs\\H7wnNNKqUiIJ.pdf",
+            "local_text": "research_papers\\papers\\065_Ndsearch_Accelerating_graph-traversal-based_approximate_nearest_neighbor_search_through_near_data_processing.txt"
+        },
+        {
+            "paper_id": "0SH719hiqAAJ",
+            "title": "PipeANN-Filter: An Efficient Filtered Vector Search System on SSD",
+            "authors": [
+                "H Guo",
+                "J Shu",
+                "Y Lu"
+            ],
+            "year": 2026,
+            "publication_summary": "H Guo, J Shu, Y Lu - arXiv preprint arXiv:2605.17992, 2026 - arxiv.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://arxiv.org/abs/2605.17992",
+            "pdf_url": "https://arxiv.org/pdf/2605.17992",
+            "snippet": "… attribute constraints) during search, PipeANN-Filter … vector explorations for a massive reduction in SSD I/O for attribute reading. Evaluations show that PipeANN-Filter improves search …",
+            "found_by_queries": [
+                "SSD ANN vector search"
+            ],
+            "best_rank": 14,
+            "local_number": 66,
+            "local_pdf": "research_papers\\pdfs\\0SH719hiqAAJ.pdf",
+            "local_text": "research_papers\\papers\\066_PipeANN-Filter_An_Efficient_Filtered_Vector_Search_System_on_SSD.txt"
+        },
+        {
+            "paper_id": "AArNdKd2KdIJ",
+            "title": "ReVerS: A Reconfigurable Near-Data Computing Architecture for Efficient Vector Search in SSDs",
+            "authors": [
+                "Y Wu",
+                "L Li",
+                "J Wu",
+                "J Zhu"
+            ],
+            "year": 2026,
+            "publication_summary": "Y Wu, L Li, J Wu, J Zhu - 2026 11th International Symposium on …, 2026 - ieeexplore.ieee.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/11635420/",
+            "pdf_url": null,
+            "snippet": "… Vector search workloads may use different metrics and ANN … SSD-resident vector search. ReVerS moves distance computation, candidate scoring and top-K maintenance into the SSD …",
+            "found_by_queries": [
+                "SSD ANN vector search",
+                "vector search cache SSD",
+                "ANN cache SSD"
+            ],
+            "best_rank": 6,
+            "local_number": 67,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\067_ReVerS_A_Reconfigurable_Near-Data_Computing_Architecture_for_Efficient_Vector_Search_in_SSDs.txt"
+        },
+        {
+            "paper_id": "j0T9UsAe244J",
+            "title": "Exploiting modern hardware architectures for high-dimensional vector search at speed and scale",
+            "authors": [
+                "M Zhang",
+                "J Ren",
+                "Z Peng",
+                "R Jin",
+                "D Li",
+                "B Ren"
+            ],
+            "year": 2023,
+            "publication_summary": "M Zhang, J Ren, Z Peng, R Jin, D Li, B Ren - IEEE Data Eng. Bull, 2023 - sites.computer.org",
+            "citation_count": 4,
+            "google_scholar_url": "http://sites.computer.org/debull/A23sept/A23SEPT-CD.pdf#page=24",
+            "pdf_url": null,
+            "snippet": "… requires a careful selection of vector search indices, with NVMe/SSD/remote storage, the … iQAN and HM-ANN to enhance the system efficiency of vector search. We have followed the …",
+            "found_by_queries": [
+                "SSD ANN vector search"
+            ],
+            "best_rank": 17,
+            "local_number": 68,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\068_Exploiting_modern_hardware_architectures_for_high-dimensional_vector_search_at_speed_and_scale.txt"
+        },
+        {
+            "paper_id": "P1Jk4D4BaqcJ",
+            "title": "Freshdiskann: A fast and accurate graph-based ann index for streaming similarity search",
+            "authors": [
+                "A Singh",
+                "SJ Subramanya",
+                "R Krishnaswamy"
+            ],
+            "year": 2021,
+            "publication_summary": "A Singh, SJ Subramanya, R Krishnaswamy… - arXiv preprint arXiv …, 2021 - arxiv.org",
+            "citation_count": 172,
+            "google_scholar_url": "https://arxiv.org/abs/2105.09613",
+            "pdf_url": "https://arxiv.org/pdf/2105.09613",
+            "snippet": "… A recent work, ADBV [60], proposes a hybrid SQL-vector search model. New vectors are … an on-SSD updatable graph index which is far more efficient for search. Their insertion …",
+            "found_by_queries": [
+                "SSD ANN vector search"
+            ],
+            "best_rank": 18,
+            "local_number": 69,
+            "local_pdf": "research_papers\\pdfs\\P1Jk4D4BaqcJ.pdf",
+            "local_text": "research_papers\\papers\\069_Freshdiskann_A_fast_and_accurate_graph-based_ann_index_for_streaming_similarity_search.txt"
+        },
+        {
+            "paper_id": "8QCw0JB6wCMJ",
+            "title": "NAVIS: Concurrent Search and Update with Low Position-Seeking Overhead in On-SSD Graph-Based Vector Search",
+            "authors": [
+                "J Song",
+                "H Jang",
+                "C Shin",
+                "S Park",
+                "YJ Ryoo"
+            ],
+            "year": 2026,
+            "publication_summary": "J Song, H Jang, C Shin, S Park, YJ Ryoo… - arXiv preprint arXiv …, 2026 - arxiv.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://arxiv.org/abs/2605.11523",
+            "pdf_url": "https://arxiv.org/pdf/2605.11523",
+            "snippet": "… To this end, we present NAVIS, an on-SSD GVS system leveraging three architectural innovations to reduce position-seeking overhead for high-performance concurrent search and …",
+            "found_by_queries": [
+                "SSD ANN vector search",
+                "vector search cache SSD"
+            ],
+            "best_rank": 8,
+            "local_number": 70,
+            "local_pdf": "research_papers\\pdfs\\8QCw0JB6wCMJ.pdf",
+            "local_text": "research_papers\\papers\\070_NAVIS_Concurrent_Search_and_Update_with_Low_Position-Seeking_Overhead_in_On-SSD_Graph-Based_Vector_Search.txt"
+        },
+        {
+            "paper_id": "Qsjl-aMSmXsJ",
+            "title": "Starling: An i/o-efficient disk-resident graph index framework for high-dimensional vector similarity search on data segment",
+            "authors": [
+                "M Wang",
+                "W Xu",
+                "X Yi",
+                "S Wu",
+                "Z Peng",
+                "X Ke"
+            ],
+            "year": 2024,
+            "publication_summary": "M Wang, W Xu, X Yi, S Wu, Z Peng, X Ke… - Proceedings of the …, 2024 - dl.acm.org",
+            "citation_count": 158,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3639269",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3639269",
+            "snippet": "… HVSS using graph index on the data segment. In this paper, we introduce an I/O-efficient disk-resident graph index framework tailored for high-dimensional vector similarity search on a …",
+            "found_by_queries": [
+                "disk resident vector index",
+                "RAM SSD tiering vector search"
+            ],
+            "best_rank": 1,
+            "local_number": 71,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\071_Starling_An_io-efficient_disk-resident_graph_index_framework_for_high-dimensional_vector_similarity_search_on_data_segment.txt"
+        },
+        {
+            "paper_id": "yI9mze6KcqgJ",
+            "title": "Micronn: An on-device disk-resident updatable vector database",
+            "authors": [
+                "J Pound",
+                "F Chabert",
+                "A Bhushan",
+                "A Goswami"
+            ],
+            "year": 2025,
+            "publication_summary": "J Pound, F Chabert, A Bhushan, A Goswami… - Companion of the 2025 …, 2025 - dl.acm.org",
+            "citation_count": 17,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3722212.3724444",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3722212.3724444",
+            "snippet": "… embedded vector search engine that implements disk-resident vector indexing and vector search … We have shown that the overhead of a disk-resident vector index can be mitigated by …",
+            "found_by_queries": [
+                "disk resident vector index"
+            ],
+            "best_rank": 3,
+            "local_number": 72,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\072_Micronn_An_on-device_disk-resident_updatable_vector_database.txt"
+        },
+        {
+            "paper_id": "YmChUeqkXq0J",
+            "title": "MCGI: Manifold-Consistent Graph Indexing for Billion-Scale Disk-Resident Vector Search",
+            "authors": [
+                "D Zhao"
+            ],
+            "year": 2026,
+            "publication_summary": "D Zhao - arXiv preprint arXiv:2601.01930, 2026 - arxiv.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://arxiv.org/abs/2601.01930",
+            "pdf_url": "https://arxiv.org/pdf/2601.01930",
+            "snippet": "… We thus argue that an optimal indexing strategy must be manifold-aware, dynamically … -Consistent Graph Indexing (MCGI), a geometry-aware disk-based indexing method crafted to …",
+            "found_by_queries": [
+                "disk resident vector index"
+            ],
+            "best_rank": 6,
+            "local_number": 73,
+            "local_pdf": "research_papers\\pdfs\\YmChUeqkXq0J.pdf",
+            "local_text": "research_papers\\papers\\073_MCGI_Manifold-Consistent_Graph_Indexing_for_Billion-Scale_Disk-Resident_Vector_Search.txt"
+        },
+        {
+            "paper_id": "8SfGdWP53IgJ",
+            "title": "LSMDiskANN: Update-friendly Disk-resident Vector Index Framework.",
+            "authors": [
+                "H Qiu",
+                "Y Peng",
+                "Z Peng"
+            ],
+            "year": 2026,
+            "publication_summary": "H Qiu, Y Peng, Z Peng - International Journal of Software & …, 2026 - openurl.ebsco.com",
+            "citation_count": 0,
+            "google_scholar_url": "https://openurl.ebsco.com/contentitem/gcd:193696523?sid=ebsco:plink:crawler-gcd&id=ebsco:gcd:193696523&crl=c&jrnl=16737288",
+            "pdf_url": null,
+            "snippet": "… full sequential scans of the disk index, introducing substantial additional disk I/O overhead. … , an updatefriendly disk-resident graph vector index framework based on FreshDiskANN. To …",
+            "found_by_queries": [
+                "disk resident vector index"
+            ],
+            "best_rank": 7,
+            "local_number": 74,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\074_LSMDiskANN_Update-friendly_Disk-resident_Vector_Index_Framework..txt"
+        },
+        {
+            "paper_id": "yL8f5cCFuuMJ",
+            "title": "Gorgeous: Revisiting the Data Layout for Disk-Resident High-Dimensional Vector Search",
+            "authors": [
+                "P Yin",
+                "X Yan",
+                "Q Zhou",
+                "H Li",
+                "X Li",
+                "L Zhang"
+            ],
+            "year": 2025,
+            "publication_summary": "P Yin, X Yan, Q Zhou, H Li, X Li, L Zhang… - arXiv preprint arXiv …, 2025 - arxiv.org",
+            "citation_count": 11,
+            "google_scholar_url": "https://arxiv.org/abs/2508.15290",
+            "pdf_url": "https://arxiv.org/pdf/2508.15290",
+            "snippet": "… As discussed in §3.4, we constrain that the disk block of each vector takes up at most one 4KB disk page. Given a proximity graph index and 𝑅, for each node𝑢, our graphreplicated disk …",
+            "found_by_queries": [
+                "disk resident vector index"
+            ],
+            "best_rank": 8,
+            "local_number": 75,
+            "local_pdf": "research_papers\\pdfs\\yL8f5cCFuuMJ.pdf",
+            "local_text": "research_papers\\papers\\075_Gorgeous_Revisiting_the_Data_Layout_for_Disk-Resident_High-Dimensional_Vector_Search.txt"
+        },
+        {
+            "paper_id": "Izl44-TAc_MJ",
+            "title": "Decoupling Vector Data and Index Storage for Space Efficiency",
+            "authors": [
+                "Y Ren",
+                "J Zhang",
+                "Y Ren",
+                "R Yang",
+                "D Wu"
+            ],
+            "year": 2026,
+            "publication_summary": "Y Ren, J Zhang, Y Ren, R Yang, D Wu… - arXiv preprint arXiv …, 2026 - arxiv.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://arxiv.org/abs/2604.09173",
+            "pdf_url": "https://arxiv.org/pdf/2604.09173",
+            "snippet": "… framework for disk-resident graph vector search. Leveraging data-index decoupling as a … vector storage management framework for disk-resident graph ANNS systems. Using data-…",
+            "found_by_queries": [
+                "disk resident vector index"
+            ],
+            "best_rank": 10,
+            "local_number": 76,
+            "local_pdf": "research_papers\\pdfs\\Izl44-TAc_MJ.pdf",
+            "local_text": "research_papers\\papers\\076_Decoupling_Vector_Data_and_Index_Storage_for_Space_Efficiency.txt"
+        },
+        {
+            "paper_id": "q-ISOa4FHC8J",
+            "title": "Vector Clustering for Disk-based HNSW",
+            "authors": [
+                "오재원"
+            ],
+            "year": 2026,
+            "publication_summary": "오재원 - 2026 - s-space.snu.ac.kr",
+            "citation_count": 0,
+            "google_scholar_url": "https://s-space.snu.ac.kr/handle/10371/234121",
+            "pdf_url": "https://s-space.snu.ac.kr/bitstream/10371/234121/1/000000193689.pdf",
+            "snippet": "… disk-resident HNSW that directly targets the physical layout and evolution of the index on disk… To address this challenge for preserving locality when storing vectors in diskbased indexes…",
+            "found_by_queries": [
+                "disk resident vector index"
+            ],
+            "best_rank": 11,
+            "local_number": 77,
+            "local_pdf": "research_papers\\pdfs\\q-ISOa4FHC8J.pdf",
+            "local_text": "research_papers\\papers\\077_Vector_Clustering_for_Disk-based_HNSW.txt"
+        },
+        {
+            "paper_id": "TLikD0LxnWUJ",
+            "title": "DiskHIVF: Disk-Resident Hierarchical Inverted File Index For Billion-scale Approximate Nearest Neighbor Search",
+            "authors": [
+                "Q Huang",
+                "S Liang",
+                "Q Li",
+                "P Huang"
+            ],
+            "year": null,
+            "publication_summary": "Q Huang, S Liang, Q Li, P Huang - openreview.net",
+            "citation_count": 0,
+            "google_scholar_url": "https://openreview.net/forum?id=aKCYSL14HX",
+            "pdf_url": "https://openreview.net/pdf?id=aKCYSL14HX",
+            "snippet": "… and keeping disk pointers to member vectors. Hybrid memory-disk ANNS techniques … ing them a preferred solution for billion-scale vector indexing. Their ability to optimize both memory …",
+            "found_by_queries": [
+                "disk resident vector index"
+            ],
+            "best_rank": 13,
+            "local_number": 78,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\078_DiskHIVF_Disk-Resident_Hierarchical_Inverted_File_Index_For_Billion-scale_Approximate_Nearest_Neighbor_Search.txt"
+        },
+        {
+            "paper_id": "cjVemcFs7cEJ",
+            "title": "I/O Optimizations for Graph-Based Disk-Resident Approximate Nearest Neighbor Search: A Design Space Exploration",
+            "authors": [
+                "L Li",
+                "S Gong",
+                "Y Yang",
+                "Y Wang",
+                "J Wu"
+            ],
+            "year": 2026,
+            "publication_summary": "L Li, S Gong, Y Yang, Y Wang, J Wu - arXiv preprint arXiv:2602.21514, 2026 - arxiv.org",
+            "citation_count": 3,
+            "google_scholar_url": "https://arxiv.org/abs/2602.21514",
+            "pdf_url": "https://arxiv.org/pdf/2602.21514",
+            "snippet": "… for on-disk graph-based ANN indexes and focuses … disk-resident search, we adopt DiskANN as a canonical model to illustrate how a three-layer architecture organizes on-disk vectors …",
+            "found_by_queries": [
+                "disk resident vector index",
+                "SSD-backed vector database"
+            ],
+            "best_rank": 7,
+            "local_number": 79,
+            "local_pdf": "research_papers\\pdfs\\cjVemcFs7cEJ.pdf",
+            "local_text": "research_papers\\papers\\079_IO_Optimizations_for_Graph-Based_Disk-Resident_Approximate_Nearest_Neighbor_Search_A_Design_Space_Exploration.txt"
+        },
+        {
+            "paper_id": "sCeYZIoJAvoJ",
+            "title": "Disk-Resident Graph ANN Search: An Experimental Evaluation",
+            "authors": [
+                "X Chen",
+                "J Qu",
+                "Y Song",
+                "S Lu",
+                "H Li",
+                "M Jiang"
+            ],
+            "year": 2026,
+            "publication_summary": "X Chen, J Qu, Y Song, S Lu, H Li, M Jiang… - arXiv preprint arXiv …, 2026 - arxiv.org",
+            "citation_count": 5,
+            "google_scholar_url": "https://arxiv.org/abs/2603.01779",
+            "pdf_url": "https://arxiv.org/pdf/2603.01779",
+            "snippet": "… Disk-resident methods must determine how to … raw vectors, graph index structures, and auxiliary data (eg, entry structures and compressed vectors), across heterogeneous memory–disk …",
+            "found_by_queries": [
+                "disk resident vector index"
+            ],
+            "best_rank": 15,
+            "local_number": 80,
+            "local_pdf": "research_papers\\pdfs\\sCeYZIoJAvoJ.pdf",
+            "local_text": "research_papers\\papers\\080_Disk-Resident_Graph_ANN_Search_An_Experimental_Evaluation.txt"
+        },
+        {
+            "paper_id": "29hIsQtGGJoJ",
+            "title": "GPS: Revisiting the Data Layout for Disk-based High-Dimensional Vector Search",
+            "authors": [
+                "P Yin",
+                "X Yan",
+                "Q Zhou",
+                "H Li",
+                "X Li",
+                "M Wang"
+            ],
+            "year": 2026,
+            "publication_summary": "P Yin, X Yan, Q Zhou, H Li, X Li, M Wang… - Proceedings of the …, 2026 - dl.acm.org",
+            "citation_count": 2,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3802069",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3802069",
+            "snippet": "… the exact vectors with memory-resident compressed vectors, yet … the disk block of each vector takes up at most one 4KB disk … graph index and , for each node , our graph-replicated disk …",
+            "found_by_queries": [
+                "disk resident vector index"
+            ],
+            "best_rank": 16,
+            "local_number": 81,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\081_GPS_Revisiting_the_Data_Layout_for_Disk-based_High-Dimensional_Vector_Search.txt"
+        },
+        {
+            "paper_id": "5qSG5_MPBdoJ",
+            "title": "{DistVS}: Large-scale Vector Search with {Compute-Memory} Disaggregation",
+            "authors": [
+                "P Yin",
+                "X Yan",
+                "S Deng",
+                "H Li",
+                "Y Zhu",
+                "X Zhi",
+                "J Mao"
+            ],
+            "year": 2026,
+            "publication_summary": "P Yin, X Yan, S Deng, H Li, Y Zhu, X Zhi, J Mao… - … USENIX Symposium on …, 2026 - usenix.org",
+            "citation_count": 3,
+            "google_scholar_url": "https://www.usenix.org/conference/nsdi26/presentation/yin",
+            "pdf_url": "https://www.usenix.org/system/files/nsdi26-yin.pdf",
+            "snippet": "… -of-the-art disk-based and distributed vector search systems and … vectors reside in memory, while the index graph and exact … DistVS uses a global vector index on the entire dataset, and …",
+            "found_by_queries": [
+                "disk resident vector index",
+                "vector search cache SSD"
+            ],
+            "best_rank": 10,
+            "local_number": 82,
+            "local_pdf": "research_papers\\pdfs\\5qSG5_MPBdoJ.pdf",
+            "local_text": "research_papers\\papers\\082_{DistVS}_Large-scale_Vector_Search_with_{Compute-Memory}_Disaggregation.txt"
+        },
+        {
+            "paper_id": "Qtde5NOxBooJ",
+            "title": "Fast nearest-neighbor search in disk-resident graphs",
+            "authors": [
+                "P Sarkar",
+                "AW Moore"
+            ],
+            "year": 2010,
+            "publication_summary": "P Sarkar, AW Moore - Proceedings of the 16th ACM SIGKDD …, 2010 - dl.acm.org",
+            "citation_count": 73,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/1835804.1835871",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/1835804.1835871",
+            "snippet": "… the graph is too large to be memory-resident. The obvious solution is to split the graph into clusters of nodes and store each cluster on a disk page; ideally random walks will rarely cross …",
+            "found_by_queries": [
+                "disk resident vector index"
+            ],
+            "best_rank": 18,
+            "local_number": 83,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\083_Fast_nearest-neighbor_search_in_disk-resident_graphs.txt"
+        },
+        {
+            "paper_id": "u36LTvOgW6AJ",
+            "title": "Disk-based indexing of recent trajectories",
+            "authors": [
+                "AR Mahmood",
+                "AM Aly",
+                "T Kuznetsova"
+            ],
+            "year": 2018,
+            "publication_summary": "AR Mahmood, AM Aly, T Kuznetsova… - ACM Transactions on …, 2018 - dl.acm.org",
+            "citation_count": 15,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3234941",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3234941",
+            "snippet": "… reside on disk. For example, AT&T keeps location data of users for 1 year.One existing approach, namely, SWST [27], addresses the problem of disk-based trail indexing… s bit vector from …",
+            "found_by_queries": [
+                "disk resident vector index"
+            ],
+            "best_rank": 20,
+            "local_number": 84,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\084_Disk-based_indexing_of_recent_trajectories.txt"
+        },
+        {
+            "paper_id": "A5VbpklQNJIJ",
+            "title": "Matkv: Trading compute for flash storage in llm inference",
+            "authors": [
+                "KW Shin",
+                "JH Park",
+                "M Oh",
+                "Y Jo",
+                "J Do"
+            ],
+            "year": 2026,
+            "publication_summary": "KW Shin, JH Park, M Oh, Y Jo, J Do… - 2026 IEEE 42nd …, 2026 - ieeexplore.ieee.org",
+            "citation_count": 4,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/11629472/",
+            "pdf_url": "https://arxiv.org/pdf/2512.22195",
+            "snippet": "… pled and actionable guideline for when SSD-backed KV reuse becomes more economical … While running 1M top-10 queries against a vector database with 9M document chunks, we …",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 1,
+            "local_number": 85,
+            "local_pdf": "research_papers\\pdfs\\A5VbpklQNJIJ.pdf",
+            "local_text": "research_papers\\papers\\085_Matkv_Trading_compute_for_flash_storage_in_llm_inference.txt"
+        },
+        {
+            "paper_id": "fwelp7lJ5wYJ",
+            "title": "HAVEN: High-Bandwidth Flash Augmented Vector Engine for Large-Scale Approximate Nearest-Neighbor Search Acceleration",
+            "authors": [
+                "PK Hsu",
+                "W Xu",
+                "Q Liu",
+                "T Rosing",
+                "S Yu"
+            ],
+            "year": 2026,
+            "publication_summary": "PK Hsu, W Xu, Q Liu, T Rosing, S Yu - arXiv preprint arXiv:2603.01175, 2026 - arxiv.org",
+            "citation_count": 4,
+            "google_scholar_url": "https://arxiv.org/abs/2603.01175",
+            "pdf_url": "https://arxiv.org/pdf/2603.01175",
+            "snippet": "… seen in CPU backed or SSD backed systems. Larger batches … vector search engine that stores and processes raw vectors in … To maintain design margin for more vector databases and …",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 2,
+            "local_number": 86,
+            "local_pdf": "research_papers\\pdfs\\fwelp7lJ5wYJ.pdf",
+            "local_text": "research_papers\\papers\\086_HAVEN_High-Bandwidth_Flash_Augmented_Vector_Engine_for_Large-Scale_Approximate_Nearest-Neighbor_Search_Acceleration.txt"
+        },
+        {
+            "paper_id": "ASrdNAolk9EJ",
+            "title": "BiSON: Billion-Scale Oblivious Nearest-Neighbor Search in Milliseconds",
+            "authors": [
+                "S Das",
+                "R Ravi",
+                "N Chandran",
+                "D Gupta"
+            ],
+            "year": 2026,
+            "publication_summary": "S Das, R Ravi, N Chandran, D Gupta - Cryptology ePrint Archive, 2026 - eprint.iacr.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://eprint.iacr.org/2026/1343",
+            "pdf_url": "https://eprint.iacr.org/2026/1343.pdf",
+            "snippet": "… Abstract—Semantic search over vector databases is a funda… incur high latency and fail to scale to realistic database sizes. … a Ring ORAM implementation optimized for SSD-backed …",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 3,
+            "local_number": 87,
+            "local_pdf": "research_papers\\pdfs\\ASrdNAolk9EJ.pdf",
+            "local_text": "research_papers\\papers\\087_BiSON_Billion-Scale_Oblivious_Nearest-Neighbor_Search_in_Milliseconds.txt"
+        },
+        {
+            "paper_id": "3V6pmpAj1LUJ",
+            "title": "Spfresh: Incremental in-place update for billion-scale vector search",
+            "authors": [
+                "Y Xu",
+                "H Liang",
+                "J Li",
+                "S Xu",
+                "Q Chen",
+                "Q Zhang"
+            ],
+            "year": 2023,
+            "publication_summary": "Y Xu, H Liang, J Li, S Xu, Q Chen, Q Zhang… - Proceedings of the 29th …, 2023 - dl.acm.org",
+            "citation_count": 154,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3600006.3613166",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3600006.3613166",
+            "snippet": "… An SSD-backed user-space storage engine dedicated to LIRE, which bypasses legacy storage stack, prioritizes partition reads, and optimizes for partition appends. Experiments show …",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 4,
+            "local_number": 88,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\088_Spfresh_Incremental_in-place_update_for_billion-scale_vector_search.txt"
+        },
+        {
+            "paper_id": "G6r1OtQZ62oJ",
+            "title": "The Clustering Strikes Back: Building {Cost-Effective} and {High-Performance}{ANNS} at Scale with Helmsman (Operational Systems)",
+            "authors": [
+                "Y Huang",
+                "B Ma",
+                "Y Sun",
+                "Y Shi",
+                "X Chen"
+            ],
+            "year": 2026,
+            "publication_summary": "Y Huang, B Ma, Y Sun, Y Shi, X Chen… - … USENIX Symposium on …, 2026 - usenix.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://www.usenix.org/conference/osdi26/presentation/huang-yuchen",
+            "pdf_url": "https://www.usenix.org/system/files/osdi26-huang-yuchen.pdf",
+            "snippet": "… RAG), we instead employ hybrid DRAM–SSD nodes with SSD-backed graph indexes [22… stored vector corpus to be doubled annually. The more than billions of new vectors persisted …",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 5,
+            "local_number": 89,
+            "local_pdf": "research_papers\\pdfs\\G6r1OtQZ62oJ.pdf",
+            "local_text": "research_papers\\papers\\089_The_Clustering_Strikes_Back_Building_{Cost-Effective}_and_{High-Performance}{ANNS}_at_Scale_with_Helmsman_(Operational_Systems).txt"
+        },
+        {
+            "paper_id": "-VDC-FtUrrUJ",
+            "title": "ByteHouse: ByteDance's Cloud-Native Data Warehouse for Real-Time Multimodal Data Analytics",
+            "authors": [
+                "Y Han",
+                "Y Lin",
+                "Y Dong",
+                "X Zhou",
+                "X Peng",
+                "X Tian"
+            ],
+            "year": 2026,
+            "publication_summary": "Y Han, Y Lin, Y Dong, X Zhou, X Peng, X Tian… - Companion of the …, 2026 - dl.acm.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3788853.3803080",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3788853.3803080",
+            "snippet": "… abstraction and physically consistent layout, SSD-backed cluster-scale cache (… vector fusion, scalar-constrained vector search) based on historical executions. Existing vector databases […",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 6,
+            "local_number": 90,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\090_ByteHouse_ByteDance's_Cloud-Native_Data_Warehouse_for_Real-Time_Multimodal_Data_Analytics.txt"
+        },
+        {
+            "paper_id": "9BSALzuUC-IJ",
+            "title": "Efficient graph embedding at scale: optimizing CPU-GPU-SSD integration: Z. Li et al.",
+            "authors": [
+                "Z Li",
+                "X Ke",
+                "Y Zhu",
+                "Y Gao",
+                "F Li"
+            ],
+            "year": 2026,
+            "publication_summary": "Z Li, X Ke, Y Zhu, Y Gao, F Li - The VLDB Journal, 2026 - Springer",
+            "citation_count": 1,
+            "google_scholar_url": "https://link.springer.com/article/10.1007/s00778-026-00974-8",
+            "pdf_url": "https://arxiv.org/pdf/2505.09258",
+            "snippet": "… Graph embeddings map graph nodes to continuous vectors and are foundational to … to address the aforementioned challenges of SSD-backed training. Below we summarize each com…",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 8,
+            "local_number": 91,
+            "local_pdf": "research_papers\\pdfs\\9BSALzuUC-IJ.pdf",
+            "local_text": "research_papers\\papers\\091_Efficient_graph_embedding_at_scale_optimizing_CPU-GPU-SSD_integration_Z._Li_et_al..txt"
+        },
+        {
+            "paper_id": "s0tCtgEFcdAJ",
+            "title": "Memory-and Storage-Centric Hardware-Software Co-Design for Vector Similarity Workloads",
+            "authors": [
+                "S Pinge"
+            ],
+            "year": 2026,
+            "publication_summary": "S Pinge - 2026 - search.proquest.com",
+            "citation_count": 0,
+            "google_scholar_url": "https://search.proquest.com/openview/9d330575e1e0e684425d7291568dae8d/1?pq-origsite=gscholar&cbl=18750&diss=y",
+            "pdf_url": null,
+            "snippet": "… embed an incoming query, search a large vector database, and retrieve a small set of relevant … In practical deployments, where libraries may reside behind NAS or large SSD-backed …",
+            "found_by_queries": [
+                "SSD-backed vector database",
+                "RAM SSD tiering vector search"
+            ],
+            "best_rank": 2,
+            "local_number": 92,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\092_Memory-and_Storage-Centric_Hardware-Software_Co-Design_for_Vector_Similarity_Workloads.txt"
+        },
+        {
+            "paper_id": "PPaD85PpuesJ",
+            "title": "TF-Engram: A Train-Free Engram with SSD-Backed Memory for Large Language Models",
+            "authors": [
+                "Y Ma",
+                "K Huang",
+                "X Jiang",
+                "Z Shao"
+            ],
+            "year": 2026,
+            "publication_summary": "Y Ma, K Huang, X Jiang, Z Shao - arXiv preprint arXiv:2607.07388, 2026 - arxiv.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://arxiv.org/abs/2607.07388",
+            "pdf_url": "https://arxiv.org/pdf/2607.07388",
+            "snippet": "… The value is usually represented in the same or a compatible vector … table is not simply a static external database; it is part of the … The value vectors must match the hidden space of a …",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 10,
+            "local_number": 93,
+            "local_pdf": "research_papers\\pdfs\\PPaD85PpuesJ.pdf",
+            "local_text": "research_papers\\papers\\093_TF-Engram_A_Train-Free_Engram_with_SSD-Backed_Memory_for_Large_Language_Models.txt"
+        },
+        {
+            "paper_id": "0OISCI5Bk6UJ",
+            "title": "GenTune-CyberDB: Workload-Generative, Cross-Family Auto-Tuning for Cybersecurity Vector Databases",
+            "authors": [
+                "M Tayyab",
+                "A Amjad",
+                "A Hussain"
+            ],
+            "year": null,
+            "publication_summary": "M Tayyab, A Amjad, A Hussain - researchgate.net",
+            "citation_count": 0,
+            "google_scholar_url": "https://www.researchgate.net/profile/Ali-Hussain-75/publication/397576277_GenTune-CyberDB_Workload-Generative_Cross-Family_Auto-Tuning_for_Cybersecurity_Vector_Databases/links/698ae07412f837212a192c9e/GenTune-CyberDB-Workload-Generative-Cross-Family-Auto-Tuning-for-Cybersecurity-Vector-Databases.pdf",
+            "pdf_url": "https://www.researchgate.net/profile/Ali-Hussain-75/publication/397576277_GenTune-CyberDB_Workload-Generative_Cross-Family_Auto-Tuning_for_Cybersecurity_Vector_Databases/links/698ae07412f837212a192c9e/GenTune-CyberDB-Workload-Generative-Cross-Family-Auto-Tuning-for-Cybersecurity-Vector-Databases.pdf",
+            "snippet": "… auto-tuning framework for cybersecurity vector databases with workload generation … such as endpoint monitoring and malware classification, when using SSD-backed systems. …",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 11,
+            "local_number": 94,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\094_GenTune-CyberDB_Workload-Generative,_Cross-Family_Auto-Tuning_for_Cybersecurity_Vector_Databases.txt"
+        },
+        {
+            "paper_id": "5iYTtRbe0DAJ",
+            "title": "A Comprehensive Empirical Evaluation of Vector Database Systems for Approximate Nearest Neighbor Search: Performance, Quality, and Resource Trade-offs",
+            "authors": [
+                "A Rashmiks",
+                "T Madushanka"
+            ],
+            "year": 2026,
+            "publication_summary": "A Rashmiks, T Madushanka - arXiv preprint arXiv:2608.12812, 2026 - arxiv.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://arxiv.org/abs/2608.12812",
+            "pdf_url": "https://arxiv.org/pdf/2608.12812",
+            "snippet": "Vector databases have emerged as critical infrastructure for … of seven prominent vector database systems: FAISS, Qdrant, … ), encompassing over 4 million vectors at dimensionalities from …",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 12,
+            "local_number": 95,
+            "local_pdf": "research_papers\\pdfs\\5iYTtRbe0DAJ.pdf",
+            "local_text": "research_papers\\papers\\095_A_Comprehensive_Empirical_Evaluation_of_Vector_Database_Systems_for_Approximate_Nearest_Neighbor_Search_Performance,_Quality,_and_Resource_Trade-offs.txt"
+        },
+        {
+            "paper_id": "iKIQcVE-4gMJ",
+            "title": "Security-Aware Retrieval-Augmented Generation System for Post-Quantum Cryptography Intelligence",
+            "authors": [
+                "GP Kolavennu",
+                "Y Shi",
+                "K Suo",
+                "T Nguyen"
+            ],
+            "year": 2026,
+            "publication_summary": "GP Kolavennu, Y Shi, K Suo, T Nguyen… - SoutheastCon …, 2026 - ieeexplore.ieee.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/11476026/",
+            "pdf_url": null,
+            "snippet": "… Generally, this attack vector proves peculiarly concerning for … Data poisoning in vector database represent another critical exposure with substantial … SSD-backed persistent disk Platform …",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 13,
+            "local_number": 96,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\096_Security-Aware_Retrieval-Augmented_Generation_System_for_Post-Quantum_Cryptography_Intelligence.txt"
+        },
+        {
+            "paper_id": "xtgB8k0OY0wJ",
+            "title": "ByteHouse: A Cloud-Native OLAP Engine with Incremental Computation and Multi-Modal Retrieval",
+            "authors": [
+                "Y Han",
+                "Y Lin",
+                "Y Dong",
+                "X Zhou",
+                "X Peng",
+                "X Tian"
+            ],
+            "year": 2026,
+            "publication_summary": "Y Han, Y Lin, Y Dong, X Zhou, X Peng, X Tian… - arXiv e …, 2026 - ui.adsabs.harvard.edu",
+            "citation_count": 1,
+            "google_scholar_url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260208226H/abstract",
+            "pdf_url": null,
+            "snippet": "… abstraction and physically consistent layout, SSD-backed cluster-scale cache (CrossCache) … queries (eg, runtime filtering over tiered vector indexes). The control layer coordinates …",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 14,
+            "local_number": 97,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\097_ByteHouse_A_Cloud-Native_OLAP_Engine_with_Incremental_Computation_and_Multi-Modal_Retrieval.txt"
+        },
+        {
+            "paper_id": "cs2pqetC7MEJ",
+            "title": "From application requests to Virtual IOPs: Provisioned key-value storage with Libra",
+            "authors": [
+                "D Shue",
+                "MJ Freedman"
+            ],
+            "year": 2014,
+            "publication_summary": "D Shue, MJ Freedman - Proceedings of the Ninth European Conference …, 2014 - dl.acm.org",
+            "citation_count": 44,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/2592798.2592823",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/2592798.2592823",
+            "snippet": "… local IO scheduling framework designed for a shared SSD-backed key-value storage system. … when applied to a LevelDB-based prototype with SSD-backed storage, satisfies tenant app-…",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 15,
+            "local_number": 98,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\098_From_application_requests_to_Virtual_IOPs_Provisioned_key-value_storage_with_Libra.txt"
+        },
+        {
+            "paper_id": "OVXqSAHh4qUJ",
+            "title": "2B-SSD: The case for dual, byte-and block-addressable solid-state drives",
+            "authors": [
+                "DH Bae",
+                "I Jo",
+                "YA Choi",
+                "JY Hwang",
+                "S Cho"
+            ],
+            "year": 2018,
+            "publication_summary": "DH Bae, I Jo, YA Choi, JY Hwang, S Cho… - 2018 ACM/IEEE 45th …, 2018 - ieeexplore.ieee.org",
+            "citation_count": 79,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/8416845/",
+            "pdf_url": "https://www.sigfast.or.kr/nvramos/nvramos18/presentation/3%EC%82%BC%EC%84%B1%EC%A0%84%EC%9E%90-%ED%99%A9%EC%A3%BC%EC%98%81.pdf",
+            "snippet": "… : DATABASE LOGGING As our case study, we focus on SQL and NoSQL database systems … This section describes how we revise database logging mechanism to exploit 2B-SSD’s …",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 16,
+            "local_number": 99,
+            "local_pdf": "research_papers\\pdfs\\OVXqSAHh4qUJ.pdf",
+            "local_text": "research_papers\\papers\\099_2B-SSD_The_case_for_dual,_byte-and_block-addressable_solid-state_drives.txt"
+        },
+        {
+            "paper_id": "MAoBW0F-oqsJ",
+            "title": "MatSQL: Accelerating Text-to-SQL via Database Schema Materialization",
+            "authors": [
+                "KS Lee",
+                "D Kim",
+                "SW Lee"
+            ],
+            "year": 2024,
+            "publication_summary": "KS Lee, D Kim, SW Lee - BEAVER, 2024 - dataintelligencecrew.github.io",
+            "citation_count": 0,
+            "google_scholar_url": "https://dataintelligencecrew.github.io/dbml26/assets/papers/matsql.pdf",
+            "pdf_url": "https://dataintelligencecrew.github.io/dbml26/assets/papers/matsql.pdf",
+            "snippet": "… We introduce essential mechanisms for persistent caching in realworld databases, including lifecycle … For a user query q targeting a database schema S, we model the prompt as …",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 17,
+            "local_number": 100,
+            "local_pdf": "research_papers\\pdfs\\MAoBW0F-oqsJ.pdf",
+            "local_text": "research_papers\\papers\\100_MatSQL_Accelerating_Text-to-SQL_via_Database_Schema_Materialization.txt"
+        },
+        {
+            "paper_id": "mKuw_8VoTQMJ",
+            "title": "Leveraging RAG-LLMs for urban mobility simulation and analysis",
+            "authors": [
+                "Y Ding",
+                "C McCarthy",
+                "K O'Shea"
+            ],
+            "year": 2025,
+            "publication_summary": "Y Ding, C McCarthy, K O'Shea… - 2025 IEEE International …, 2025 - ieeexplore.ieee.org",
+            "citation_count": 3,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/11343289/",
+            "pdf_url": "https://arxiv.org/pdf/2507.10382?",
+            "snippet": "… Using SSDbacked storage and Google Cloud Pub/Sub for … all database M-Schema descriptions into vector representations… resulting vectors are stored in a local Chroma vector database…",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 18,
+            "local_number": 101,
+            "local_pdf": "research_papers\\pdfs\\mKuw_8VoTQMJ.pdf",
+            "local_text": "research_papers\\papers\\101_Leveraging_RAG-LLMs_for_urban_mobility_simulation_and_analysis.txt"
+        },
+        {
+            "paper_id": "iUvT1qJQ0tUJ",
+            "title": "Database learning: Toward a database that becomes smarter every time",
+            "authors": [
+                "Y Park",
+                "AS Tajik",
+                "M Cafarella",
+                "B Mozafari"
+            ],
+            "year": 2017,
+            "publication_summary": "Y Park, AS Tajik, M Cafarella, B Mozafari - Proceedings of the 2017 ACM …, 2017 - dl.acm.org",
+            "citation_count": 102,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3035918.3064013",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3035918.3064013",
+            "snippet": "… 1 (thus, we can obtain the elements of the column vector kn+1 and the variance κ2 as well). … Our cluster also included SSD-backed HDFS [68] for Spark’s data loading. For experiments …",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 19,
+            "local_number": 102,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\102_Database_learning_Toward_a_database_that_becomes_smarter_every_time.txt"
+        },
+        {
+            "paper_id": "WPsGVnnqJBoJ",
+            "title": "Hybrid Aggregates: Combining SSDs and HDDs in a single storage pool",
+            "authors": [
+                "JD Strunk"
+            ],
+            "year": 2012,
+            "publication_summary": "JD Strunk - ACM SIGOPS Operating Systems Review, 2012 - dl.acm.org",
+            "citation_count": 124,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/2421648.2421656",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/2421648.2421656",
+            "snippet": "… the aggregate such that the SSD-backed portion of the ag… item to a set of bits within a large bit vector. To insert an entry, the … a transaction processing database workload. The benchmark …",
+            "found_by_queries": [
+                "SSD-backed vector database"
+            ],
+            "best_rank": 20,
+            "local_number": 103,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\103_Hybrid_Aggregates_Combining_SSDs_and_HDDs_in_a_single_storage_pool.txt"
+        },
+        {
+            "paper_id": "n2a_MRkxtpAJ",
+            "title": "Data tiering in heterogeneous memory systems",
+            "authors": [
+                "SR Dulloor",
+                "A Roy",
+                "Z Zhao",
+                "N Sundaram"
+            ],
+            "year": 2016,
+            "publication_summary": "SR Dulloor, A Roy, Z Zhao, N Sundaram… - Proceedings of the …, 2016 - dl.acm.org",
+            "citation_count": 326,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/2901318.2901344",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/2901318.2901344",
+            "snippet": "… X-Mem maps regions to memory types based on its auto… We iterate through the buffer searching for access pairs where the … the sparse vector rather than the full dense vector of vertices, …",
+            "found_by_queries": [
+                "RAM SSD tiering vector search"
+            ],
+            "best_rank": 5,
+            "local_number": 104,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\104_Data_tiering_in_heterogeneous_memory_systems.txt"
+        },
+        {
+            "paper_id": "9Qfyc6Pp7q8J",
+            "title": "Routing Memory",
+            "authors": [
+                "AY Sertel"
+            ],
+            "year": null,
+            "publication_summary": "AY Sertel - researchgate.net",
+            "citation_count": 0,
+            "google_scholar_url": "https://www.researchgate.net/profile/Ahmet-Yigit-Sertel/publication/401670106_Routing_Memory_A_Tiered_Vector-Quantized_Memory_System_for_Long-Lived_Language-Model_Agents/links/6a44c7ef5ec65810298e5144/Routing-Memory-A-Tiered-Vector-Quantized-Memory-System-for-Long-Lived-Language-Model-Agents.pdf",
+            "pdf_url": "https://www.researchgate.net/profile/Ahmet-Yigit-Sertel/publication/401670106_Routing_Memory_A_Tiered_Vector-Quantized_Memory_System_for_Long-Lived_Language-Model_Agents/links/6a44c7ef5ec65810298e5144/Routing-Memory-A-Tiered-Vector-Quantized-Memory-System-for-Long-Lived-Language-Model-Agents.pdf",
+            "snippet": "… ) stays in RAM, while full embeddings live in cold storage and are … , the tiered design uses 14.4× less RAM than dense flat search … The system needs no vector database and no FAISS …",
+            "found_by_queries": [
+                "RAM SSD tiering vector search"
+            ],
+            "best_rank": 9,
+            "local_number": 105,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\105_Routing_Memory.txt"
+        },
+        {
+            "paper_id": "SMpNuS_0Kq8J",
+            "title": "Search-in-memory: Reliable, versatile, and efficient data matching in SSD's NAND flash memory chip for data indexing acceleration",
+            "authors": [
+                "YC Chen",
+                "YH Chang",
+                "TW Kuo"
+            ],
+            "year": 2024,
+            "publication_summary": "YC Chen, YH Chang, TW Kuo - IEEE Transactions on …, 2024 - ieeexplore.ieee.org",
+            "citation_count": 15,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/10745821/",
+            "pdf_url": null,
+            "snippet": "… SiM bypasses the page cache and requires additional cycles for on-chip matching, whereas the baseline may avoid I/O by searching the pages stored in the page cache directly. One …",
+            "found_by_queries": [
+                "RAM SSD tiering vector search",
+                "vector search cache SSD"
+            ],
+            "best_rank": 10,
+            "local_number": 106,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\106_Search-in-memory_Reliable,_versatile,_and_efficient_data_matching_in_SSD's_NAND_flash_memory_chip_for_data_indexing_acceleration.txt"
+        },
+        {
+            "paper_id": "D42U2hPBdAwJ",
+            "title": "Search-in-Memory (SiM): Reliable, Versatile, and Efficient Data Matching in SSD's NAND Flash Memory Chip for Data Indexing Acceleration",
+            "authors": [
+                "YC Chen",
+                "YH Chang",
+                "TW Kuo"
+            ],
+            "year": 2024,
+            "publication_summary": "YC Chen, YH Chang, TW Kuo - arXiv preprint arXiv:2408.00327, 2024 - arxiv.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://arxiv.org/abs/2408.00327",
+            "pdf_url": "https://arxiv.org/pdf/2408.00327",
+            "snippet": "… page cache. SiM, on the other hand, bypasses the page cache by sending a search command … 3d nand-based in-memory computing for vector similarity search acceleration,” in MICRO, …",
+            "found_by_queries": [
+                "RAM SSD tiering vector search",
+                "vector search cache SSD"
+            ],
+            "best_rank": 11,
+            "local_number": 107,
+            "local_pdf": "research_papers\\pdfs\\D42U2hPBdAwJ.pdf",
+            "local_text": "research_papers\\papers\\107_Search-in-Memory_(SiM)_Reliable,_Versatile,_and_Efficient_Data_Matching_in_SSD's_NAND_Flash_Memory_Chip_for_Data_Indexing_Acceleration.txt"
+        },
+        {
+            "paper_id": "m4UkjTuEwTIJ",
+            "title": "Automatic tiering for in-memory database systems",
+            "authors": [
+                "M Dreseler"
+            ],
+            "year": 2022,
+            "publication_summary": "M Dreseler - 2022 - publishup.uni-potsdam.de",
+            "citation_count": 9,
+            "google_scholar_url": "https://publishup.uni-potsdam.de/frontdoor/index/index/docId/55825",
+            "pdf_url": "https://publishup.uni-potsdam.de/opus4-ubp/frontdoor/deliver/index/docId/55825/file/diss_dreseler_markus.pdf",
+            "snippet": "… for data stored on different memory and storage tiers (Section 5). … Hybrid approaches exist that try to find the optimal balance … To make the vector persistent, we now need to write it to …",
+            "found_by_queries": [
+                "RAM SSD tiering vector search"
+            ],
+            "best_rank": 13,
+            "local_number": 108,
+            "local_pdf": "research_papers\\pdfs\\m4UkjTuEwTIJ.pdf",
+            "local_text": "research_papers\\papers\\108_Automatic_tiering_for_in-memory_database_systems.txt"
+        },
+        {
+            "paper_id": "mCxbUFzzfxQJ",
+            "title": "An NVM SSD-based high performance query processing framework for search engines",
+            "authors": [
+                "X Liu",
+                "Y Pan",
+                "Y Li",
+                "G Wang",
+                "X Liu"
+            ],
+            "year": 2022,
+            "publication_summary": "X Liu, Y Pan, Y Li, G Wang, X Liu - IEEE Transactions on …, 2022 - ieeexplore.ieee.org",
+            "citation_count": 10,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/9738487/",
+            "pdf_url": null,
+            "snippet": "… memory performance while using much less DRAM storage space. However, achieving such a goal is non-trivial for search … improving search efficiency and quality [16], such as cache …",
+            "found_by_queries": [
+                "RAM SSD tiering vector search"
+            ],
+            "best_rank": 15,
+            "local_number": 109,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\109_An_NVM_SSD-based_high_performance_query_processing_framework_for_search_engines.txt"
+        },
+        {
+            "paper_id": "pGGGscuu2AsJ",
+            "title": "PDX: A data layout for vector similarity search",
+            "authors": [
+                "L Kuffo",
+                "E Krippner",
+                "P Boncz"
+            ],
+            "year": 2025,
+            "publication_summary": "L Kuffo, E Krippner, P Boncz - Proceedings of the ACM on Management …, 2025 - dl.acm.org",
+            "citation_count": 21,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3725333",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3725333",
+            "snippet": "… cache utilization. PDXearch does not rely on SIMD instructions to be fast (its code auto-vectorizes on float32 vectors), … overhead and memory consumption (as also memory footprint and …",
+            "found_by_queries": [
+                "RAM SSD tiering vector search"
+            ],
+            "best_rank": 16,
+            "local_number": 110,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\110_PDX_A_data_layout_for_vector_similarity_search.txt"
+        },
+        {
+            "paper_id": "QYs5EtKTHb0J",
+            "title": "SIMD-scan: ultra fast in-memory table scan using on-chip vector processing units",
+            "authors": [
+                "T Willhalm",
+                "N Popovici",
+                "Y Boshmaf"
+            ],
+            "year": 2009,
+            "publication_summary": "T Willhalm, N Popovici, Y Boshmaf… - … of the VLDB …, 2009 - 15721.courses.cs.cmu.edu",
+            "citation_count": 342,
+            "google_scholar_url": "https://15721.courses.cs.cmu.edu/spring2018/papers/21-vectorization1/willhalm-vldb2009.pdf",
+            "pdf_url": "https://15721.courses.cs.cmu.edu/spring2018/papers/21-vectorization1/willhalm-vldb2009.pdf",
+            "snippet": "… column-oriented main memory storage. We then discuss how … and implementation of SIMD predicate search. Here, we … improved compression ratio, RAM/CPU cache compression, and …",
+            "found_by_queries": [
+                "RAM SSD tiering vector search"
+            ],
+            "best_rank": 17,
+            "local_number": 111,
+            "local_pdf": "research_papers\\pdfs\\QYs5EtKTHb0J.pdf",
+            "local_text": "research_papers\\papers\\111_SIMD-scan_ultra_fast_in-memory_table_scan_using_on-chip_vector_processing_units.txt"
+        },
+        {
+            "paper_id": "iCnkxH2ItagJ",
+            "title": "GraphSSD: graph semantics aware SSD",
+            "authors": [
+                "KK Matam",
+                "G Koo",
+                "H Zha",
+                "HW Tseng"
+            ],
+            "year": 2019,
+            "publication_summary": "KK Matam, G Koo, H Zha, HW Tseng… - Proceedings of the 46th …, 2019 - dl.acm.org",
+            "citation_count": 126,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3307650.3322275",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3307650.3322275",
+            "snippet": "… find the index of the destination vertex in the colIdx vector; with that index we can access the corresponding location in the val vector… the same host side memory cache size as GraphSSD…",
+            "found_by_queries": [
+                "RAM SSD tiering vector search"
+            ],
+            "best_rank": 18,
+            "local_number": 112,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\112_GraphSSD_graph_semantics_aware_SSD.txt"
+        },
+        {
+            "paper_id": "D8sv89eNE2AJ",
+            "title": "Wisckey: Separating keys from values in ssd-conscious storage",
+            "authors": [
+                "L Lu",
+                "TS Pillai",
+                "H Gopalakrishnan"
+            ],
+            "year": 2017,
+            "publication_summary": "L Lu, TS Pillai, H Gopalakrishnan… - … On Storage (TOS), 2017 - dl.acm.org",
+            "citation_count": 748,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3033273",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3033273",
+            "snippet": "… Second, the large amount of data loaded into memory decreases the efficiency of the cache. … Overall, we find that CPU is not a bottleneck for both LevelDB and WiscKey in our setup. …",
+            "found_by_queries": [
+                "RAM SSD tiering vector search"
+            ],
+            "best_rank": 19,
+            "local_number": 113,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\113_Wisckey_Separating_keys_from_values_in_ssd-conscious_storage.txt"
+        },
+        {
+            "paper_id": "HKClK-ll5AIJ",
+            "title": "Amber: Enabling precise full-system simulation with detailed modeling of all SSD resources",
+            "authors": [
+                "D Gouk",
+                "M Kwon",
+                "J Zhang",
+                "S Koh"
+            ],
+            "year": 2018,
+            "publication_summary": "D Gouk, M Kwon, J Zhang, S Koh… - 2018 51st Annual …, 2018 - ieeexplore.ieee.org",
+            "citation_count": 128,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/8574562/",
+            "pdf_url": "https://arxiv.org/pdf/1811.01544",
+            "snippet": "… of storage subsystems in modern memory/storage systems. … performance computers leverage SSDs as a cache or as a … , it needs to search all page table entries to find out other pages, …",
+            "found_by_queries": [
+                "RAM SSD tiering vector search"
+            ],
+            "best_rank": 20,
+            "local_number": 114,
+            "local_pdf": "research_papers\\pdfs\\HKClK-ll5AIJ.pdf",
+            "local_text": "research_papers\\papers\\114_Amber_Enabling_precise_full-system_simulation_with_detailed_modeling_of_all_SSD_resources.txt"
+        },
+        {
+            "paper_id": "s1XNo3fecaIJ",
+            "title": "Cache design of ssd-based search engine architectures: An experimental study",
+            "authors": [
+                "J Wang",
+                "E Lo",
+                "ML Yiu",
+                "J Tong",
+                "G Wang"
+            ],
+            "year": 2014,
+            "publication_summary": "J Wang, E Lo, ML Yiu, J Tong, G Wang… - ACM Transactions on …, 2014 - dl.acm.org",
+            "citation_count": 21,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/2661629",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/2661629",
+            "snippet": "… may void the cache management of existing search engines. In … the impact of SSD on search engine cache management. Based on … and caching policies for SSD-based search engines. …",
+            "found_by_queries": [
+                "vector search cache SSD"
+            ],
+            "best_rank": 19,
+            "local_number": 115,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\115_Cache_design_of_ssd-based_search_engine_architectures_An_experimental_study.txt"
+        },
+        {
+            "paper_id": "wCq-jUR7E30J",
+            "title": "NCache: A machine-learning cache management scheme for computational SSDs",
+            "authors": [
+                "H Sun",
+                "Q Cui",
+                "J Huang",
+                "X Qin"
+            ],
+            "year": 2022,
+            "publication_summary": "H Sun, Q Cui, J Huang, X Qin - IEEE Transactions on Computer …, 2022 - ieeexplore.ieee.org",
+            "citation_count": 17,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/9899693/",
+            "pdf_url": "https://drive.google.com/file/d/1YzZGBo6_zKFQCvua5dW6cfDYU3Y681BW/view",
+            "snippet": "… hit time Thit is the time spent in searching cache, and miss ratio Rmiss is the frequency of … The support vector machine (SVM) [28] was applied in a hardware predictor structure for …",
+            "found_by_queries": [
+                "vector search cache SSD"
+            ],
+            "best_rank": 20,
+            "local_number": 116,
+            "local_pdf": "research_papers\\pdfs\\wCq-jUR7E30J.pdf",
+            "local_text": "research_papers\\papers\\116_NCache_A_machine-learning_cache_management_scheme_for_computational_SSDs.txt"
+        },
+        {
+            "paper_id": "REZ6dmI5LV4J",
+            "title": "A machine learning-empowered cache management scheme for high-performance SSDs",
+            "authors": [
+                "H Sun",
+                "C Sun",
+                "H Tong",
+                "Y Yue"
+            ],
+            "year": 2024,
+            "publication_summary": "H Sun, C Sun, H Tong, Y Yue… - IEEE Transactions on …, 2024 - ieeexplore.ieee.org",
+            "citation_count": 12,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/10536870/",
+            "pdf_url": null,
+            "snippet": "… SSDs. For instance, SSDKeeper [20] adopts a channel allocation mechanism based on the ANN … requests are calculated – and ANN is employed to allocate cache space for requests in …",
+            "found_by_queries": [
+                "ANN cache SSD"
+            ],
+            "best_rank": 1,
+            "local_number": 117,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\117_A_machine_learning-empowered_cache_management_scheme_for_high-performance_SSDs.txt"
+        },
+        {
+            "paper_id": "XGKHFRu-QHQJ",
+            "title": "A space-efficient fair cache scheme based on machine learning for NVMe SSDs",
+            "authors": [
+                "W Liu",
+                "J Cui",
+                "T Li",
+                "J Liu",
+                "LT Yang"
+            ],
+            "year": 2022,
+            "publication_summary": "W Liu, J Cui, T Li, J Liu, LT Yang - IEEE Transactions on …, 2022 - ieeexplore.ieee.org",
+            "citation_count": 26,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/9946404/",
+            "pdf_url": null,
+            "snippet": "… studies use ANN to optimize SSD, including cache replacement … As a heuristic algorithm, ANN can effectively obtain the … cache partition and obtain the approximate optimal cache …",
+            "found_by_queries": [
+                "ANN cache SSD"
+            ],
+            "best_rank": 3,
+            "local_number": 118,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\118_A_space-efficient_fair_cache_scheme_based_on_machine_learning_for_NVMe_SSDs.txt"
+        },
+        {
+            "paper_id": "x1Iwu-W7slEJ",
+            "title": "Toward Smarter SSDs: A Comprehensive Survey of Machine Learning Techniques for Internal Optimization",
+            "authors": [
+                "T Kim"
+            ],
+            "year": 2025,
+            "publication_summary": "T Kim - IEEE Access, 2025 - ieeexplore.ieee.org",
+            "citation_count": 3,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/11208569/",
+            "pdf_url": "https://ieeexplore.ieee.org/iel8/6287639/6514899/11208569.pdf",
+            "snippet": "… They also proposed NCache [44], which improves cache efficiency in computational SSDs by … MLCache uses an ANN to predict reuse distance, allowing it to dynamically allocate cache …",
+            "found_by_queries": [
+                "ANN cache SSD"
+            ],
+            "best_rank": 5,
+            "local_number": 119,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\119_Toward_Smarter_SSDs_A_Comprehensive_Survey_of_Machine_Learning_Techniques_for_Internal_Optimization.txt"
+        },
+        {
+            "paper_id": "LRQrSEA8koMJ",
+            "title": "MLCache: A space-efficient cache scheme based on reuse distance and machine learning for NVMe SSDs",
+            "authors": [
+                "W Liu",
+                "J Cui",
+                "J Liu",
+                "LT Yang"
+            ],
+            "year": 2020,
+            "publication_summary": "W Liu, J Cui, J Liu, LT Yang - … of the 39th International Conference on …, 2020 - dl.acm.org",
+            "citation_count": 25,
+            "google_scholar_url": "https://dl.acm.org/doi/abs/10.1145/3400302.3415652",
+            "pdf_url": "https://dl.acm.org/doi/pdf/10.1145/3400302.3415652",
+            "snippet": "… shared cache management scheme for NVMe SSDs, which maximizes the write hit ratios, as well as enhances the SSD … Secondly, MLCache uses artificial neural network techniques to …",
+            "found_by_queries": [
+                "ANN cache SSD"
+            ],
+            "best_rank": 6,
+            "local_number": 120,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\120_MLCache_A_space-efficient_cache_scheme_based_on_reuse_distance_and_machine_learning_for_NVMe_SSDs.txt"
+        },
+        {
+            "paper_id": "ABImFcfc1NIJ",
+            "title": "ML-CLOCK: Efficient page cache algorithm based on perceptron-based neural network",
+            "authors": [
+                "M Cho",
+                "D Kang"
+            ],
+            "year": 2021,
+            "publication_summary": "M Cho, D Kang - Electronics, 2021 - mdpi.com",
+            "citation_count": 11,
+            "google_scholar_url": "https://www.mdpi.com/2079-9292/10/20/2503",
+            "pdf_url": null,
+            "snippet": "… ANN provides the abstraction for each biological neural cell to … independent stream and adjusts the cache space of each stream. … to the SSD cache in clouding computing environments. …",
+            "found_by_queries": [
+                "ANN cache SSD"
+            ],
+            "best_rank": 7,
+            "local_number": 121,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\121_ML-CLOCK_Efficient_page_cache_algorithm_based_on_perceptron-based_neural_network.txt"
+        },
+        {
+            "paper_id": "pvECjl0YMUkJ",
+            "title": "A Survey on the Use of AI/ML for Storage System Design and Optimization",
+            "authors": [
+                "J Boukhobza",
+                "S Byna",
+                "YH Chang",
+                "S Ibrahim",
+                "S Jamil"
+            ],
+            "year": 2026,
+            "publication_summary": "J Boukhobza, S Byna, YH Chang, S Ibrahim, S Jamil… - 2026 - hal.science",
+            "citation_count": 1,
+            "google_scholar_url": "https://hal.science/hal-05528520/",
+            "pdf_url": "https://hal.science/hal-05528520v1/file/Survey_about_AI_for_storage__preprint.pdf",
+            "snippet": "… address mapping table, enhancing caching efficiency within the SSD controller. The linear … designed to improve SSD performance in multi-tenant environments. It uses an ANN model, …",
+            "found_by_queries": [
+                "ANN cache SSD"
+            ],
+            "best_rank": 8,
+            "local_number": 122,
+            "local_pdf": "research_papers\\pdfs\\pvECjl0YMUkJ.pdf",
+            "local_text": "research_papers\\papers\\122_A_Survey_on_the_Use_of_AIML_for_Storage_System_Design_and_Optimization.txt"
+        },
+        {
+            "paper_id": "4BAbPtQKd0kJ",
+            "title": "CD-ANN: Scalable Approximate Nearest Neighbor search on client-side devices",
+            "authors": [
+                "C Qin",
+                "Y Tang",
+                "B Guo",
+                "K Zhong",
+                "D Liu"
+            ],
+            "year": 2026,
+            "publication_summary": "C Qin, Y Tang, B Guo, K Zhong, D Liu - Journal of Systems Architecture, 2026 - Elsevier",
+            "citation_count": 1,
+            "google_scholar_url": "https://www.sciencedirect.com/science/article/pii/S1383762126000895",
+            "pdf_url": null,
+            "snippet": "… index structures are stored on Solid-State Disks (SSDs) by a remote Service Provider (SP), … linear path caching with high volatility, CD-ANN treats each HNSW segment as a caching unit…",
+            "found_by_queries": [
+                "ANN cache SSD"
+            ],
+            "best_rank": 12,
+            "local_number": 123,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\123_CD-ANN_Scalable_Approximate_Nearest_Neighbor_search_on_client-side_devices.txt"
+        },
+        {
+            "paper_id": "l4vIBqIxjv4J",
+            "title": "Cache Partition Management for Improving Fairness and I/O Responsiveness in NVMe SSDs",
+            "authors": [
+                "J Wu",
+                "F Yang",
+                "Z Sha",
+                "L Cai",
+                "Z Cai"
+            ],
+            "year": 2025,
+            "publication_summary": "J Wu, F Yang, Z Sha, L Cai, Z Cai… - … on Parallel and …, 2025 - ieeexplore.ieee.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/11197598/",
+            "pdf_url": null,
+            "snippet": "… It uses an artificial neural network (ANN) model to direct cache space partition. By taking reuse distance and distribution as inputs, the neural network model predicts the allocation ratio …",
+            "found_by_queries": [
+                "ANN cache SSD"
+            ],
+            "best_rank": 13,
+            "local_number": 124,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\124_Cache_Partition_Management_for_Improving_Fairness_and_IO_Responsiveness_in_NVMe_SSDs.txt"
+        },
+        {
+            "paper_id": "tdXGot8sUFMJ",
+            "title": "ANN-Cache: Accelerating Approximate Nearest Neighbor Search via Caching",
+            "authors": [
+                "L Li",
+                "Z He",
+                "Z Zhang",
+                "Y Deng"
+            ],
+            "year": 2026,
+            "publication_summary": "L Li, Z He, Z Zhang, Y Deng - IEEE Transactions on Knowledge …, 2026 - ieeexplore.ieee.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/11551922/",
+            "pdf_url": null,
+            "snippet": "… , we propose ANN-CACHE, an I/O-efficient cache-conscious ANN … exploring caching to accelerate disk-based ANN search. … optimizing the data layout on SSDs and improving the search …",
+            "found_by_queries": [
+                "ANN cache SSD"
+            ],
+            "best_rank": 14,
+            "local_number": 125,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\125_ANN-Cache_Accelerating_Approximate_Nearest_Neighbor_Search_via_Caching.txt"
+        },
+        {
+            "paper_id": "OlaPVW7z5EIJ",
+            "title": "Artificial intelligence-based Cache Partitioning for protecting the systems against vulnerabilities",
+            "authors": [
+                "AM Jose"
+            ],
+            "year": 2025,
+            "publication_summary": "AM Jose - 2025 - norma.ncirl.ie",
+            "citation_count": 0,
+            "google_scholar_url": "https://norma.ncirl.ie/id/eprint/8325",
+            "pdf_url": "https://norma.ncirl.ie/8325/1/angelmaroorjose.pdf",
+            "snippet": "… Cache, when implemented in an SSD emulator, surpasses other … A space-efficient fair cache scheme based on machine learning for nvme ssds. IEEE Transactions on Parallel and …",
+            "found_by_queries": [
+                "ANN cache SSD"
+            ],
+            "best_rank": 15,
+            "local_number": 126,
+            "local_pdf": "research_papers\\pdfs\\OlaPVW7z5EIJ.pdf",
+            "local_text": "research_papers\\papers\\126_Artificial_intelligence-based_Cache_Partitioning_for_protecting_the_systems_against_vulnerabilities.txt"
+        },
+        {
+            "paper_id": "TUc4sXY-FJoJ",
+            "title": "Self-adapting channel allocation for multiple tenants sharing SSD devices",
+            "authors": [
+                "R Liu",
+                "D Liu",
+                "X Chen",
+                "Y Tan",
+                "R Zhang"
+            ],
+            "year": 2021,
+            "publication_summary": "R Liu, D Liu, X Chen, Y Tan, R Zhang… - IEEE Transactions on …, 2021 - ieeexplore.ieee.org",
+            "citation_count": 20,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/9344825/",
+            "pdf_url": null,
+            "snippet": "… Cache register and page register in each plane is used to cache data to balance the speed … this article, we mainly use an artificial neural network (ANN) as an example to describe …",
+            "found_by_queries": [
+                "ANN cache SSD"
+            ],
+            "best_rank": 17,
+            "local_number": 127,
+            "local_pdf": null,
+            "local_text": "research_papers\\papers\\127_Self-adapting_channel_allocation_for_multiple_tenants_sharing_SSD_devices.txt"
+        },
+        {
+            "paper_id": "UVvJB22SUw0J",
+            "title": "CS-PQ: Cache-Friendly SIMD Product Quantization for Large-Scale ANNS Index Construction",
+            "authors": [
+                "YT Ma",
+                "KC Huang",
+                "XK Jiang",
+                "ML Wang",
+                "X Yao"
+            ],
+            "year": 2026,
+            "publication_summary": "YT Ma, KC Huang, XK Jiang, ML Wang, X Yao… - arXiv preprint arXiv …, 2026 - arxiv.org",
+            "citation_count": 0,
+            "google_scholar_url": "https://arxiv.org/abs/2605.25521",
+            "pdf_url": "https://arxiv.org/pdf/2605.25521",
+            "snippet": "… main memory, and a high-performance SSD array with approximately 1.7 TB capacity. The … This compression setting is commonly used in large-scale ANN systems and provides a …",
+            "found_by_queries": [
+                "ANN cache SSD"
+            ],
+            "best_rank": 18,
+            "local_number": 128,
+            "local_pdf": "research_papers\\pdfs\\UVvJB22SUw0J.pdf",
+            "local_text": "research_papers\\papers\\128_CS-PQ_Cache-Friendly_SIMD_Product_Quantization_for_Large-Scale_ANNS_Index_Construction.txt"
+        },
+        {
+            "paper_id": "kQQYVMnYYPQJ",
+            "title": "Quick generation of SSD performance models using machine learning",
+            "authors": [
+                "S Azadvar",
+                "A Tavakkol",
+                "H Asadi"
+            ],
+            "year": 2021,
+            "publication_summary": "S Azadvar, A Tavakkol, H Asadi… - IEEE Transactions on …, 2021 - ieeexplore.ieee.org",
+            "citation_count": 6,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/9557842/",
+            "pdf_url": "https://www.tavakkol.ch/downloads/papers/A.Tavakkol-TETC2021.pdf",
+            "snippet": "… SSDs perform many internal processes such as out-of-place writes, wear-leveling, and gar… SSD simulators. Our survey indicates that aside from complex configuration, available SSD …",
+            "found_by_queries": [
+                "ANN cache SSD"
+            ],
+            "best_rank": 19,
+            "local_number": 129,
+            "local_pdf": "research_papers\\pdfs\\kQQYVMnYYPQJ.pdf",
+            "local_text": "research_papers\\papers\\129_Quick_generation_of_SSD_performance_models_using_machine_learning.txt"
+        },
+        {
+            "paper_id": "KdWGFW5N_NkJ",
+            "title": "Selective I/O bypass and load balancing method for write-through SSD caching in big data analytics",
+            "authors": [
+                "J Kim",
+                "H Roh",
+                "S Park"
+            ],
+            "year": 2017,
+            "publication_summary": "J Kim, H Roh, S Park - IEEE Transactions on Computers, 2017 - ieeexplore.ieee.org",
+            "citation_count": 19,
+            "google_scholar_url": "https://ieeexplore.ieee.org/abstract/document/8100898/",
+            "pdf_url": "http://delab.yonsei.ac.kr/assets/files/publication/international/journal/08100898.pdf",
+            "snippet": "… SSDs as a write-through cache instead of increasing the number of HDDs. To improve the cost-perperformance of the SSD cache… from the SSD cache to idle HDDs when the SSDs are I/…",
+            "found_by_queries": [
+                "ANN cache SSD"
+            ],
+            "best_rank": 20,
+            "local_number": 130,
+            "local_pdf": "research_papers\\pdfs\\KdWGFW5N_NkJ.pdf",
+            "local_text": "research_papers\\papers\\130_Selective_IO_bypass_and_load_balancing_method_for_write-through_SSD_caching_in_big_data_analytics.txt"
+        }
+    ]
+}

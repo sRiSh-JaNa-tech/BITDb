@@ -1,0 +1,39 @@
+TITLE
+=====
+An efficient SSD-based hybrid storage architecture for large-scale search engines
+
+PAPER ID
+========
+w_gvA83bgyoJ
+
+AUTHORS
+=======
+R Li, C Li, W Xiao, H Jin, H He, X Gu
+
+YEAR
+====
+2012
+
+PUBLICATION INFORMATION
+=======================
+R Li, C Li, W Xiao, H Jin, H He, X Gu… - 2012 41st …, 2012 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+13
+
+FOUND BY QUERIES
+================
+- SSD-based vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/6337606/
+
+PDF URL
+=======
+https://www.academia.edu/download/32160226/06337606.pdf
+
+SNIPPET
+=======
+Large-scale search engines use hard disk drives (HDD) to … I/O patterns of search engines and propose SSD-based data … Our main goal is to improve the performance of search engines …

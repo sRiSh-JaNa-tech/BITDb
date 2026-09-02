@@ -1,0 +1,39 @@
+TITLE
+=====
+VStore: in-storage graph based vector search accelerator
+
+PAPER ID
+========
+nTuBsZ4oJ1UJ
+
+AUTHORS
+=======
+S Liang, Y Wang, Z Yuan, C Liu, H Li, X Li
+
+YEAR
+====
+2022
+
+PUBLICATION INFORMATION
+=======================
+S Liang, Y Wang, Z Yuan, C Liu, H Li, X Li - … of the 59th ACM/IEEE Design …, 2022 - dl.acm.org
+
+CITATION COUNT
+==============
+32
+
+FOUND BY QUERIES
+================
+- SSD-based vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/3489517.3530560
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/3489517.3530560
+
+SNIPPET
+=======
+… In order to reduce memory footprint and data movement overhead, we construct VStore, a graph-based vector search solution within SSD based on the in-storage computing technique. …

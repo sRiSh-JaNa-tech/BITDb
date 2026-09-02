@@ -1,0 +1,39 @@
+TITLE
+=====
+Zoom: Ssd-based vector search for optimizing accuracy, latency and memory
+
+PAPER ID
+========
+h_0encVnamQJ
+
+AUTHORS
+=======
+M Zhang, Y He
+
+YEAR
+====
+2018
+
+PUBLICATION INFORMATION
+=======================
+M Zhang, Y He - arXiv preprint arXiv:1809.04067, 2018 - arxiv.org
+
+CITATION COUNT
+==============
+14
+
+FOUND BY QUERIES
+================
+- SSD-based vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://arxiv.org/abs/1809.04067
+
+PDF URL
+=======
+https://arxiv.org/pdf/1809.04067
+
+SNIPPET
+=======
+… , to search and find best matches to user queries based on their semantic similarities. These online services require the search … We develop, Zoom, a new vector search solution that …

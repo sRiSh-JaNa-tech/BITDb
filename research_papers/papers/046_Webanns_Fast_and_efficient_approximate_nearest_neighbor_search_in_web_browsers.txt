@@ -1,0 +1,39 @@
+TITLE
+=====
+Webanns: Fast and efficient approximate nearest neighbor search in web browsers
+
+PAPER ID
+========
+tOLUYxfNFusJ
+
+AUTHORS
+=======
+M Liu, S Zhong, Q Yang, Y Han, X Liu
+
+YEAR
+====
+2025
+
+PUBLICATION INFORMATION
+=======================
+M Liu, S Zhong, Q Yang, Y Han, X Liu… - Proceedings of the 48th …, 2025 - dl.acm.org
+
+CITATION COUNT
+==============
+12
+
+FOUND BY QUERIES
+================
+- memory efficient approximate nearest neighbor search
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/3726302.3730115
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/3726302.3730115
+
+SNIPPET
+=======
+… To address these limitations, we propose WebANNS, a fast and memory-efficient ANNS engine specifically designed for browsers, which incorporates three key designs. First, …

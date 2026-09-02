@@ -1,0 +1,39 @@
+TITLE
+=====
+Associative memories to accelerate approximate nearest neighbor search
+
+PAPER ID
+========
+4jCoyInwCJgJ
+
+AUTHORS
+=======
+V Gripon, M Löwe, F Vermet
+
+YEAR
+====
+2018
+
+PUBLICATION INFORMATION
+=======================
+V Gripon, M Löwe, F Vermet - Applied Sciences, 2018 - mdpi.com
+
+CITATION COUNT
+==============
+24
+
+FOUND BY QUERIES
+================
+- memory efficient approximate nearest neighbor search
+
+GOOGLE SCHOLAR URL
+==================
+https://www.mdpi.com/2076-3417/8/9/1676
+
+PDF URL
+=======
+Not available
+
+SNIPPET
+=======
+… In Section 5, we will support our findings with simulations on classical approximate nearest neighbor search benchmarks. These will also reveal the interplay between the various …

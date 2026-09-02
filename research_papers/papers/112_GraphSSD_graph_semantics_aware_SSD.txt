@@ -1,0 +1,39 @@
+TITLE
+=====
+GraphSSD: graph semantics aware SSD
+
+PAPER ID
+========
+iCnkxH2ItagJ
+
+AUTHORS
+=======
+KK Matam, G Koo, H Zha, HW Tseng
+
+YEAR
+====
+2019
+
+PUBLICATION INFORMATION
+=======================
+KK Matam, G Koo, H Zha, HW Tseng… - Proceedings of the 46th …, 2019 - dl.acm.org
+
+CITATION COUNT
+==============
+126
+
+FOUND BY QUERIES
+================
+- RAM SSD tiering vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/3307650.3322275
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/3307650.3322275
+
+SNIPPET
+=======
+… find the index of the destination vertex in the colIdx vector; with that index we can access the corresponding location in the val vector… the same host side memory cache size as GraphSSD…

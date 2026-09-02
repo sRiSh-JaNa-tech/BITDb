@@ -1,0 +1,39 @@
+TITLE
+=====
+Out-of-core solver for large dense nonsymmetric linear systems
+
+PAPER ID
+========
+53zV9jpe7_cJ
+
+AUTHORS
+=======
+N Geers, R Klees
+
+YEAR
+====
+1993
+
+PUBLICATION INFORMATION
+=======================
+N Geers, R Klees - Manuscripta geodaetica, 1993 - Springer
+
+CITATION COUNT
+==============
+7
+
+FOUND BY QUERIES
+================
+- out-of-core vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://link.springer.com/article/10.1007/BF03655340
+
+PDF URL
+=======
+Not available
+
+SNIPPET
+=======
+… fast out-ofcore solver for dense nonsymmetric linear systems on pipelined SIMD machines ("vector … We can use equation (15) to find reasonable values for NB. Let Pt1 be the sustained …

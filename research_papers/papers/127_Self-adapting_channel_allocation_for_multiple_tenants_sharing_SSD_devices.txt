@@ -1,0 +1,39 @@
+TITLE
+=====
+Self-adapting channel allocation for multiple tenants sharing SSD devices
+
+PAPER ID
+========
+TUc4sXY-FJoJ
+
+AUTHORS
+=======
+R Liu, D Liu, X Chen, Y Tan, R Zhang
+
+YEAR
+====
+2021
+
+PUBLICATION INFORMATION
+=======================
+R Liu, D Liu, X Chen, Y Tan, R Zhang… - IEEE Transactions on …, 2021 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+20
+
+FOUND BY QUERIES
+================
+- ANN cache SSD
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/9344825/
+
+PDF URL
+=======
+Not available
+
+SNIPPET
+=======
+… Cache register and page register in each plane is used to cache data to balance the speed … this article, we mainly use an artificial neural network (ANN) as an example to describe …

@@ -1,0 +1,39 @@
+TITLE
+=====
+Routing Memory
+
+PAPER ID
+========
+9Qfyc6Pp7q8J
+
+AUTHORS
+=======
+AY Sertel
+
+YEAR
+====
+Unknown
+
+PUBLICATION INFORMATION
+=======================
+AY Sertel - researchgate.net
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- RAM SSD tiering vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://www.researchgate.net/profile/Ahmet-Yigit-Sertel/publication/401670106_Routing_Memory_A_Tiered_Vector-Quantized_Memory_System_for_Long-Lived_Language-Model_Agents/links/6a44c7ef5ec65810298e5144/Routing-Memory-A-Tiered-Vector-Quantized-Memory-System-for-Long-Lived-Language-Model-Agents.pdf
+
+PDF URL
+=======
+https://www.researchgate.net/profile/Ahmet-Yigit-Sertel/publication/401670106_Routing_Memory_A_Tiered_Vector-Quantized_Memory_System_for_Long-Lived_Language-Model_Agents/links/6a44c7ef5ec65810298e5144/Routing-Memory-A-Tiered-Vector-Quantized-Memory-System-for-Long-Lived-Language-Model-Agents.pdf
+
+SNIPPET
+=======
+… ) stays in RAM, while full embeddings live in cold storage and are … , the tiered design uses 14.4× less RAM than dense flat search … The system needs no vector database and no FAISS …

@@ -1,0 +1,39 @@
+TITLE
+=====
+Es4d: Accelerating exact similarity search for high-dimensional vectors via vector slicing and in-ssd computation
+
+PAPER ID
+========
+oIcWZnLYPagJ
+
+AUTHORS
+=======
+J Kim, J Seo, J Park, SW Lee, H Roh
+
+YEAR
+====
+2022
+
+PUBLICATION INFORMATION
+=======================
+J Kim, J Seo, J Park, SW Lee, H Roh… - 2022 IEEE 40th …, 2022 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+4
+
+FOUND BY QUERIES
+================
+- SSD-based vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/9978526/
+
+PDF URL
+=======
+Not available
+
+SNIPPET
+=======
+… Several SSD-based similarity search platforms were proposed to reduce flash storage … are also targeting ANN search. Other than using flash as the vector dataset storage, memory-…

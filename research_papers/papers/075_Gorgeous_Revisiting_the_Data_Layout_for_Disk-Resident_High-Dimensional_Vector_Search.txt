@@ -1,0 +1,39 @@
+TITLE
+=====
+Gorgeous: Revisiting the Data Layout for Disk-Resident High-Dimensional Vector Search
+
+PAPER ID
+========
+yL8f5cCFuuMJ
+
+AUTHORS
+=======
+P Yin, X Yan, Q Zhou, H Li, X Li, L Zhang
+
+YEAR
+====
+2025
+
+PUBLICATION INFORMATION
+=======================
+P Yin, X Yan, Q Zhou, H Li, X Li, L Zhang… - arXiv preprint arXiv …, 2025 - arxiv.org
+
+CITATION COUNT
+==============
+11
+
+FOUND BY QUERIES
+================
+- disk resident vector index
+
+GOOGLE SCHOLAR URL
+==================
+https://arxiv.org/abs/2508.15290
+
+PDF URL
+=======
+https://arxiv.org/pdf/2508.15290
+
+SNIPPET
+=======
+… As discussed in §3.4, we constrain that the disk block of each vector takes up at most one 4KB disk page. Given a proximity graph index and 𝑅, for each node𝑢, our graphreplicated disk …

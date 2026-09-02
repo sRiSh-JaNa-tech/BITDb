@@ -1,0 +1,39 @@
+TITLE
+=====
+Disk-Resident Graph ANN Search: An Experimental Evaluation
+
+PAPER ID
+========
+sCeYZIoJAvoJ
+
+AUTHORS
+=======
+X Chen, J Qu, Y Song, S Lu, H Li, M Jiang
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+X Chen, J Qu, Y Song, S Lu, H Li, M Jiang… - arXiv preprint arXiv …, 2026 - arxiv.org
+
+CITATION COUNT
+==============
+5
+
+FOUND BY QUERIES
+================
+- disk resident vector index
+
+GOOGLE SCHOLAR URL
+==================
+https://arxiv.org/abs/2603.01779
+
+PDF URL
+=======
+https://arxiv.org/pdf/2603.01779
+
+SNIPPET
+=======
+… Disk-resident methods must determine how to … raw vectors, graph index structures, and auxiliary data (eg, entry structures and compressed vectors), across heterogeneous memory–disk …

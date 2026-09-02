@@ -1,0 +1,39 @@
+TITLE
+=====
+Search-in-memory: Reliable, versatile, and efficient data matching in SSD's NAND flash memory chip for data indexing acceleration
+
+PAPER ID
+========
+SMpNuS_0Kq8J
+
+AUTHORS
+=======
+YC Chen, YH Chang, TW Kuo
+
+YEAR
+====
+2024
+
+PUBLICATION INFORMATION
+=======================
+YC Chen, YH Chang, TW Kuo - IEEE Transactions on …, 2024 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+15
+
+FOUND BY QUERIES
+================
+- RAM SSD tiering vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/10745821/
+
+PDF URL
+=======
+Not available
+
+SNIPPET
+=======
+… SiM bypasses the page cache and requires additional cycles for on-chip matching, whereas the baseline may avoid I/O by searching the pages stored in the page cache directly. One …

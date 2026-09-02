@@ -1,0 +1,39 @@
+TITLE
+=====
+iqan: Fast and accurate vector search with efficient intra-query parallelism on multi-core architectures
+
+PAPER ID
+========
+_e8bK75aWPQJ
+
+AUTHORS
+=======
+Z Peng, M Zhang, K Li, R Jin, B Ren
+
+YEAR
+====
+2023
+
+PUBLICATION INFORMATION
+=======================
+Z Peng, M Zhang, K Li, R Jin, B Ren - … of the 28th ACM SIGPLAN Annual …, 2023 - dl.acm.org
+
+CITATION COUNT
+==============
+47
+
+FOUND BY QUERIES
+================
+- out-of-core vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/3572848.3577527
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/3572848.3577527
+
+SNIPPET
+=======
+… to handle them to allow vector-based similarity search to scale on … We have applied Δ-stepping to vector search and will … Some efforts focus on out-of-core designs (eg, GraphChi [31] …

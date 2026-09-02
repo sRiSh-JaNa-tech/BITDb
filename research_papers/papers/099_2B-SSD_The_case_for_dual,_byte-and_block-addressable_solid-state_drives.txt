@@ -1,0 +1,39 @@
+TITLE
+=====
+2B-SSD: The case for dual, byte-and block-addressable solid-state drives
+
+PAPER ID
+========
+OVXqSAHh4qUJ
+
+AUTHORS
+=======
+DH Bae, I Jo, YA Choi, JY Hwang, S Cho
+
+YEAR
+====
+2018
+
+PUBLICATION INFORMATION
+=======================
+DH Bae, I Jo, YA Choi, JY Hwang, S Cho… - 2018 ACM/IEEE 45th …, 2018 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+79
+
+FOUND BY QUERIES
+================
+- SSD-backed vector database
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/8416845/
+
+PDF URL
+=======
+https://www.sigfast.or.kr/nvramos/nvramos18/presentation/3%EC%82%BC%EC%84%B1%EC%A0%84%EC%9E%90-%ED%99%A9%EC%A3%BC%EC%98%81.pdf
+
+SNIPPET
+=======
+… : DATABASE LOGGING As our case study, we focus on SQL and NoSQL database systems … This section describes how we revise database logging mechanism to exploit 2B-SSD’s …

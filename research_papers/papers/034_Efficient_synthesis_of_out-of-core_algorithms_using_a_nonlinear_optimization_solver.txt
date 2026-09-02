@@ -1,0 +1,39 @@
+TITLE
+=====
+Efficient synthesis of out-of-core algorithms using a nonlinear optimization solver
+
+PAPER ID
+========
+QhhiOvZrtewJ
+
+AUTHORS
+=======
+S Krishnan, S Krishnamoorthy
+
+YEAR
+====
+2004
+
+PUBLICATION INFORMATION
+=======================
+S Krishnan, S Krishnamoorthy… - 18th International …, 2004 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+11
+
+FOUND BY QUERIES
+================
+- out-of-core vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/1302948/
+
+PDF URL
+=======
+https://www.researchgate.net/profile/Gerald-Baumgartner/publication/4077726_Efficient_synthesis_of_out-of-core_algorithms_using_a_nonlinear_optimization_solver/links/0912f5111433632506000000/Efficient-synthesis-of-out-of-core-algorithms-using-a-nonlinear-optimization-solver.pdf
+
+SNIPPET
+=======
+… proposed for out-of-core code generation. We use the Discrete Constrained Search (DCS) [… of the input array to be a scalar or a vector. This is because, the resulting concrete code will …

@@ -1,0 +1,39 @@
+TITLE
+=====
+ReVerS: A Reconfigurable Near-Data Computing Architecture for Efficient Vector Search in SSDs
+
+PAPER ID
+========
+AArNdKd2KdIJ
+
+AUTHORS
+=======
+Y Wu, L Li, J Wu, J Zhu
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+Y Wu, L Li, J Wu, J Zhu - 2026 11th International Symposium on …, 2026 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- SSD ANN vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/11635420/
+
+PDF URL
+=======
+Not available
+
+SNIPPET
+=======
+… Vector search workloads may use different metrics and ANN … SSD-resident vector search. ReVerS moves distance computation, candidate scoring and top-K maintenance into the SSD …

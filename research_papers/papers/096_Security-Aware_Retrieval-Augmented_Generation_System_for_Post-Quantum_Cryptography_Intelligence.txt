@@ -1,0 +1,39 @@
+TITLE
+=====
+Security-Aware Retrieval-Augmented Generation System for Post-Quantum Cryptography Intelligence
+
+PAPER ID
+========
+iKIQcVE-4gMJ
+
+AUTHORS
+=======
+GP Kolavennu, Y Shi, K Suo, T Nguyen
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+GP Kolavennu, Y Shi, K Suo, T Nguyen… - SoutheastCon …, 2026 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- SSD-backed vector database
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/11476026/
+
+PDF URL
+=======
+Not available
+
+SNIPPET
+=======
+… Generally, this attack vector proves peculiarly concerning for … Data poisoning in vector database represent another critical exposure with substantial … SSD-backed persistent disk Platform …

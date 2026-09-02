@@ -1,0 +1,39 @@
+TITLE
+=====
+Hybrid Aggregates: Combining SSDs and HDDs in a single storage pool
+
+PAPER ID
+========
+WPsGVnnqJBoJ
+
+AUTHORS
+=======
+JD Strunk
+
+YEAR
+====
+2012
+
+PUBLICATION INFORMATION
+=======================
+JD Strunk - ACM SIGOPS Operating Systems Review, 2012 - dl.acm.org
+
+CITATION COUNT
+==============
+124
+
+FOUND BY QUERIES
+================
+- SSD-backed vector database
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/2421648.2421656
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/2421648.2421656
+
+SNIPPET
+=======
+… the aggregate such that the SSD-backed portion of the ag… item to a set of bits within a large bit vector. To insert an entry, the … a transaction processing database workload. The benchmark …

@@ -1,0 +1,39 @@
+TITLE
+=====
+ANN-Cache: Accelerating Approximate Nearest Neighbor Search via Caching
+
+PAPER ID
+========
+tdXGot8sUFMJ
+
+AUTHORS
+=======
+L Li, Z He, Z Zhang, Y Deng
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+L Li, Z He, Z Zhang, Y Deng - IEEE Transactions on Knowledge …, 2026 - ieeexplore.ieee.org
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- ANN cache SSD
+
+GOOGLE SCHOLAR URL
+==================
+https://ieeexplore.ieee.org/abstract/document/11551922/
+
+PDF URL
+=======
+Not available
+
+SNIPPET
+=======
+… , we propose ANN-CACHE, an I/O-efficient cache-conscious ANN … exploring caching to accelerate disk-based ANN search. … optimizing the data layout on SSDs and improving the search …

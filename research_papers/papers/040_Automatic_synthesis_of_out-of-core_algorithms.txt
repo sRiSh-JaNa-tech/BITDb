@@ -1,0 +1,39 @@
+TITLE
+=====
+Automatic synthesis of out-of-core algorithms
+
+PAPER ID
+========
+11KpQbttdBwJ
+
+AUTHORS
+=======
+Y Klonatos, A Nötzli, A Spielmann, C Koch
+
+YEAR
+====
+2013
+
+PUBLICATION INFORMATION
+=======================
+Y Klonatos, A Nötzli, A Spielmann, C Koch… - Proceedings of the 2013 …, 2013 - dl.acm.org
+
+CITATION COUNT
+==============
+16
+
+FOUND BY QUERIES
+================
+- out-of-core vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/2463676.2465334
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/2463676.2465334
+
+SNIPPET
+=======
+… The research literature describes numerous out-of-core algorithms designed and optimized for a … or memory technology requires the development of new versions of most out-of-core …

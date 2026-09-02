@@ -1,0 +1,39 @@
+TITLE
+=====
+Vector Clustering for Disk-based HNSW
+
+PAPER ID
+========
+q-ISOa4FHC8J
+
+AUTHORS
+=======
+오재원
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+오재원 - 2026 - s-space.snu.ac.kr
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- disk resident vector index
+
+GOOGLE SCHOLAR URL
+==================
+https://s-space.snu.ac.kr/handle/10371/234121
+
+PDF URL
+=======
+https://s-space.snu.ac.kr/bitstream/10371/234121/1/000000193689.pdf
+
+SNIPPET
+=======
+… disk-resident HNSW that directly targets the physical layout and evolution of the index on disk… To address this challenge for preserving locality when storing vectors in diskbased indexes…

@@ -1,0 +1,39 @@
+TITLE
+=====
+Low-Latency Out-of-Core ANN Search in High-Dimensional Space
+
+PAPER ID
+========
+SmseQq44_n0J
+
+AUTHORS
+=======
+Z Song, B Wang, X Yang, J Zhang
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+Z Song, B Wang, X Yang, J Zhang - arXiv preprint arXiv:2605.05787, 2026 - arxiv.org
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- out-of-core vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://arxiv.org/abs/2605.05787
+
+PDF URL
+=======
+https://arxiv.org/pdf/2605.05787
+
+SNIPPET
+=======
+… For the vector information used in memory for computing neighbor distances, we apply Principal Component Analysis (PCA) to each data point for dimensionality reduction, and our …

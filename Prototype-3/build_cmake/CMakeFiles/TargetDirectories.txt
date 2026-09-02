@@ -1,0 +1,7 @@
+C:/Users/srish/Desktop/BitDB/Prototype-3/build_cmake/CMakeFiles/bitdb_embed.dir
+C:/Users/srish/Desktop/BitDB/Prototype-3/build_cmake/CMakeFiles/Build.dir
+C:/Users/srish/Desktop/BitDB/Prototype-3/build_cmake/CMakeFiles/BitDBSearch.dir
+C:/Users/srish/Desktop/BitDB/Prototype-3/build_cmake/CMakeFiles/print_catalog.dir
+C:/Users/srish/Desktop/BitDB/Prototype-3/build_cmake/CMakeFiles/print_segment_dir.dir
+C:/Users/srish/Desktop/BitDB/Prototype-3/build_cmake/CMakeFiles/edit_cache.dir
+C:/Users/srish/Desktop/BitDB/Prototype-3/build_cmake/CMakeFiles/rebuild_cache.dir

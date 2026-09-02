@@ -1,0 +1,39 @@
+TITLE
+=====
+Disk-Resident Vector Similarity Search: A Survey
+
+PAPER ID
+========
+iQXImLwgVygJ
+
+AUTHORS
+=======
+Y Song, H Li, Z Wu, L Yi, B Zhu, X Zhou, X Huang, J Xu
+
+YEAR
+====
+Unknown
+
+PUBLICATION INFORMATION
+=======================
+Y Song, H Li, Z Wu, L Yi, B Zhu, X Zhou, X Huang, J Xu - hkbudb.github.io
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- SSD-based vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://hkbudb.github.io/disk-vss-survey/Disk-Resident%20Vector%20Similarity%20Search-%20A%20Survey.pdf
+
+PDF URL
+=======
+https://hkbudb.github.io/disk-vss-survey/Disk-Resident%20Vector%20Similarity%20Search-%20A%20Survey.pdf
+
+SNIPPET
+=======
+… , Disk-resident search … INTRODUCTION Vector Similarity Search (VSS) retrieves the vectors most similar to a given query from large-scale, high-dimensional datasets. It has become a …

@@ -1,0 +1,39 @@
+TITLE
+=====
+LSMDiskANN: Update-friendly Disk-resident Vector Index Framework.
+
+PAPER ID
+========
+8SfGdWP53IgJ
+
+AUTHORS
+=======
+H Qiu, Y Peng, Z Peng
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+H Qiu, Y Peng, Z Peng - International Journal of Software & …, 2026 - openurl.ebsco.com
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- disk resident vector index
+
+GOOGLE SCHOLAR URL
+==================
+https://openurl.ebsco.com/contentitem/gcd:193696523?sid=ebsco:plink:crawler-gcd&id=ebsco:gcd:193696523&crl=c&jrnl=16737288
+
+PDF URL
+=======
+Not available
+
+SNIPPET
+=======
+… full sequential scans of the disk index, introducing substantial additional disk I/O overhead. … , an updatefriendly disk-resident graph vector index framework based on FreshDiskANN. To …

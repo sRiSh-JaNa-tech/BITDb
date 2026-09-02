@@ -1,0 +1,39 @@
+TITLE
+=====
+Artificial intelligence-based Cache Partitioning for protecting the systems against vulnerabilities
+
+PAPER ID
+========
+OlaPVW7z5EIJ
+
+AUTHORS
+=======
+AM Jose
+
+YEAR
+====
+2025
+
+PUBLICATION INFORMATION
+=======================
+AM Jose - 2025 - norma.ncirl.ie
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- ANN cache SSD
+
+GOOGLE SCHOLAR URL
+==================
+https://norma.ncirl.ie/id/eprint/8325
+
+PDF URL
+=======
+https://norma.ncirl.ie/8325/1/angelmaroorjose.pdf
+
+SNIPPET
+=======
+… Cache, when implemented in an SSD emulator, surpasses other … A space-efficient fair cache scheme based on machine learning for nvme ssds. IEEE Transactions on Parallel and …

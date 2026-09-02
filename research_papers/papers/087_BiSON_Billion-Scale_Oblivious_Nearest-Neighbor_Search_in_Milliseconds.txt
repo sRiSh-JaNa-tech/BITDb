@@ -1,0 +1,39 @@
+TITLE
+=====
+BiSON: Billion-Scale Oblivious Nearest-Neighbor Search in Milliseconds
+
+PAPER ID
+========
+ASrdNAolk9EJ
+
+AUTHORS
+=======
+S Das, R Ravi, N Chandran, D Gupta
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+S Das, R Ravi, N Chandran, D Gupta - Cryptology ePrint Archive, 2026 - eprint.iacr.org
+
+CITATION COUNT
+==============
+0
+
+FOUND BY QUERIES
+================
+- SSD-backed vector database
+
+GOOGLE SCHOLAR URL
+==================
+https://eprint.iacr.org/2026/1343
+
+PDF URL
+=======
+https://eprint.iacr.org/2026/1343.pdf
+
+SNIPPET
+=======
+… Abstract—Semantic search over vector databases is a funda… incur high latency and fail to scale to realistic database sizes. … a Ring ORAM implementation optimized for SSD-backed …

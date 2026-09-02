@@ -1,0 +1,39 @@
+TITLE
+=====
+GPS: Revisiting the Data Layout for Disk-based High-Dimensional Vector Search
+
+PAPER ID
+========
+29hIsQtGGJoJ
+
+AUTHORS
+=======
+P Yin, X Yan, Q Zhou, H Li, X Li, M Wang
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+P Yin, X Yan, Q Zhou, H Li, X Li, M Wang… - Proceedings of the …, 2026 - dl.acm.org
+
+CITATION COUNT
+==============
+2
+
+FOUND BY QUERIES
+================
+- disk resident vector index
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/3802069
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/3802069
+
+SNIPPET
+=======
+… the exact vectors with memory-resident compressed vectors, yet … the disk block of each vector takes up at most one 4KB disk … graph index and , for each node , our graph-replicated disk …

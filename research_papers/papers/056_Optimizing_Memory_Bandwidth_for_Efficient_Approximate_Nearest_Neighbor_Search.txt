@@ -1,0 +1,39 @@
+TITLE
+=====
+Optimizing Memory Bandwidth for Efficient Approximate Nearest Neighbor Search
+
+PAPER ID
+========
+2jYaxX9gRO8J
+
+AUTHORS
+=======
+T Zhang
+
+YEAR
+====
+2025
+
+PUBLICATION INFORMATION
+=======================
+T Zhang - … Consortium (UMC). Toronto, Canada. Best Student …, 2025 - kdd2025.kdd.org
+
+CITATION COUNT
+==============
+2
+
+FOUND BY QUERIES
+================
+- memory efficient approximate nearest neighbor search
+
+GOOGLE SCHOLAR URL
+==================
+https://kdd2025.kdd.org/wp-content/uploads/2025/07/CameraReady-06.pdf
+
+PDF URL
+=======
+https://kdd2025.kdd.org/wp-content/uploads/2025/07/CameraReady-06.pdf
+
+SNIPPET
+=======
+… Approximate Nearest Neighbor (ANN) search is fundamental … , yet its efficiency is often limited by memory bandwidth, given its𝑂(1… a memory-centric approach to optimize ANN search by …

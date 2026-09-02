@@ -1,0 +1,39 @@
+TITLE
+=====
+Spann: Highly-efficient billion-scale approximate nearest neighborhood search
+
+PAPER ID
+========
+5FKYB737YPEJ
+
+AUTHORS
+=======
+Q Chen, B Zhao, H Wang, M Li, C Liu
+
+YEAR
+====
+2021
+
+PUBLICATION INFORMATION
+=======================
+Q Chen, B Zhao, H Wang, M Li, C Liu… - Advances in …, 2021 - proceedings.neurips.cc
+
+CITATION COUNT
+==============
+403
+
+FOUND BY QUERIES
+================
+- memory efficient approximate nearest neighbor search
+
+GOOGLE SCHOLAR URL
+==================
+https://proceedings.neurips.cc/paper_files/paper/2021/hash/299dc35e747eb77177d9cea10a802da2-Abstract.html
+
+PDF URL
+=======
+https://proceedings.neurips.cc/paper_files/paper/2021/file/299dc35e747eb77177d9cea10a802da2-Paper.pdf
+
+SNIPPET
+=======
+… -memory algorithms for approximate nearest neighbor search (ANNS) have achieved great success for fast high-recall search, … ANNS solutions with small memory and inexpensive solid-…

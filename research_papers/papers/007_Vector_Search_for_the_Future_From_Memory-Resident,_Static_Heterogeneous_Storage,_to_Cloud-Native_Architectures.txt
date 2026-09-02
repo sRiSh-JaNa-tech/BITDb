@@ -1,0 +1,39 @@
+TITLE
+=====
+Vector Search for the Future: From Memory-Resident, Static Heterogeneous Storage, to Cloud-Native Architectures
+
+PAPER ID
+========
+EwbvQvw9BpwJ
+
+AUTHORS
+=======
+Y Song, X Zhou, CS Jensen, J Xu
+
+YEAR
+====
+2026
+
+PUBLICATION INFORMATION
+=======================
+Y Song, X Zhou, CS Jensen, J Xu - Companion of the International …, 2026 - dl.acm.org
+
+CITATION COUNT
+==============
+4
+
+FOUND BY QUERIES
+================
+- SSD-based vector search
+
+GOOGLE SCHOLAR URL
+==================
+https://dl.acm.org/doi/abs/10.1145/3788853.3801879
+
+PDF URL
+=======
+https://dl.acm.org/doi/pdf/10.1145/3788853.3801879
+
+SNIPPET
+=======
+… Zoom: SSD-based vector search for optimizing accuracy, latency and memory. arXiv preprint arXiv:1809.04067 (2018). [61] Xi Zhao, Yao Tian, Kai Huang, Bolong Zheng, and Xiaofang …
