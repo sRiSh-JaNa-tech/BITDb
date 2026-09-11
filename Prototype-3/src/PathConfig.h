@@ -55,6 +55,10 @@ public:
         return getDataStorageDir() / "segment_dir.bin";
     }
 
+    static fs::path getSegmentExtentsFile() {
+        return getDataStorageDir() / "segment_extents.bin";
+    }
+
     static fs::path getChunkStoreFile() {
         return getDataStorageDir() / "chunk_store.bin";
     }

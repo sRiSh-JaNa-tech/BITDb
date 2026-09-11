@@ -1,6 +1,8 @@
 # Prototype-3: Segment-Chain Architecture
 
-This document details the architectural evolution from Prototype-2 to Prototype-3, highlighting the new techniques implemented to achieve a high-speed, SSD-first, PDF-native semantic search database.
+This document details the architectural evolution from Prototype-2 to Prototype-3, including the version-3 routing, incremental extent, bounded-memory scan, compact-code, and persistent-model changes.
+
+The version-3 binary format is not backward-compatible with version-1 data. Run `build\\Build.exe --rebuild` before querying an older `DataStorage/` directory.
 
 ## 1. Core Paradigm Shift: From Hierarchical Tree to Flat Segment-Chain
 
@@ -8,7 +10,7 @@ This document details the architectural evolution from Prototype-2 to Prototype-
 
 **Prototype-3** abandons the tree entirely in favor of a **flat Segment-Chain architecture**. It partitions the vector space into a fixed number of segments (buckets). During search, the query is mapped directly to a specific segment, and only that segment's contiguous block of data is read from the SSD. 
 
-This achieves the primary goal: **shifting 80% of the load to the SSD while maintaining a microscopic RAM footprint.**
+This is intended to shift most corpus storage to SSD while keeping routing metadata and the bounded scan buffer small in RAM. The actual RAM, I/O, latency, and recall trade-offs must be established experimentally.
 
 ## 2. New Technique: Halton Sequence Probe Vectors
 
@@ -22,10 +24,11 @@ Instead of using random Gaussian projections (standard LSH) or K-Means centroids
 
 Prototype-2 created a complex web of directories and small binary files for each node. Prototype-3 consolidates the entire database into just **four flat binary files** optimized for sequential SSD reads:
 
-1. **`segment_dir.bin` (RAM-Resident):** A tiny 4KB routing table. It stores the byte offset and chunk count for each of the 256 segments in the chunk store. This is the *only* routing data kept in RAM.
+1. **`segment_dir.bin` (RAM-Resident):** A small routing table. It stores the primary extent offset/count and extent-chain head for each of the 256 segments.
 2. **`doc_catalog.bin` (RAM-Resident):** A small catalog tracking indexed PDFs and metadata.
-3. **`chunk_store.bin` (SSD-Resident):** The core database. All chunks belonging to the same segment are grouped and written **contiguously**. When searching, the engine reads a segment's entire block of chunks in one fast, sequential SSD read.
-4. **`pdf_text.bin` (SSD-Resident):** The raw UTF-8 passage text, only accessed for the final Top-K results via sparse seeks.
+3. **`chunk_store.bin` (SSD-Resident):** The core database. Records contain an int8 embedding, a 384-bit sign code, the full probe signature, and document metadata. New data may be appended as segment extents; search reads bounded contiguous blocks.
+4. **`segment_extents.bin` (RAM metadata loaded at search):** Chained extent descriptors for incremental append runs.
+5. **`pdf_text.bin` (SSD-Resident):** The raw UTF-8 passage text, only accessed for the final Top-K results via sparse seeks.
 
 ## 4. Native PDF Ingestion
 
@@ -63,4 +66,4 @@ To ensure seamless execution across different machines and operating systems wit
 3. Seek to that segment's offset in `chunk_store.bin` -> Read block into memory.
 4. Fast int8 dot-product scoring against candidates -> Fetch text from `pdf_text.bin` for Top-K.
 
-**Result:** Sub-millisecond disk search times with virtually zero RAM dependency for index traversal and portable cross-platform deployment.
+**Result:** A versioned, SSD-first retrieval prototype with adaptive routing, incremental extents, bounded Top-K selection, compact-code filtering, and warm interactive search. Performance claims remain benchmark hypotheses until measured.

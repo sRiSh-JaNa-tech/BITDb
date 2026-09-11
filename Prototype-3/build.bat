@@ -91,9 +91,11 @@ echo.
 echo   USAGE:
 echo     1. Drop PDFs:   Prototype-3\ingestor\
 echo     2. Ingest:      build\Build.exe
-echo     3. Query:       build\BitDBSearch.exe "your search query" [N]
-echo     4. Catalog:     build\print_catalog.exe
-echo     5. Segments:    build\print_segment_dir.exe
+echo     3. Query:       build\BitDBSearch.exe "your search query" [N] [probes]
+echo        Interactive: build\BitDBSearch.exe --interactive --probes 4
+echo     4. Rebuild:     build\Build.exe --rebuild
+echo     5. Catalog:     build\print_catalog.exe
+echo     6. Segments:    build\print_segment_dir.exe
 echo ==================================================
 echo.
 exit /b 0

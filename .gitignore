@@ -1,5 +1,7 @@
 # C++ Build Output
 build/
+**/build/
+**/build_cmake*/
 bin/
 obj/
 *.exe
@@ -28,9 +30,17 @@ ENV/
 # Database Storage & Model Downloads
 bitdb/
 BinStorage/*.bin
+**/DataStorage/*.bin
+**/segment_extents.bin
+**/*.tmp
+**/ingestor/
+**/docs/*_report.md
+**/docs/*_profile.md
 
 # Large ML Model Weights
 *.safetensors
+*.cl_cache
+*.blob
 
 # Editor & IDE Files
 .vscode/
