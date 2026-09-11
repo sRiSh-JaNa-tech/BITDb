@@ -12,7 +12,7 @@ import serpapi
 # ============================================================
 
 # Put your SerpApi key here
-SERPAPI_KEY = "38743361d593828f68036a1ec707c001ce1ac2aeaa20f5d7620381855a2fa1d8"
+SERPAPI_KEY = "<API_KEY>"
 
 # File containing your research topics
 TOPIC_FILE = "search_topics.txt"
