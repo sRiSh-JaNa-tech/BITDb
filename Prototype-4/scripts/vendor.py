@@ -1,14 +1,27 @@
 import os
+import sys
 import numpy as np
 import nltk
 
-# Download punkt tokenizer (only downloads once)
-nltk.download('punkt_tab', quiet=True)
+# Ensure fast_pdf_agent is discoverable
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+_PROJECT_ROOT = os.path.abspath(os.path.join(_SCRIPT_DIR, '..'))
+_p = os.path.join(_PROJECT_ROOT, 'fast_pdf_agent')
+if os.path.exists(_p) and _p not in sys.path:
+    sys.path.insert(0, _p)
+
+# Check punkt tokenizer locally first to avoid network timeout
+try:
+    nltk.data.find('tokenizers/punkt_tab')
+except LookupError:
+    try:
+        nltk.download('punkt_tab', quiet=True)
+    except Exception:
+        pass
 
 # Resolve model paths relative to THIS file
-_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-_MODEL_PATH = os.path.join(_SCRIPT_DIR, '..', 'models', 'local_minilm')
-_OV_MODEL_PATH = os.path.join(_SCRIPT_DIR, '..', 'models', 'openvino_minilm')
+_MODEL_PATH = os.path.abspath(os.path.join(_SCRIPT_DIR, '..', 'models', 'local_minilm'))
+_OV_MODEL_PATH = os.path.abspath(os.path.join(_SCRIPT_DIR, '..', 'models', 'openvino_minilm'))
 
 backend_type = "cpu"
 ov_model = None
@@ -24,25 +37,25 @@ try:
         from optimum.intel.openvino import OVModelForFeatureExtraction
         
         load_path = _OV_MODEL_PATH if os.path.exists(_OV_MODEL_PATH) else _MODEL_PATH
-        ov_tokenizer = AutoTokenizer.from_pretrained(load_path)
-        ov_model = OVModelForFeatureExtraction.from_pretrained(load_path, device="GPU")
+        ov_tokenizer = AutoTokenizer.from_pretrained(load_path, local_files_only=True)
+        ov_model = OVModelForFeatureExtraction.from_pretrained(load_path, device="GPU", local_files_only=True)
         backend_type = "openvino_gpu"
         gpu_name = core.get_property("GPU", "FULL_DEVICE_NAME")
-        print(f"[vendor.py] Hardware Acceleration: OpenVINO iGPU ({gpu_name}) active.")
+        print(f"[vendor.py] Hardware Acceleration: OpenVINO iGPU ({gpu_name}) active.", flush=True)
 except Exception as e:
-    print(f"[vendor.py] OpenVINO iGPU notice: {e}")
+    print(f"[vendor.py] OpenVINO iGPU notice: {e}", flush=True)
 
 # 2. Fallback to CUDA Discrete GPU or standard CPU
 if backend_type == "cpu":
     import torch
     from sentence_transformers import SentenceTransformer
     if torch.cuda.is_available():
-        st_model = SentenceTransformer(_MODEL_PATH, device="cuda")
+        st_model = SentenceTransformer(_MODEL_PATH, device="cuda", local_files_only=True)
         backend_type = "cuda"
-        print("[vendor.py] Hardware Acceleration: Discrete GPU (CUDA) detected.")
+        print("[vendor.py] Hardware Acceleration: Discrete GPU (CUDA) detected.", flush=True)
     else:
-        st_model = SentenceTransformer(_MODEL_PATH, device="cpu")
-        print("[vendor.py] Hardware Acceleration: Running on CPU.")
+        st_model = SentenceTransformer(_MODEL_PATH, device="cpu", local_files_only=True)
+        print("[vendor.py] Hardware Acceleration: Running on CPU.", flush=True)
 
 # ─────────────────────────────────────────────────────────────────────
 # Embedding functions

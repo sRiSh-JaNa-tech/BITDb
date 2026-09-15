@@ -23,10 +23,12 @@ void init_python() {
 
     std::string scriptsDir = PathConfig::getScriptsDir().generic_string();
     std::string venvDir    = PathConfig::getVenvSitePackagesDir().generic_string();
+    std::string agentDir   = (PathConfig::getProjectRoot() / "fast_pdf_agent").generic_string();
 
     std::ostringstream ss;
     ss << "import sys\n"
        << "sys.path.insert(0, '" << scriptsDir << "')\n"
+       << "sys.path.insert(0, '" << agentDir << "')\n"
        << "sys.path.insert(0, '" << venvDir << "')\n";
 
     PyRun_SimpleString(ss.str().c_str());

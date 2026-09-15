@@ -13,7 +13,7 @@ if not exist "ingestor" mkdir "ingestor"
 if not exist "DataStorage" mkdir "DataStorage"
 
 :: Check if CMake is available
-where DOES_NOT_EXIST >nul 2>&1
+where cmake >nul 2>&1
 if %ERRORLEVEL% equ 0 (
     echo [*] CMake detected. Building via CMake...
     if not exist "build_cmake" mkdir "build_cmake"
@@ -61,7 +61,7 @@ if %ERRORLEVEL% neq 0 (
 echo   Compiler:       %CXX%
 echo.
 
-set FLAGS=-std=c++17 -O2 -I"src" -I"%PY_INC%"
+set FLAGS=-std=c++17 -O2 -mavx2 -mpopcnt -I"src" -I"%PY_INC%"
 set LIBS=-L"%PY_LIB%" -l%PY_NAME%
 
 echo [1/4] Compiling Build.exe...
@@ -81,7 +81,7 @@ echo [4/5] Compiling print_segment_dir.exe...
 if %ERRORLEVEL% neq 0 ( echo [!] FAILED to compile print_segment_dir.exe & exit /b 1 )
 
 echo [5/5] Compiling test_suite.exe...
-%CXX% -std=c++17 -O2 -mavx2 -I"src" src\test_suite.cpp -o build\test_suite.exe
+%CXX% -std=c++17 -O2 -mavx2 -mpopcnt -I"src" src\test_suite.cpp -o build\test_suite.exe
 if %ERRORLEVEL% neq 0 ( echo [!] FAILED to compile test_suite.exe & exit /b 1 )
 
 :success

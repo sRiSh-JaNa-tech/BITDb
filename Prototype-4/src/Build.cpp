@@ -490,17 +490,28 @@ int main(int argc, char* argv[]) {
     // ── Ingestion Phase ──
     init_python();
 
+    // ── Text Store Write ──
+    // Write text data to pdf_text.bin.tmp first; after all index files are
+    // atomically committed we rename it to pdf_text.bin. This guarantees that
+    // a crash mid-ingestion cannot produce a partially-written text store.
+    const string tmpTextFile = textFile + ".tmp";
+
     uint64_t textWriteOffset = 0;
-    {
-        ifstream textIn(textFile, ios::binary | ios::ate);
-        if (textIn && !forceRebuild) {
-            textWriteOffset = static_cast<uint64_t>(textIn.tellg());
+    if (!forceRebuild) {
+        // Preserve existing content by copying it into the .tmp file first
+        ifstream existingText(textFile, ios::binary);
+        if (existingText) {
+            ofstream tmpTextOut(tmpTextFile, ios::binary | ios::trunc);
+            tmpTextOut << existingText.rdbuf();
+            existingText.seekg(0, ios::end);
+            textWriteOffset = static_cast<uint64_t>(existingText.tellg());
         }
     }
 
-    ofstream textOut(textFile, forceRebuild ? (ios::binary | ios::trunc) : (ios::binary | ios::app));
+    ofstream textOut(tmpTextFile,
+        forceRebuild ? (ios::binary | ios::trunc) : (ios::binary | ios::app));
     if (!textOut) {
-        cerr << "FATAL: Cannot open " << textFile << "\n";
+        cerr << "FATAL: Cannot open " << tmpTextFile << "\n";
         finalize_python();
         return 1;
     }
@@ -740,6 +751,10 @@ int main(int argc, char* argv[]) {
     catOut.write(reinterpret_cast<const char*>(catalog.data()), catalog.size() * sizeof(DocEntry));
     catOut.close();
     atomic_commit_file(tmpCat, catFile);
+
+    // ── Atomic Commit of pdf_text.bin (final step) ──
+    // Close is implicit since textOut went out of scope; now rename .tmp -> final.
+    atomic_commit_file(tmpTextFile, textFile);
 
     // ── Summary & Diagnostics ──
     cout << "\n══════════════════════════════════════════════════\n";

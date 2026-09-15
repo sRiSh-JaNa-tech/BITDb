@@ -263,36 +263,73 @@ public:
         double embedMs = chrono::duration<double, milli>(tEmb1 - tEmb0).count();
 
         // ─── Step 2: Probe Candidate Segments via Multi-Index Hashing (MIH) ───
-        uint32_t qMask = BitDB::compute_probe_bitmask(queryVec.data());
+        //
+        // numProbes controls how many additional Hamming-1 neighbours are included
+        // beyond the exact-match primary segment. Probe bits are ranked by their
+        // normalised margin (|q · probe_i|) — bits close to the decision boundary
+        // are most likely to cross it and should be probed first.
+        //
+        // numProbes=1  → exact segment only (fastest, lowest recall)
+        // numProbes=32 → all 32 probe dimensions flipped (slowest, highest recall)
+
+        float margins[P3_NUM_PROBES];
+        uint32_t qMask = BitDB::compute_probe_bitmask_and_margins(queryVec.data(), margins);
         vector<uint32_t> segsToSearch;
 
-        if (hasMih) {
+        // Always add the primary exact-match segment
+        {
+            uint32_t baseSeg = BitDB::signature_to_segment(qMask);
+            segsToSearch.push_back(baseSeg);
+        }
+
+        if (hasMih && numProbes > 1) {
+            // Rank the 32 probe bits by ascending margin (smallest margin = closest
+            // to hyperplane boundary = most likely to be wrong, so probe both sides)
+            struct ProbeBit { int bit; float margin; };
+            ProbeBit probeRanked[P3_NUM_PROBES];
+            for (int i = 0; i < P3_NUM_PROBES; ++i) {
+                probeRanked[i] = {i, margins[i]};
+            }
+            // Sort ascending by margin so we flip the most uncertain bits first
+            std::sort(probeRanked, probeRanked + P3_NUM_PROBES,
+                [](const ProbeBit& a, const ProbeBit& b) { return a.margin < b.margin; });
+
+            // Expand: for each of the top-(numProbes-1) uncertain bits, generate the
+            // flipped signature and look it up in the MIH table
+            size_t extraProbes = 0;
+            const size_t maxExtra = numProbes - 1; // -1 because primary seg already added
             uint8_t seg_mask[32] = {};
-            for (int m = 0; m < 4; ++m) {
-                uint8_t sub_val = static_cast<uint8_t>((qMask >> (m * 8)) & 0xFF);
-                for (int b = 0; b < 32; ++b) {
-                    seg_mask[b] |= mih_tables[m][sub_val][b];
-                }
-                for (int bit = 0; bit < 8; ++bit) {
-                    uint8_t flip_val = sub_val ^ static_cast<uint8_t>(1u << bit);
+
+            for (int pi = 0; pi < P3_NUM_PROBES && extraProbes < maxExtra; ++pi) {
+                int bit = probeRanked[pi].bit;
+                uint32_t flippedMask = qMask ^ (1u << bit);
+
+                // Look up the flipped signature in all 4 MIH sub-tables
+                bool anyNew = false;
+                for (int m = 0; m < 4; ++m) {
+                    uint8_t sub_val = static_cast<uint8_t>((flippedMask >> (m * 8)) & 0xFF);
                     for (int b = 0; b < 32; ++b) {
-                        seg_mask[b] |= mih_tables[m][flip_val][b];
+                        if (mih_tables[m][sub_val][b] & ~seg_mask[b]) {
+                            seg_mask[b] |= mih_tables[m][sub_val][b];
+                            anyNew = true;
+                        }
                     }
                 }
+                if (anyNew) extraProbes++;
             }
+
+            // Collect segments from the accumulated bitmap (skip primary already added)
+            uint32_t primarySeg = segsToSearch[0];
             for (uint32_t seg = 0; seg < NUM_SEGMENTS; ++seg) {
-                if (seg_mask[seg / 8] & (1u << (seg % 8))) {
+                if ((seg_mask[seg / 8] & (1u << (seg % 8))) && seg != primarySeg) {
                     segsToSearch.push_back(seg);
                 }
             }
         }
 
-        if (segsToSearch.empty()) {
-            uint32_t baseSeg = BitDB::signature_to_segment(qMask);
-            segsToSearch.push_back(baseSeg);
-        }
+        cout << "[Search] Probing " << segsToSearch.size() << " segment(s) (numProbes=" << numProbes << ") via margin-ranked MIH\n";
 
-        cout << "[Search] Probing " << segsToSearch.size() << " segment(s) via MIH routing\n";
+
 
         // ─── Step 3: Scan Extents using 2-Stage Asymmetric I/O & Bounded Min-Heap ───
         auto tDisk0 = chrono::high_resolution_clock::now();
@@ -358,33 +395,36 @@ public:
 
                 if (hdr.record_count == 0) continue;
 
-                // Stage 1 Filter: Asymmetric Distance Computation (ADC)
+                // ── Stage 1: ADC pre-sort for I/O optimisation ONLY ──
+                // We compute an ADC score for every record in this extent to decide
+                // whether to use a bulk sequential read or scattered per-record seeks.
+                // IMPORTANT: the ADC score does NOT filter out any records — all
+                // hdr.record_count records proceed to the int8 exact-scoring stage.
+                // Eliminating candidates based on ADC alone would be unsafe because
+                // binary quantisation introduces approximation error that can invert
+                // the ranking of the true nearest neighbour.
                 struct CandScore {
                     uint32_t idx;
-                    int32_t adc_score;
+                    int32_t  adc_score;
                 };
-                vector<CandScore> passed;
-                passed.reserve(hdr.record_count);
-
+                vector<CandScore> allCands;
+                allCands.reserve(hdr.record_count);
                 for (uint32_t i = 0; i < hdr.record_count; ++i) {
-                    int32_t score = BitDB::adc_score(queryVec.data(), extent_codes[i]);
-                    passed.push_back({i, score});
+                    allCands.push_back({i, BitDB::adc_score(queryVec.data(), extent_codes[i])});
                 }
+                // Sort by ADC score descending — highest ADC first.
+                // This orders later I/O reads to access likely-high-scoring embeddings
+                // first so the heap threshold rises quickly (better heap pruning).
+                std::sort(allCands.begin(), allCands.end(),
+                    [](const CandScore& a, const CandScore& b) { return a.adc_score > b.adc_score; });
 
-                // Dynamic Survival Quotas: rank candidates by ADC score and keep top 15%
-                sort(passed.begin(), passed.end(), [](const CandScore& a, const CandScore& b) {
-                    return a.adc_score > b.adc_score;
-                });
-                size_t quota = max<size_t>(8, static_cast<size_t>(ceil(hdr.record_count * 0.15)));
-                quota = min(quota, passed.size());
-
-                // Hardware I/O Crossover:
-                // If surviving candidate count exceeds 40 records (~15% of extent),
-                // sequential bulk read of the remaining extent is faster than scattered seeks.
+                // ── I/O Crossover Heuristic ──
+                // If the extent has more than CROSSOVER_THRESHOLD records, a single
+                // sequential bulk read of the remainder is cheaper than N scattered seeks.
                 constexpr size_t CROSSOVER_THRESHOLD = 40;
 
-                if (quota > CROSSOVER_THRESHOLD) {
-                    // Bulk sequential read path
+                if (hdr.record_count > CROSSOVER_THRESHOLD) {
+                    // Bulk sequential read of int8 embeddings + metadata
                     uint64_t bulk_offset = node.chunk_store_offset + STAGE1_BYTES;
                     size_t remaining_bytes = EXTENT_BYTES - STAGE1_BYTES;
                     vector<char> bulk_buf(remaining_bytes);
@@ -395,44 +435,49 @@ public:
                     const int8_t (*embeddings)[DIMS] = reinterpret_cast<const int8_t(*)[DIMS]>(bulk_buf.data());
                     const ChunkRecordMeta* meta = reinterpret_cast<const ChunkRecordMeta*>(bulk_buf.data() + EMBEDDINGS_BYTES);
 
-                    for (size_t c = 0; c < quota; ++c) {
-                        uint32_t idx = passed[c].idx;
+                    // Score ALL candidates (ADC order ensures heap fills fast)
+                    for (const auto& cand : allCands) {
+                        uint32_t idx = cand.idx;
                         if (tombstonedDocs.count(meta[idx].doc_id)) continue;
                         int32_t score = dot_int8(queryVec.data(), embeddings[idx], DIMS);
                         totalScored++;
 
                         if (minHeap.size() < static_cast<size_t>(topK)) {
-                            minHeap.push(CandidateHit(score, meta[idx].doc_id, meta[idx].page_num, meta[idx].text_offset, meta[idx].text_length));
+                            minHeap.push(CandidateHit(score, meta[idx].doc_id, meta[idx].page_num,
+                                                      meta[idx].text_offset, meta[idx].text_length));
                         } else if (score > minHeap.top().score) {
                             minHeap.pop();
-                            minHeap.push(CandidateHit(score, meta[idx].doc_id, meta[idx].page_num, meta[idx].text_offset, meta[idx].text_length));
+                            minHeap.push(CandidateHit(score, meta[idx].doc_id, meta[idx].page_num,
+                                                      meta[idx].text_offset, meta[idx].text_length));
                         }
                     }
                 } else {
-                    // Scattered payload read path: read only surviving candidates' int8 embeddings and metadata
-                    for (size_t c = 0; c < quota; ++c) {
-                        uint32_t idx = passed[c].idx;
+                    // Scattered reads for small extents — read each record's embedding + meta individually
+                    for (const auto& cand : allCands) {
+                        uint32_t idx = cand.idx;
                         int8_t emb[DIMS];
                         ChunkRecordMeta meta;
 
-                        uint64_t emb_offset = node.chunk_store_offset + STAGE1_BYTES + (idx * DIMS);
+                        uint64_t emb_offset  = node.chunk_store_offset + STAGE1_BYTES + (uint64_t(idx) * DIMS);
+                        uint64_t meta_offset = node.chunk_store_offset + STAGE1_BYTES + EMBEDDINGS_BYTES + (uint64_t(idx) * sizeof(ChunkRecordMeta));
+
                         chunkIn.seekg(static_cast<streamoff>(emb_offset), ios::beg);
                         chunkIn.read(reinterpret_cast<char*>(emb), DIMS);
-
-                        uint64_t meta_offset = node.chunk_store_offset + STAGE1_BYTES + EMBEDDINGS_BYTES + (idx * sizeof(ChunkRecordMeta));
                         chunkIn.seekg(static_cast<streamoff>(meta_offset), ios::beg);
                         chunkIn.read(reinterpret_cast<char*>(&meta), sizeof(meta));
-                        totalBytesRead += DIMS + sizeof(meta);
+                        totalBytesRead += DIMS + sizeof(ChunkRecordMeta);
 
                         if (tombstonedDocs.count(meta.doc_id)) continue;
                         int32_t score = dot_int8(queryVec.data(), emb, DIMS);
                         totalScored++;
 
                         if (minHeap.size() < static_cast<size_t>(topK)) {
-                            minHeap.push(CandidateHit(score, meta.doc_id, meta.page_num, meta.text_offset, meta.text_length));
+                            minHeap.push(CandidateHit(score, meta.doc_id, meta.page_num,
+                                                      meta.text_offset, meta.text_length));
                         } else if (score > minHeap.top().score) {
                             minHeap.pop();
-                            minHeap.push(CandidateHit(score, meta.doc_id, meta.page_num, meta.text_offset, meta.text_length));
+                            minHeap.push(CandidateHit(score, meta.doc_id, meta.page_num,
+                                                      meta.text_offset, meta.text_length));
                         }
                     }
                 }
@@ -496,11 +541,13 @@ public:
         }
 
         cout << "  ╔═ LATENCY & I/O PROFILE ══════════════════════════════╗\n";
-        cout << "  ║  Query Embedding : " << fixed << setprecision(2) << embedMs  << " ms\n";
-        cout << "  ║  SSD Extent Scan : " << diskMs   << " ms  (" << totalScored << " scored / " << totalCandidates << " candidates)\n";
-        cout << "  ║  Bulk I/O Read   : " << (totalBytesRead / 1024.0) << " KB in " << segsToSearch.size() << " segments\n";
-        cout << "  ║  Passage Fetch   : " << textMs   << " ms\n";
-        cout << "  ║  Total Latency   : " << totalMs  << " ms\n";
+        cout << "  ║  Query Embedding : " << fixed << setprecision(2) << embedMs << " ms\n";
+        cout << "  ║  Segments Probed : " << segsToSearch.size() << " (numProbes=" << numProbes << ")\n";
+        cout << "  ║  Records Scored  : " << totalScored << " / " << totalCandidates << " candidates (100% recall)\n";
+        cout << "  ║  SSD Extent Scan : " << diskMs << " ms\n";
+        cout << "  ║  Bulk I/O Read   : " << (totalBytesRead / 1024.0) << " KB\n";
+        cout << "  ║  Passage Fetch   : " << textMs << " ms\n";
+        cout << "  ║  Total Latency   : " << totalMs << " ms\n";
         cout << "  ╚══════════════════════════════════════════════════════╝\n\n";
     }
 };

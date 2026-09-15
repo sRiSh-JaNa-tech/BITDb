@@ -33,6 +33,34 @@ inline uint32_t signature_to_segment(uint32_t mask) {
     return mask & (NUM_SEGMENTS - 1);
 }
 
+// ── Normalised Probe Vector Cache ──
+// The raw PROBE_VECTORS are Halton low-discrepancy sequences and are NOT
+// unit-normalised. The sign test (dot > 0) is scale-invariant so routing is
+// unaffected. However, the absolute margin values used for multi-probe ranking
+// must be comparable across probes, which requires equal-norm vectors.
+//
+// We cache a normalised copy once (lazy-static via a local bool).
+namespace detail {
+inline const float (&get_normalised_probes())[P3_NUM_PROBES][P3_DIMS] {
+    static float norm_probes[P3_NUM_PROBES][P3_DIMS];
+    static bool initialised = false;
+    if (!initialised) {
+        for (int i = 0; i < P3_NUM_PROBES; ++i) {
+            float norm_sq = 0.0f;
+            for (int j = 0; j < P3_DIMS; ++j) {
+                norm_sq += PROBE_VECTORS[i][j] * PROBE_VECTORS[i][j];
+            }
+            float inv_norm = (norm_sq > 1e-12f) ? (1.0f / std::sqrt(norm_sq)) : 1.0f;
+            for (int j = 0; j < P3_DIMS; ++j) {
+                norm_probes[i][j] = PROBE_VECTORS[i][j] * inv_norm;
+            }
+        }
+        initialised = true;
+    }
+    return norm_probes;
+}
+} // namespace detail
+
 // Compute 32-bit probe bitmask from an int8 embedding
 inline uint32_t compute_probe_bitmask(const int8_t* emb) {
     uint32_t mask = 0;
@@ -48,13 +76,16 @@ inline uint32_t compute_probe_bitmask(const int8_t* emb) {
     return mask;
 }
 
-// Compute 32-bit probe bitmask AND margin (absolute dot product) for each probe bit.
+// Compute 32-bit probe bitmask AND normalised margin (absolute dot product)
+// for each probe bit. Margins are now directly comparable across probes because
+// the normalised probe vectors all have unit L2 norm.
 inline uint32_t compute_probe_bitmask_and_margins(const int8_t* emb, float* out_margins) {
+    const float (&np)[P3_NUM_PROBES][P3_DIMS] = detail::get_normalised_probes();
     uint32_t mask = 0;
     for (int i = 0; i < P3_NUM_PROBES; ++i) {
         float dot = 0.0f;
         for (uint32_t j = 0; j < DIMS; ++j) {
-            dot += static_cast<float>(emb[j]) * PROBE_VECTORS[i][j];
+            dot += static_cast<float>(emb[j]) * np[i][j];
         }
         if (dot > 0.0f) {
             mask |= (1u << i);

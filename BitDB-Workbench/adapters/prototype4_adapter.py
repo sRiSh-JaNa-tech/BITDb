@@ -115,7 +115,7 @@ class Prototype4Adapter(BasePrototypeAdapter):
                 text=True,
                 encoding="utf-8",
                 errors="replace",
-                timeout=60
+                timeout=120
             )
             raw_stdout = res.stdout
             items = self._parse_items(raw_stdout)
