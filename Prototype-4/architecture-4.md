@@ -1,6 +1,6 @@
 # Prototype-4: Elastic Radix Extent Routing (ER2) Architecture
 
-This document describes the design, mathematics, and implementation of **BitDB Prototype-4**. It explains how the system achieves high-recall approximate nearest neighbor search (ANNS) on NVMe SSDs with sub-megabyte RAM and microsecond CPU prefiltering.
+This document describes the design, mathematics, and implementation of **BitDB Prototype-4**. It explains how the system achieves 100% intra-extent recall approximate nearest neighbor search (ANNS) on NVMe SSDs with sub-megabyte RAM and microsecond CPU prefiltering.
 
 ---
 
@@ -13,11 +13,14 @@ Traditional vector databases rely on one of two paradigms, both of which face se
 3. **Fixed Avalanche Hashing (Prototype-3 Baseline)**: Uses a 32-bit Murmur3 hash to distribute vectors across 256 segments. While this guarantees uniform bucket sizes, the avalanche effect **destroys metric locality**: two vectors with a Hamming distance of 1 get mapped to completely unrelated SSD segments, requiring unguided multi-probing.
 
 **Prototype-4 introduces Elastic Radix Extent Routing (ER2)**, an integrated systems-algorithmic co-design that:
-- **Preserves Metric Locality**: Similar vectors reside in the same or adjacent physical extents.
-- **Microscopic RAM Footprint**: Holds less than **3 MB of RAM** for routing and catalog metadata.
+- **Preserves Metric Locality**: Similar vectors reside in the same or adjacent physical extents via Multi-Index Hashing (MIH).
+- **Margin-Ranked Multi-Probing (`--probes`)**: Expands search along the most uncertain hyperplane boundaries ranked by normalized geometric margin.
+- **Microscopic RAM Footprint**: Holds less than **3 MB of RAM** for routing, MIH tables, and catalog metadata.
 - **Hardware-Co-Designed 128 KB Columnar Extents**: Aligns every disk extent to physical NVMe flash pages (131,072 bytes) and groups binary codes into a contiguous cache-friendly array.
-- **AVX2 SIMD Prefiltering**: Uses the Harley-Seal `vpshufb` algorithm to scan candidate codes in memory at over **30 GB/s**, bypassing **>84%** of expensive int8 dot products.
-- **Safe Early-Exit via Cauchy-Schwarz WAND**: Prunes unpromising extents with zero false dismissals.
+- **AVX2 SIMD Acceleration**: Built with native AVX2 SIMD flags (`/arch:AVX2` on MSVC, `-mavx2 -mpopcnt` on GCC) using the Harley-Seal `vpshufb` algorithm to scan candidate codes in memory at over **30 GB/s**.
+- **100% Intra-Extent Recall (Zero False Dismissals)**: Uses Asymmetric Distance Computation (ADC) strictly as an I/O scheduling and heap-pruning optimizer, scoring all candidates in accessed extents with exact int8 dot products.
+- **Safe Early-Exit via Cauchy-Schwarz WAND**: Prunes unvisited extents with mathematical certainty.
+- **Crash-Safe Atomic Ingestion**: Employs `.tmp` write and atomic rename across all 5 index files including text storage.
 
 ---
 
@@ -41,9 +44,9 @@ The following diagram illustrates the complete end-to-end query execution lifecy
      (Hyperplane Projections)       (Retained in RAM for ADC)
            │                               │
            ▼                               │
-  2. Multi-Index Hashing (MIH)             │
+  2. Margin-Ranked MIH Multi-Probing       │
      (4 x 8-bit Substrings +               │
-      1-Bit Hamming Neighbors)             │
+      Margin-Ranked Uncertain Bits)        │
            │                               │
            ▼                               │
   3. Geometric WAND Upper Bounding         │
@@ -51,15 +54,17 @@ The following diagram illustrates the complete end-to-end query execution lifecy
      (Safely prune extents with 0 SSD I/O) │
            │                               │
            ▼                               │
-  4. Two-Stage Extent Read & SIMD Filter  │
+  4. Two-Stage Extent Read & Scoring       │
      ├── Read Stage 1 Block (~14 KB) ◄─────┘
-     ├── AVX2 Harley-Seal Popcount / ADC Filter
-     └── Dynamic Hardware Crossover:
-         ├── If survivors > 40: 1-Stage Bulk Extent Read (128 KB)
-         └── If survivors <= 40: Targeted Payload Reads (Scatter)
+     ├── AVX2 Harley-Seal Popcount / ADC Pre-Sort
+     │   (Order candidates to elevate min-heap rapidly)
+     └── Dynamic Hardware I/O Crossover:
+         ├── If count > 40: 1-Stage Bulk Extent Read (128 KB)
+         └── If count <= 40: Targeted Payload Reads (Scatter)
                            │
                            ▼
-  5. Second-Stage SIMD Dot-Product & Top-K Min-Heap
+  5. Second-Stage Exact int8 SIMD Dot-Product & Top-K Min-Heap
+     (All candidates scored -> 100% intra-extent recall)
                            │
                            ▼
   6. Passage Text Retrieval from pdf_text.bin
@@ -76,7 +81,7 @@ The following diagram illustrates the complete end-to-end query execution lifecy
 Previous iterations used Halton low-discrepancy sequences to generate hyperplanes. However, real-world dense semantic language embeddings are **highly anisotropic** (variance is concentrated along specific principal axes). Uniform or uncalibrated hyperplanes cut through empty dead space or slice across dense clusters, producing low bit-entropy and uneven bucket distributions.
 
 ### The Solution: ITQ / PCA Calibration
-In Prototype-4, hyperplanes can be calibrated against a tiny sample of the dataset (e.g., 5,000 vectors):
+In Prototype-4, hyperplanes can be calibrated against a representative sample of the dataset:
 1. Compute the top principal components via randomized SVD/PCA.
 2. Apply an orthogonal rotation matrix $R$ via **Iterative Quantization (ITQ)** to minimize the quantization error:
    $$\min_R \|V - \text{sgn}(V \cdot R)\|_F^2$$
@@ -86,7 +91,7 @@ In Prototype-4, hyperplanes can be calibrated against a tiny sample of the datas
 
 ---
 
-## 4. Pillar 2: Multi-Index Hashing (MIH) Substring Inverted Table
+## 4. Pillar 2: Multi-Index Hashing (MIH) & Margin-Ranked Probing
 
 ### Why Deep Radix Trees Cause Locality Collapse
 In theoretical designs, an adaptive Radix Trie is proposed to route variable-length prefixes. However, deep binary tries suffer from **catastrophic metric collapse at top-level splits**: two vectors that are near-identical in high-dimensional space can differ on bit 0 due to boundary noise, placing them into completely disjoint subtrees.
@@ -101,7 +106,20 @@ Prototype-4 replaces the deep trie with **Multi-Index Hashing (MIH)**:
    ```
 3. **Pigeonhole Principle Guarantee**: If two 32-bit signatures have a Hamming distance $d \le 3$, they **must** share at least one 8-bit substring identically:
    $$\lfloor 3 / 4 \rfloor = 0 \implies \text{At least one 8-bit chunk has 0 bit flips}$$
-4. At query time, the engine probes extents matching exact substrings as well as **1-bit Hamming neighbors** across all 4 tables. This guarantees comprehensive recall without suffering from early tree-split errors.
+
+### Margin-Ranked Probing (`--probes N`)
+Rather than flipping bits arbitrarily, Prototype-4 ranks probe bits by geometric uncertainty:
+
+1. **Normalized Probe Cache**: Probe vectors $P_i$ have varying norms in raw configurations. To make geometric distances comparable across hyperplanes, Prototype-4 lazily computes and caches unit-normalized probe vectors:
+   $$\hat{P}_i = \frac{P_i}{\|P_i\|_2}$$
+2. **Margin Calculation**: For a query vector $q$, the margin $m_i$ to hyperplane $i$ is the absolute value of the projection:
+   $$m_i = |q \cdot \hat{P}_i|$$
+   A smaller margin means the query lies directly on or near the decision boundary, where slight quantization noise could flip the bit.
+3. **Adaptive Probing**:
+   - Probe bits are sorted in ascending order of margin $m_i$ (most uncertain first).
+   - `--probes N` flips the top $(N-1)$ most uncertain bits, computes their flipped signatures, and queries the MIH tables to gather candidate segment IDs.
+   - `numProbes = 1`: Probes only the primary exact segment (lowest latency).
+   - `numProbes = 4..8`: Probes the primary segment plus the most plausible metric neighbors.
 
 ---
 
@@ -128,11 +146,11 @@ Prototype-4 implements **Columnar Extent Layout (CEL)**. Every physical extent o
 ├────────────────────────────────────────────────────────────────────────┤
 │ SECTION 2: CONTIGUOUS 384-BIT BINARY CODES        (13,584 Bytes)       │
 │   [Code 0: 48B][Code 1: 48B][Code 2: 48B] ... [Code 282: 48B]         │
-│   ⚡ Linear block: Scanned at 30+ GB/s via AVX2 popcount              │
+│   Linear block: Scanned at 30+ GB/s via AVX2 popcount / ADC            │
 ├────────────────────────────────────────────────────────────────────────┤
 │ SECTION 3: CONTIGUOUS INT8 PAYLOAD EMBEDDINGS     (108,672 Bytes)      │
 │   [Vec 0: 384B][Vec 1: 384B][Vec 2: 384B] ... [Vec 282: 384B]         │
-│   Only accessed for candidates that pass Stage 1                       │
+│   Accessed sequentially or targeted per candidate                      │
 ├────────────────────────────────────────────────────────────────────────┤
 │ SECTION 4: METADATA & TEXT OFFSETS                (7,924 Bytes)        │
 │   [Meta 0: 28B][Meta 1: 28B] ... [Meta 282: 28B]                       │
@@ -148,7 +166,7 @@ $$512\text{ B} + (283 \times 48\text{ B}) + (283 \times 384\text{ B}) + (283 \ti
 
 ---
 
-## 6. Pillar 4: Two-Phase Filtering & SIMD Vectorization
+## 6. Pillar 4: Two-Phase Filtering & Exact Dot Product Scoring
 
 ### Phase 1: AVX2 Harley-Seal Popcount (`vpshufb`)
 Standard AVX2 lacks the native `_mm256_popcnt_epi32` instruction (which requires AVX-512). Prototype-4 implements the **Muła / Harley-Seal 4-bit lookup table** popcount using `_mm256_shuffle_epi8`:
@@ -157,16 +175,22 @@ Standard AVX2 lacks the native `_mm256_popcnt_epi32` instruction (which requires
 3. Masks the low and high nibbles, then performs parallel lookups using `_mm256_shuffle_epi8`.
 4. Accumulates 32 bytes per instruction cycle, sweeping **1,000 binary codes in under $2.5\,\mu\text{s}$**.
 
-### Asymmetric Distance Computation (ADC)
+### Asymmetric Distance Computation (ADC) as I/O Scheduler
 To prevent precision loss from symmetric binary quantization, Prototype-4 retains the continuous unquantized query vector $q \in \mathbb{R}^{384}$ in RAM. It computes the Asymmetric Distance between continuous query weights and candidate binary codes:
 $$\text{Score}_{\text{ADC}}(q, c) = \sum_{j=0}^{383} (2 \cdot c_j - 1) \cdot q_j$$
-This preserves directional magnitude and significantly boosts correlation with true cosine similarity.
 
-### Dynamic Survival Quota & Hardware I/O Crossover
-Candidates inside an extent are ranked by their Stage 1 ADC score. Only the **top 15%** pass to Stage 2 int8 rescoring.
-The engine then dynamically branches based on the hardware read amplification threshold $\tau$:
-- **If survivors $> 40$**: Issues a single contiguous 128 KB bulk read.
-- **If survivors $\le 40$**: Issues targeted scattered payload reads ($40 \times 384\text{ B} \approx 15\text{ KB}$), saving up to **88% SSD read volume**.
+### The False Dismissal Fix: 100% Intra-Extent Recall
+Earlier designs used a fixed top-15% ADC survival quota before exact dot products. However, because binary quantization introduces approximation error, the true nearest neighbor could occasionally fall below the 15% cutoff and be permanently discarded.
+
+**Prototype-4 eliminates heuristic drop quotas**:
+- **ADC Orders Evaluation**: All records in the extent have their ADC score computed and are sorted descending by ADC score.
+- **Heap Threshold Acceleration**: Processing high-ADC candidates first drives up the `minHeap.top().score` rapidly, maximizing the pruning power of Cauchy-Schwarz WAND on all subsequent extents.
+- **Full Precision Scoring**: Every active record in an extent that survives WAND is evaluated with exact int8 dot products (`dot_int8`). No candidate is prematurely dropped.
+
+### Dynamic Hardware I/O Crossover
+The engine chooses the optimal SSD read strategy based on candidate density:
+- **Bulk Read (`record_count > 40`)**: A single contiguous 116 KB read retrieves all remaining embeddings and metadata in one sequential NVMe transaction.
+- **Scattered Seek (`record_count <= 40`)**: Issues targeted seeks for individual embeddings and metadata records, avoiding reading unused extent padding.
 
 ---
 
@@ -186,10 +210,10 @@ Since $\|v - C_E\|_2 \le R_E$, the maximum possible score of any vector in exten
 $$\text{MaxScore}(q, E) = (q \cdot C_E) + \|q\|_2 \cdot R_E$$
 
 ### Pruning Rule
-Candidate extents are sorted in descending order of $\text{MaxScore}(q, E)$.
+Candidate extents are evaluated against the current min-heap.
 If:
 $$\text{MaxScore}(q, E) \le \text{MinHeap.top().score}$$
-Extent $E$ (and all subsequent extents in the priority queue) are **safely skipped with zero SSD reads**. This guarantees zero false dismissals.
+Extent $E$ is **safely skipped with zero SSD reads**. Because this bound is mathematically rigorous, it guarantees zero false dismissals.
 
 ---
 
@@ -209,9 +233,9 @@ The table below contrasts the memory and storage requirements of Prototype-4 aga
 
 ---
 
-## 9. Binary File Formats in `DataStorage/`
+## 9. Binary File Formats & Crash-Safe Ingestion
 
-All files in `Prototype-4/DataStorage/` are versioned with magic `0x42444234` (`"BDB4"`):
+All files in `Prototype-4/DataStorage/` are versioned with magic `0x42444234` (`"BDB4"`). Ingestion uses an atomic rename workflow: every file is written completely to a `.tmp` file and then renamed into place with `std::filesystem::rename`, ensuring index integrity even if ingestion is terminated mid-run.
 
 ### 1. `chunk_store.bin` (Physical Extents)
 Contains contiguous 131,072-byte `ExtentBlock` structures:
@@ -230,16 +254,26 @@ Contains contiguous 131,072-byte `ExtentBlock` structures:
   - `centroid[384]` (float[384] = 1,536 bytes)
   - `max_radius` (float = 4 bytes)
 
-### 3. `mih_table.bin` (MIH Inverted Table)
+### 3. `segment_extents.bin` (Extent Overflow Chain)
+Stores `ExtentNode` records (1,552 bytes each) representing chained extent blocks for segments that exceed the single-extent capacity (283 records).
+
+### 4. `mih_table.bin` (MIH Inverted Table)
 - Exactly **32,768 bytes** ($4 \times 256 \times 32\text{ bytes}$).
-- Maps substring index $[0..3]$ and 8-bit value $[0..255]$ to extent bitmasks.
+- Maps substring index $[0..3]$ and 8-bit value $[0..255]$ to a 256-bit segment occurrence bitmap.
 
-### 4. `doc_catalog.bin` (Document Catalog)
+### 5. `doc_catalog.bin` (Document Catalog)
 - **Header** (8 bytes): `num_docs` (uint32_t), `active_docs` (uint32_t).
-- **Entries** ($N \times 256\text{ bytes}$): `doc_id`, `page_count`, `chunk_start`, `chunk_count`, `is_deleted`, `filename[232]`.
+- **Entries** ($N \times 256\text{ bytes}$): `doc_id`, `page_count`, `chunk_start`, `chunk_count`, `is_deleted`, `filename[232]`. Supports tombstoning for fast document deletion.
 
-### 5. `pdf_text.bin` (Passage Text Store)
-- Contiguous UTF-8 passage text referenced by `(text_offset, text_length)` in chunk metadata. Only fetched for top-ranked results.
+### 6. `pdf_text.bin` (Passage Text Store)
+- Contiguous UTF-8 passage text referenced by `(text_offset, text_length)` in chunk metadata. Only fetched for final top-ranked results.
+- Written via `.tmp` atomic commit matching all other database files.
+
+### Ingestion Engine & Fast PDF Extractor
+Prototype-4 integrates `fast_pdf_agent/pdf_extractor3.py` directly into the ingestion pipeline (`embed.cpp` and `pdf_extractor.py`). It provides:
+- High-throughput layout-aware PDF text and table extraction.
+- Automatic fallback mechanisms (PyMuPDF / `pdfplumber`).
+- Direct chunking with byte-range indexing into `pdf_text.bin`.
 
 ---
 
@@ -252,13 +286,15 @@ cd Prototype-4
 build\test_suite.exe
 ```
 
-### Validated Invariants:
-1. **Physical Layout**: Compile-time and runtime asserts that `sizeof(ExtentBlock) == 131072` and section sums are byte-perfect.
+### Complete Test Suite (8/8 PASS):
+1. **Physical Layout**: Verifies `sizeof(ExtentBlock) == 131072`, section offsets, and byte alignments.
 2. **MIH Decompositions**: Verifies 4-way substring slicing and asserts all 8 single-bit flips per byte yield Hamming distance strictly equal to 1.
 3. **AVX2 Popcount Correctness**: Compares `_mm256_shuffle_epi8` Harley-Seal implementation against scalar reference across 500 pseudo-random vectors and single-bit flips.
-4. **ADC Scoring Invariant**: Verifies asymmetric float-to-bit dot products.
-5. **Cauchy-Schwarz Inequality**: Validates that no point in an extent can exceed $\text{MaxScore}(q, E)$.
+4. **ADC Scoring Invariant**: Verifies asymmetric float-to-bit dot product calculations against reference scalar code.
+5. **Cauchy-Schwarz Inequality**: Validates that no point in an extent can exceed $\text{MaxScore}(q, E) = (q \cdot C) + \|q\| \cdot R$.
 6. **On-Disk Health**: Confirms all binary files match magic `"BDB4"`, version `4`, and 128 KB divisibility.
+7. **Extent Chain Traversal**: Validates multi-extent linked list traversal, cycle detection, and record capacity across extended segment chains.
+8. **ADC Recall & Zero False Dismissals**: Validates that candidates ranked outside the top 15% of ADC pre-scores are never dropped and the true nearest neighbor is discovered with 100% precision.
 
 ---
 
@@ -269,6 +305,7 @@ build\test_suite.exe
 cd Prototype-4
 build.bat
 ```
+*Note: `build.bat` automatically enables `-mavx2 -mpopcnt` on GCC/Clang or `/arch:AVX2` on MSVC, and builds `Build.exe`, `BitDBSearch.exe`, and `test_suite.exe`.*
 
 ### Ingest Documents
 Place PDFs into `Prototype-4\ingestor\` and run:
@@ -277,13 +314,20 @@ build\Build.exe --rebuild
 ```
 
 ### Search Queries
+Run search specifying query text, top-K, and multi-probe expansion:
 ```cmd
 build\BitDBSearch.exe "approximate nearest neighbor search on SSD" 3 4
 ```
 
 ### Persistent Interactive Daemon Mode
+Supports interactive queries without reloading model weights on each turn:
 ```cmd
 build\BitDBSearch.exe --interactive --probes 4
+```
+
+### Run Test Suite
+```cmd
+build\test_suite.exe
 ```
 
 ### Workbench & RAG Studio
