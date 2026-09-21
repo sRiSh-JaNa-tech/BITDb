@@ -136,32 +136,40 @@ def _chunk_text_to_offsets(text: str) -> list:
     """
     Internal helper: chunks a text string into sentences and returns
     (sentence_text, byte_offset, byte_length) tuples.
-    Byte offsets are relative to the start of the string encoded as UTF-8.
     """
-    sentences = nltk.sent_tokenize(text)
+    import re
+    # Clean mid-sentence line breaks from raw PDF extraction so they don't break tokenization.
+    text_clean = re.sub(r'(?<![.!?])\s*\n\s*', ' ', text)
     
-    # Further refine chunks: if NLTK returns a massive chunk (due to missing periods in PDFs),
-    # force split it by newlines so we get granular sentence/line embeddings.
-    refined_chunks = []
+    sentences = nltk.sent_tokenize(text_clean)
+    
+    refined_sentences = []
     for s in sentences:
-        if len(s) > 150 and '\n' in s:
-            for line in s.split('\n'):
-                if line.strip():
-                    refined_chunks.append(line.strip())
-        else:
-            if s.strip():
-                refined_chunks.append(s.strip())
-                
+        s = s.strip()
+        # Filter out very short fragments (like isolated headings, numbers, or 2-word artifacts)
+        # to ensure only rich, complete sentences are indexed.
+        if len(s) > 30 and len(s.split()) >= 5:
+            refined_sentences.append(s)
+            
+    # Group into overlapping windows (e.g. 3 sentences per chunk, overlap by 1 sentence)
+    window_size = 3
+    stride = 2
+    windowed_chunks = []
+    
+    i = 0
+    while i < len(refined_sentences):
+        window = refined_sentences[i : i + window_size]
+        windowed_chunks.append(" ".join(window))
+        if i + window_size >= len(refined_sentences):
+            break
+        i += stride
+            
     results = []
-    current_char_idx = 0
-    for s_stripped in refined_chunks:
-        start_char_idx = text.find(s_stripped, current_char_idx)
-        if start_char_idx == -1:
-            start_char_idx = current_char_idx
-        current_char_idx = start_char_idx + len(s_stripped)
-        byte_offset = len(text[:start_char_idx].encode('utf-8'))
-        byte_length = len(s_stripped.encode('utf-8'))
-        results.append((s_stripped, byte_offset, byte_length))
+    for chunk_text in windowed_chunks:
+        # We just need to return the string and its encoded length;
+        # Prototype-4 Build.cpp calculates its own contiguous text offsets.
+        byte_length = len(chunk_text.encode('utf-8'))
+        results.append((chunk_text, 0, byte_length))
     return results
 
 def chunk_text_with_offsets(text: str) -> list:

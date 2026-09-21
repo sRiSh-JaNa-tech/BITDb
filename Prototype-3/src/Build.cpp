@@ -318,11 +318,14 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    // ── Scan ingestor for new PDFs ──
+    // ── Scan ingestor recursively for all PDFs (including subdirectories) ──
     vector<fs::path> pdfFiles;
     if (fs::exists(pdfDir) && fs::is_directory(pdfDir)) {
-        for (const auto& entry : fs::directory_iterator(pdfDir)) {
-            if (entry.is_regular_file()) {
+        std::error_code ec;
+        for (const auto& entry : fs::recursive_directory_iterator(pdfDir, fs::directory_options::skip_permission_denied, ec)) {
+            if (ec) continue;
+            std::error_code fileEc;
+            if (entry.is_regular_file(fileEc)) {
                 string ext = entry.path().extension().string();
                 for (auto& c : ext) c = static_cast<char>(tolower(c));
                 if (ext == ".pdf") {
@@ -336,7 +339,9 @@ int main(int argc, char* argv[]) {
     // Filter PDFs to only those not yet indexed
     vector<fs::path> pendingPdfs;
     for (const auto& p : pdfFiles) {
-        if (forceRebuild || !alreadyIndexed.count(p.filename().string())) {
+        string relPath = fs::relative(p, pdfDir).generic_string();
+        string filename = p.filename().string();
+        if (forceRebuild || (!alreadyIndexed.count(relPath) && !alreadyIndexed.count(filename))) {
             pendingPdfs.push_back(p);
         }
     }
@@ -384,9 +389,10 @@ int main(int argc, char* argv[]) {
     cout << "\n[*] Processing " << pendingPdfs.size() << " PDF(s)...\n";
     int pdfIdx = 0;
     for (const auto& pdfPath : pendingPdfs) {
+        string relPath = fs::relative(pdfPath, pdfDir).generic_string();
         string basename = pdfPath.filename().string();
         pdfIdx++;
-        cout << "\n  [" << pdfIdx << "/" << pendingPdfs.size() << "] " << basename << "\n";
+        cout << "\n  [" << pdfIdx << "/" << pendingPdfs.size() << "] " << relPath << "\n";
 
         vector<PageText> pages = pdf_to_text_pages(pdfPath.generic_string());
         if (pages.empty()) {
@@ -448,7 +454,8 @@ int main(int argc, char* argv[]) {
         de.chunk_store_start = 0; // will be updated
         de.chunk_count       = docChunkCount;
         de.is_deleted        = 0;
-        strncpy(de.filename, basename.c_str(), sizeof(de.filename) - 1);
+        string storeName = (relPath.size() < sizeof(de.filename)) ? relPath : basename;
+        strncpy(de.filename, storeName.c_str(), sizeof(de.filename) - 1);
         de.filename[sizeof(de.filename) - 1] = '\0';
         newDocs.push_back(de);
         cout << "    -> Extracted " << docChunkCount << " chunks across " << pages.size() << " pages.\n";

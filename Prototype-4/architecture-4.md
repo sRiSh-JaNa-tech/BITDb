@@ -273,7 +273,9 @@ Stores `ExtentNode` records (1,552 bytes each) representing chained extent block
 Prototype-4 integrates `fast_pdf_agent/pdf_extractor3.py` directly into the ingestion pipeline (`embed.cpp` and `pdf_extractor.py`). It provides:
 - High-throughput layout-aware PDF text and table extraction.
 - Automatic fallback mechanisms (PyMuPDF / `pdfplumber`).
+- **Coherent Sentence Chunking**: Uses `nltk.sent_tokenize` with a regex pre-pass to merge mid-sentence line breaks caused by column-wraps in PDFs. This avoids fragmenting logical sentences across line breaks. Very short fragments (e.g., isolated headings or artifacts) are aggressively filtered out to maximize the semantic quality of indexed vectors.
 - Direct chunking with byte-range indexing into `pdf_text.bin`.
+- Fully supports Unicode (UTF-8) console output for displaying UI components and multi-byte characters accurately during search.
 
 ---
 
@@ -308,10 +310,11 @@ build.bat
 *Note: `build.bat` automatically enables `-mavx2 -mpopcnt` on GCC/Clang or `/arch:AVX2` on MSVC, and builds `Build.exe`, `BitDBSearch.exe`, and `test_suite.exe`.*
 
 ### Ingest Documents
-Place PDFs into `Prototype-4\ingestor\` and run:
+Place PDFs into `Prototype-4\ingestor\` (or any nested subfolders/datasets within `ingestor\`) and run:
 ```cmd
-build\Build.exe --rebuild
+build\Build.exe
 ```
+*(Use `--rebuild` to perform a clean re-indexing from scratch, or omit flags for incremental append).*
 
 ### Search Queries
 Run search specifying query text, top-K, and multi-probe expansion:

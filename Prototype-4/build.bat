@@ -14,6 +14,8 @@ if not exist "DataStorage" mkdir "DataStorage"
 
 :: Check if CMake is available
 where cmake >nul 2>&1
+:: Skip CMake as it has issues with NMake
+goto :fallback
 if %ERRORLEVEL% equ 0 (
     echo [*] CMake detected. Building via CMake...
     if not exist "build_cmake" mkdir "build_cmake"

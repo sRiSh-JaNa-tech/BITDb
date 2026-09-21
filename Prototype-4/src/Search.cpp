@@ -20,6 +20,10 @@
 #include <unordered_set>
 #include <unordered_map>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include "embed.h"
 #include "probe_vectors.h"
 #include "Routing.h"
@@ -282,52 +286,68 @@ public:
             segsToSearch.push_back(baseSeg);
         }
 
-        if (hasMih && numProbes > 1) {
-            // Rank the 32 probe bits by ascending margin (smallest margin = closest
-            // to hyperplane boundary = most likely to be wrong, so probe both sides)
-            struct ProbeBit { int bit; float margin; };
-            ProbeBit probeRanked[P3_NUM_PROBES];
-            for (int i = 0; i < P3_NUM_PROBES; ++i) {
-                probeRanked[i] = {i, margins[i]};
+        if (numProbes > 1) {
+            // Rank the 8 segment-defining hyperplanes (bits 0..7) by ascending confidence margin
+            // (smallest margin = closest to Voronoi decision boundary = most likely neighbor)
+            struct ProbeMargin {
+                int   bit;
+                float margin;
+            };
+            vector<ProbeMargin> ranked;
+            ranked.reserve(8);
+            for (int i = 0; i < 8; ++i) {
+                ranked.push_back({i, margins[i]});
             }
-            // Sort ascending by margin so we flip the most uncertain bits first
-            std::sort(probeRanked, probeRanked + P3_NUM_PROBES,
-                [](const ProbeBit& a, const ProbeBit& b) { return a.margin < b.margin; });
+            std::sort(ranked.begin(), ranked.end(),
+                [](const ProbeMargin& a, const ProbeMargin& b) { return a.margin < b.margin; });
 
-            // Expand: for each of the top-(numProbes-1) uncertain bits, generate the
-            // flipped signature and look it up in the MIH table
-            size_t extraProbes = 0;
-            const size_t maxExtra = numProbes - 1; // -1 because primary seg already added
-            uint8_t seg_mask[32] = {};
+            // 1-bit flips in order of lowest margin (1-Hamming distance adjacent Voronoi cells)
+            for (size_t i = 0; i < ranked.size() && segsToSearch.size() < numProbes; ++i) {
+                uint32_t flippedMask = qMask ^ (1u << ranked[i].bit);
+                uint32_t neighborSeg = BitDB::signature_to_segment(flippedMask);
+                if (neighborSeg < NUM_SEGMENTS && (segDir[neighborSeg].chunk_count > 0 || segDir[neighborSeg].ext_chain_head > 0)) {
+                    if (std::find(segsToSearch.begin(), segsToSearch.end(), neighborSeg) == segsToSearch.end()) {
+                        segsToSearch.push_back(neighborSeg);
+                    }
+                }
+            }
 
-            for (int pi = 0; pi < P3_NUM_PROBES && extraProbes < maxExtra; ++pi) {
-                int bit = probeRanked[pi].bit;
-                uint32_t flippedMask = qMask ^ (1u << bit);
-
-                // Look up the flipped signature in all 4 MIH sub-tables
-                bool anyNew = false;
-                for (int m = 0; m < 4; ++m) {
-                    uint8_t sub_val = static_cast<uint8_t>((flippedMask >> (m * 8)) & 0xFF);
-                    for (int b = 0; b < 32; ++b) {
-                        if (mih_tables[m][sub_val][b] & ~seg_mask[b]) {
-                            seg_mask[b] |= mih_tables[m][sub_val][b];
-                            anyNew = true;
+            // 2-bit flips on top uncertain bits if more probes requested (diagonal Voronoi cells)
+            if (segsToSearch.size() < numProbes) {
+                for (size_t i = 0; i < ranked.size() && segsToSearch.size() < numProbes; ++i) {
+                    for (size_t j = i + 1; j < ranked.size() && segsToSearch.size() < numProbes; ++j) {
+                        uint32_t flippedMask = qMask ^ (1u << ranked[i].bit) ^ (1u << ranked[j].bit);
+                        uint32_t neighborSeg = BitDB::signature_to_segment(flippedMask);
+                        if (neighborSeg < NUM_SEGMENTS && (segDir[neighborSeg].chunk_count > 0 || segDir[neighborSeg].ext_chain_head > 0)) {
+                            if (std::find(segsToSearch.begin(), segsToSearch.end(), neighborSeg) == segsToSearch.end()) {
+                                segsToSearch.push_back(neighborSeg);
+                            }
                         }
                     }
                 }
-                if (anyNew) extraProbes++;
             }
 
-            // Collect segments from the accumulated bitmap (skip primary already added)
-            uint32_t primarySeg = segsToSearch[0];
-            for (uint32_t seg = 0; seg < NUM_SEGMENTS; ++seg) {
-                if ((seg_mask[seg / 8] & (1u << (seg % 8))) && seg != primarySeg) {
-                    segsToSearch.push_back(seg);
+            // Fallback for remaining slots if empty segments were skipped
+            if (segsToSearch.size() < numProbes) {
+                uint32_t baseSeg = segsToSearch[0];
+                vector<pair<int, uint32_t>> otherSegs;
+                for (uint32_t s = 0; s < NUM_SEGMENTS; ++s) {
+                    if (s != baseSeg && (segDir[s].chunk_count > 0 || segDir[s].ext_chain_head > 0)) {
+                        if (std::find(segsToSearch.begin(), segsToSearch.end(), s) == segsToSearch.end()) {
+                            int dist = BitDB::hamming_distance_32(baseSeg, s);
+                            otherSegs.push_back({dist, s});
+                        }
+                    }
+                }
+                std::sort(otherSegs.begin(), otherSegs.end());
+                for (const auto& p : otherSegs) {
+                    if (segsToSearch.size() >= numProbes) break;
+                    segsToSearch.push_back(p.second);
                 }
             }
         }
 
-        cout << "[Search] Probing " << segsToSearch.size() << " segment(s) (numProbes=" << numProbes << ") via margin-ranked MIH\n";
+        cout << "[Search] Probing " << segsToSearch.size() << " segment(s) (numProbes=" << numProbes << ") via margin-ranked Voronoi routing\n";
 
 
 
@@ -380,6 +400,7 @@ public:
                 
                 // Safe Early-Exit Pruning
                 if (minHeap.size() == static_cast<size_t>(topK) && max_score_bound < static_cast<float>(minHeap.top().score)) {
+                    totalCandidates += node.chunk_count; // Tally bypassed candidates for telemetry
                     continue;
                 }
 
@@ -534,16 +555,20 @@ public:
             cout << "  │  Score   : " << r.score << "\n";
             cout << "  │  File    : " << r.filename << "\n";
             cout << "  │  Page    : " << r.page_num << "\n";
-            string snippet = r.passage.substr(0, 300);
+            string snippet = r.passage;
             for (auto& c : snippet) if (c == '\r' || c == '\n') c = ' ';
-            cout << "  │  Passage : \"" << snippet << (r.passage.size() > 300 ? "..." : "") << "\"\n";
+            // Remove hardcoded 300 char limit to display full multi-sentence chunks
+            if (snippet.size() > 1000) {
+                snippet = snippet.substr(0, 1000) + "...";
+            }
+            cout << "  │  Passage : \"" << snippet << "\"\n";
             cout << "  └──────────────────────────────────────────────────────\n\n";
         }
 
         cout << "  ╔═ LATENCY & I/O PROFILE ══════════════════════════════╗\n";
         cout << "  ║  Query Embedding : " << fixed << setprecision(2) << embedMs << " ms\n";
         cout << "  ║  Segments Probed : " << segsToSearch.size() << " (numProbes=" << numProbes << ")\n";
-        cout << "  ║  Records Scored  : " << totalScored << " / " << totalCandidates << " candidates (100% recall)\n";
+        cout << "  ║  Records Scored  : " << totalScored << " / " << totalCandidates << " candidates in probed extents\n";
         cout << "  ║  SSD Extent Scan : " << diskMs << " ms\n";
         cout << "  ║  Bulk I/O Read   : " << (totalBytesRead / 1024.0) << " KB\n";
         cout << "  ║  Passage Fetch   : " << textMs << " ms\n";
@@ -557,6 +582,9 @@ public:
 // ─────────────────────────────────────────────────
 
 int main(int argc, char* argv[]) {
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif
     setvbuf(stdout, NULL, _IONBF, 0);
     ios::sync_with_stdio(true);
 
@@ -568,7 +596,27 @@ int main(int argc, char* argv[]) {
 
     for (int i = 1; i < argc; ++i) {
         string arg = argv[i];
-        if (arg == "--interactive" || arg == "--daemon" || arg == "-i") {
+        if (arg == "--help" || arg == "-h") {
+            cout << "==================================================\n";
+            cout << "  BitDB Prototype-4 Columnar Search Engine\n";
+            cout << "==================================================\n";
+            cout << "USAGE:\n";
+            cout << "  BitDBSearch.exe \"<query>\" [topK] [numProbes]\n";
+            cout << "  BitDBSearch.exe --interactive [--probes N]\n\n";
+            cout << "OPTIONS:\n";
+            cout << "  --help, -h          Show this help message and exit\n";
+            cout << "  --interactive, -i   Launch in persistent REPL mode\n";
+            cout << "  --probes N          Number of adjacent segments to probe (default 4)\n";
+            cout << "                      Higher probes = better accuracy but higher latency.\n\n";
+            cout << "REPL COMMANDS (Interactive Mode Only):\n";
+            cout << "  --K [number]        Append to any query to override the top-K limit for that search\n";
+            cout << "                      Example: bitdb> flash memory buffer management --K 10\n\n";
+            cout << "EXAMPLES:\n";
+            cout << "  BitDBSearch.exe \"flash memory buffer management\" 10 8\n";
+            cout << "  BitDBSearch.exe --interactive\n";
+            cout << "==================================================\n";
+            return 0;
+        } else if (arg == "--interactive" || arg == "--daemon" || arg == "-i") {
             interactive = true;
         } else if (arg == "--probes" && i + 1 < argc) {
             numProbes = static_cast<size_t>(std::clamp(stoi(argv[++i]), 1, P3_NUM_PROBES));
@@ -616,7 +664,17 @@ int main(int argc, char* argv[]) {
             if (line == "exit" || line == "quit" || line == "q") break;
             if (line.empty()) continue;
 
-            engine.executeQuery(line, topK, numProbes);
+            int currentTopK = topK;
+            size_t kPos = line.rfind("--K ");
+            if (kPos != string::npos) {
+                try {
+                    currentTopK = stoi(line.substr(kPos + 4));
+                    line = line.substr(0, kPos);
+                    while (!line.empty() && line.back() == ' ') line.pop_back();
+                } catch (...) {}
+            }
+
+            engine.executeQuery(line, currentTopK, numProbes);
         }
     } else {
         engine.executeQuery(queryText, topK, numProbes);
