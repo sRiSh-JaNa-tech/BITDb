@@ -1,0 +1,65 @@
+[
+  {
+    "prompts": 10,
+    "cumulative_time_s": 0.205,
+    "avg_latency_ms": 19.99,
+    "qps": 48.8,
+    "ram_mb": 780.5,
+    "cumulative_io_mb": 14.77,
+    "extents": 118
+  },
+  {
+    "prompts": 30,
+    "cumulative_time_s": 0.543,
+    "avg_latency_ms": 16.36,
+    "qps": 59.2,
+    "ram_mb": 791.9,
+    "cumulative_io_mb": 43.06,
+    "extents": 344
+  },
+  {
+    "prompts": 50,
+    "cumulative_time_s": 0.844,
+    "avg_latency_ms": 14.44,
+    "qps": 66.3,
+    "ram_mb": 795.4,
+    "cumulative_io_mb": 73.44,
+    "extents": 587
+  },
+  {
+    "prompts": 75,
+    "cumulative_time_s": 1.226,
+    "avg_latency_ms": 14.94,
+    "qps": 65.5,
+    "ram_mb": 795.4,
+    "cumulative_io_mb": 109.71,
+    "extents": 877
+  },
+  {
+    "prompts": 100,
+    "cumulative_time_s": 1.64,
+    "avg_latency_ms": 15.61,
+    "qps": 60.3,
+    "ram_mb": 796.8,
+    "cumulative_io_mb": 140.92,
+    "extents": 1127
+  },
+  {
+    "prompts": 125,
+    "cumulative_time_s": 2.028,
+    "avg_latency_ms": 15.01,
+    "qps": 64.4,
+    "ram_mb": 796.8,
+    "cumulative_io_mb": 176.94,
+    "extents": 1415
+  },
+  {
+    "prompts": 150,
+    "cumulative_time_s": 2.441,
+    "avg_latency_ms": 15.76,
+    "qps": 60.6,
+    "ram_mb": 796.8,
+    "cumulative_io_mb": 208.87,
+    "extents": 1670
+  }
+]

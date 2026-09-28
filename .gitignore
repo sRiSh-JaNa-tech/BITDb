@@ -29,7 +29,7 @@ env/
 ENV/
 
 # Database Storage & Model Downloads
-bitdb/
+BitDB/bitdb/
 BinStorage/*.bin
 **/DataStorage/*.bin
 **/segment_extents.bin

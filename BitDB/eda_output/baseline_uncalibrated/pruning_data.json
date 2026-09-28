@@ -1,0 +1,11 @@
+{
+  "total_candidates": 872,
+  "scored_simd": 872,
+  "bypassed_cs": 0,
+  "latency_metrics": {
+    "embed": 20.73,
+    "disk": 0.9,
+    "fetch": 0.14,
+    "segs_probed": 4
+  }
+}
