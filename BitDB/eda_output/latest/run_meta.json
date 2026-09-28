@@ -1,9 +1,8 @@
 {
-  "run_name": "run_20260928_233435",
-  "created_at": "2026-09-28 23:36:09",
+  "run_name": "run_20260928_235747",
+  "created_at": "2026-09-28 23:59:06",
   "total_vectors": 10018,
   "files_generated": [
-    "10_uncalibrated_hyperplane_variance.png",
     "11_query_segment_access_distribution.png",
     "12_storage_vs_query_access_heatmap.png",
     "1_segment_distribution.png",

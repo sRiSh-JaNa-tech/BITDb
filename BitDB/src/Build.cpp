@@ -732,9 +732,12 @@ int main(int argc, char* argv[]) {
                             }
                         }
                         if (!isTombstoned) {
-                            uint32_t sig = (rec.signature != 0) ? rec.signature : BitDB::compute_probe_bitmask(rec.embedding);
+                            uint32_t sig = BitDB::compute_probe_bitmask(rec.embedding);
                             rec.signature = sig;
                             rec.segment_id = BitDB::signature_to_segment(sig);
+                            for (int b = 0; b < 32; b++) {
+                                if ((sig >> b) & 1) global_bit_tally[b]++;
+                            }
                             allRecords.push_back(rec);
                         }
                     }

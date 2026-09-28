@@ -76,18 +76,18 @@ def main():
     print("  BitDB ER2 — Centroid + PCA Hyperplane Calibration")
     print("=" * 60)
 
-    sample_vectors = None
-    chunk_store_path = "DataStorage/chunk_store.bin"
+    script_dir = os.path.dirname(os.path.abspath(__file__)) if "__file__" in globals() else os.getcwd()
+    project_root = os.path.abspath(os.path.join(script_dir, "..")) if os.path.basename(script_dir) == "scripts" else script_dir
+    chunk_store_path = os.path.join(project_root, "DataStorage", "chunk_store.bin")
     
+    sample_vectors = None
     if os.path.exists(chunk_store_path) and os.path.getsize(chunk_store_path) > 131072:
-        print(f"[*] Sampling vectors directly from {chunk_store_path}...")
+        print(f"[*] Reading all corpus vectors directly from {chunk_store_path}...")
         vectors = []
         EXTENT_BYTES = 131072
-        EXTENT_CAPACITY = 283
-        HEADER_BYTES = 512
         STAGE1_BYTES = 14096
         with open(chunk_store_path, "rb") as f:
-            while len(vectors) < 5000:
+            while True:
                 block_data = f.read(EXTENT_BYTES)
                 if len(block_data) < EXTENT_BYTES:
                     break
@@ -96,11 +96,9 @@ def main():
                 arr = np.frombuffer(emb_bytes, dtype=np.int8).reshape(rec_count, DIMS)
                 for vec in arr:
                     vectors.append(vec.astype(np.float32) / 127.0)
-                    if len(vectors) >= 5000:
-                        break
         if len(vectors) >= 500:
             sample_vectors = np.array(vectors)
-            print(f"[*] Loaded {len(sample_vectors)} real corpus vectors.")
+            print(f"[*] Loaded {len(sample_vectors)} real corpus vectors across all extents.")
 
     if sample_vectors is None:
         print("[*] Generating anisotropic Gaussian sample vectors (384-dim)...")

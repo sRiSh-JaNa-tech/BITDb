@@ -57,15 +57,16 @@ def generate_heatmaps(stored_chunks, checkpoint_snapshots, output_dir=OUTPUT_DIR
     os.makedirs(output_dir, exist_ok=True)
     checkpoints = sorted(checkpoint_snapshots.keys())
 
+    from matplotlib.colors import PowerNorm
+
     # Define bins for Segment Storage Size (X-Axis)
-    # Segments range from 0 to 283 chunks
-    size_bins = [0, 20, 50, 100, 180, 300]
-    size_bin_labels = ["0-20\n(Cold)", "21-50\n(Low)", "51-100\n(Medium)", "101-180\n(High)", "181-283\n(Overloaded)"]
+    size_bins = [0, 20, 40, 70, 110, 250]
+    size_bin_labels = ["0-20\n(Cold)", "21-40\n(Low)", "41-70\n(Medium)", "71-110\n(High)", "111+\n(Peak)"]
     num_x_bins = len(size_bin_labels)
 
     # 4-panel figure (2x2 grid)
     fig, axes = plt.subplots(2, 2, figsize=(16, 12))
-    fig.suptitle("BitDB Prototype-4: Storage Size vs. Query Access Frequency Heatmaps", 
+    fig.suptitle("BitDB: Storage Size vs. Query Access Frequency Heatmaps", 
                  fontsize=18, fontweight='bold', y=0.98)
 
     # Custom access frequency bins for each checkpoint scale
@@ -111,9 +112,10 @@ def generate_heatmaps(stored_chunks, checkpoint_snapshots, output_dir=OUTPUT_DIR
             # We invert Y so top row is highest access frequency
             matrix[num_y_bins - 1 - y_bin, x_bin] += 1
 
-        # Plot Heatmap using imshow
-        # High-contrast color map: 'YlOrRd' with soft boundaries
-        im = ax.imshow(matrix, cmap="YlOrRd", aspect="auto", interpolation="nearest")
+        # Plot Heatmap using imshow with PowerNorm for dynamic range
+        max_val = max(int(np.max(matrix)), 1)
+        norm = PowerNorm(gamma=0.55, vmin=0, vmax=max_val)
+        im = ax.imshow(matrix, cmap="YlOrRd", norm=norm, aspect="auto", interpolation="nearest")
 
         # Set tick marks and labels
         ax.set_xticks(np.arange(num_x_bins))
@@ -123,40 +125,38 @@ def generate_heatmaps(stored_chunks, checkpoint_snapshots, output_dir=OUTPUT_DIR
         ax.set_yticks(np.arange(num_y_bins))
         ax.set_yticklabels(y_labels_inverted, fontsize=10, fontweight='bold')
 
-        ax.set_title(f"Workload Set: {cp} Prompts (Total Probes: {sum(hits)})", 
-                     fontsize=13, fontweight='bold', pad=12)
+        # Pearson correlation and segment metrics
+        corr = np.corrcoef(stored_chunks, hits)[0, 1] if np.std(hits) > 0 else 0.0
+        large_segs_mask = (stored_chunks > 40)
+        hits_in_large = np.sum(hits[large_segs_mask])
+        total_hits = np.sum(hits)
+        pct_in_large = (hits_in_large / total_hits * 100) if total_hits > 0 else 0
+        cold_count = int(np.count_nonzero(hits == 0))
+
+        # Title includes clean telemetry summary without overlapping any heatmap cells
+        ax.set_title(
+            f"Workload Set: {cp} Prompts ({total_hits} Total Probes)\n"
+            f"Correlation (r): {corr:.3f}   |   >40 Chunks: {pct_in_large:.1f}% hits   |   Cold (0 hits): {cold_count}/256 segs", 
+            fontsize=11, fontweight='bold', pad=10
+        )
         ax.set_xlabel("Segment Storage Size (Stored Chunks)", fontsize=11, fontweight='bold')
         ax.set_ylabel("Query Access Frequency (Hits)", fontsize=11, fontweight='bold')
 
         # Add cell text annotations (number of segments in each cell)
-        max_val = np.max(matrix)
         for i in range(num_y_bins):
             for j in range(num_x_bins):
                 val = matrix[i, j]
-                text_color = "white" if val > (max_val * 0.55) else "black"
-                ax.text(j, i, f"{val}", ha="center", va="center",
-                        color=text_color, fontsize=11, fontweight="bold")
+                if val == 0:
+                    ax.text(j, i, "0", ha="center", va="center",
+                            color="#95a5a6", fontsize=10, fontweight="normal")
+                else:
+                    text_color = "white" if val > (max_val * 0.45) else "black"
+                    ax.text(j, i, f"{val}", ha="center", va="center",
+                            color=text_color, fontsize=11, fontweight="bold")
 
         # Colorbar
         cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
         cbar.ax.set_ylabel("Segment Count", rotation=-90, va="bottom", fontsize=10, fontweight='bold')
-
-        # Pearson correlation between storage size and query hits
-        corr = np.corrcoef(stored_chunks, hits)[0, 1]
-        
-        # Calculate percentage of queries landing in the top 2 storage tiers (Medium/High/Overloaded > 50 chunks)
-        large_segs_mask = (stored_chunks > 50)
-        hits_in_large = np.sum(hits[large_segs_mask])
-        total_hits = np.sum(hits)
-        pct_in_large = (hits_in_large / total_hits * 100) if total_hits > 0 else 0
-
-        # Stats Annotation Callout
-        stats_str = (f"Correlation (r): {corr:.3f}\n"
-                     f">50 Chunks Segments: {pct_in_large:.1f}% of hits\n"
-                     f"Cold (0 hits): {np.count_nonzero(hits == 0)}/256 segs")
-        ax.text(0.04, 0.94, stats_str, transform=ax.transAxes, ha='left', va='top',
-                fontsize=9, fontweight='semibold',
-                bbox=dict(boxstyle='round,pad=0.5', facecolor='white', alpha=0.9, edgecolor='#bdc3c7'))
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     out_file = os.path.join(output_dir, "12_storage_vs_query_access_heatmap.png")
@@ -189,7 +189,7 @@ def main():
     os.makedirs(target_dir, exist_ok=True)
 
     print("=" * 65)
-    print("  BitDB Prototype-4: Generating Graph 12 (Storage vs Access Heatmaps)")
+    print("  BitDB: Generating Graph 12 (Storage vs Access Heatmaps)")
     print(f"  Target Output: {target_dir}")
     print("=" * 65)
 

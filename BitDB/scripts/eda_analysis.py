@@ -547,7 +547,7 @@ def main():
     try:
         from plot_hyperplane_variance import load_chunk_embeddings, load_probe_vectors, generate_uncalibrated_plots
         X_vecs = load_chunk_embeddings(os.path.join(DATA_DIR, "chunk_store.bin"))
-        W_probes = load_probe_vectors("src/probe_vectors.h")
+        W_probes = load_probe_vectors(os.path.join(BASE_DIR, "src", "probe_vectors.h"))
         generate_uncalibrated_plots(X_vecs, W_probes, OUTPUT_DIR)
         print(" -> Saved 10_uncalibrated_hyperplane_variance.png")
     except Exception as e:

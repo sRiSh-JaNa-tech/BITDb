@@ -210,7 +210,7 @@ def plot_stress_test_analysis(query_logs, checkpoint_snapshots, seg_info, output
 
     # Figure Setup
     fig, axes = plt.subplots(2, 2, figsize=(16, 11))
-    fig.suptitle(f"BitDB Prototype-4: Workload Stress Test & Segment Access Heatmap ({total_queries} Prompts)",
+    fig.suptitle(f"BitDB: Workload Stress Test & Segment Access Heatmap ({total_queries} Prompts)",
                  fontsize=18, fontweight='bold', y=0.98)
 
     # ─────────────────────────────────────────────────────────────────
@@ -240,6 +240,7 @@ def plot_stress_test_analysis(query_logs, checkpoint_snapshots, seg_info, output
     ax1.set_xlabel("Segment ID (0 to 255)", fontsize=11)
     ax1.set_ylabel("Total Probes Received", fontsize=11)
     ax1.set_xlim(-2, 258)
+    ax1.set_ylim(0, max(float(np.max(total_seg_hits)) * 1.22, 10.0))
     ax1.grid(True, linestyle='--', alpha=0.5)
 
     # Legend & Stats Box
@@ -276,7 +277,8 @@ def plot_stress_test_analysis(query_logs, checkpoint_snapshots, seg_info, output
     x_pos = np.arange(len(checkpoints))
     bar_width = 0.55
 
-    p1 = ax2.bar(x_pos, top5_shares, bar_width, label=f'Top 5 Hot Segments {list(top5_overall)}', color='#c0392b', alpha=0.9, edgecolor='black')
+    clean_top5 = [int(x) for x in top5_overall]
+    p1 = ax2.bar(x_pos, top5_shares, bar_width, label=f'Top 5 Hot Segments {clean_top5}', color='#c0392b', alpha=0.9, edgecolor='black')
     p2 = ax2.bar(x_pos, top20_shares, bar_width, bottom=top5_shares, label='Next 15 Warm Segments', color='#e67e22', alpha=0.9, edgecolor='black')
     bottom_combined = np.array(top5_shares) + np.array(top20_shares)
     p3 = ax2.bar(x_pos, other_shares, bar_width, bottom=bottom_combined, label='Remaining 236 Cold Segments', color='#bdc3c7', alpha=0.7, edgecolor='black')
@@ -422,7 +424,7 @@ def main():
     os.makedirs(target_dir, exist_ok=True)
 
     print("=" * 60)
-    print("  BitDB Prototype-4: Workload Stress Test & Segment Access")
+    print("  BitDB: Workload Stress Test & Segment Access")
     print(f"  Target Directory: {target_dir}")
     print("=" * 60)
 
