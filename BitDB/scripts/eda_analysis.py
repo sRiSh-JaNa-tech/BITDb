@@ -474,15 +474,59 @@ def plot_extent_radii(extent_radii):
     plt.close()
     print(" -> Saved 9_extent_radii_distribution.png")
 
+def prune_stale_or_incomplete_runs(base_eda, keep_count=5):
+    """
+    Cleans up incomplete or empty run directories to prevent useless directory clutter in eda_output.
+    Keeps at most keep_count of the most recent complete runs.
+    Preserves protected directories like 'latest' and 'baseline_uncalibrated'.
+    """
+    import shutil
+    if not os.path.exists(base_eda):
+        return
+
+    protected = {"latest", "baseline_uncalibrated"}
+    run_dirs = []
+
+    for item in os.listdir(base_eda):
+        full_path = os.path.join(base_eda, item)
+        if not os.path.isdir(full_path) or item in protected:
+            continue
+        if item.startswith("run_"):
+            files = [f for f in os.listdir(full_path) if os.path.isfile(os.path.join(full_path, f))]
+            # If directory has fewer than 10 files, it is incomplete/useless
+            if len(files) < 10:
+                try:
+                    shutil.rmtree(full_path)
+                    print(f"[*] Pruned useless/incomplete run directory: {item} ({len(files)} files)")
+                except Exception as e:
+                    print(f"[!] Could not prune {item}: {e}")
+            else:
+                run_dirs.append(item)
+
+    # Sort remaining valid runs chronologically
+    run_dirs.sort()
+    if len(run_dirs) > keep_count:
+        excess = len(run_dirs) - keep_count
+        for old_run in run_dirs[:excess]:
+            try:
+                shutil.rmtree(os.path.join(base_eda, old_run))
+                print(f"[*] Pruned older run directory: {old_run} (keeping top {keep_count})")
+            except Exception as e:
+                print(f"[!] Could not prune {old_run}: {e}")
+
 def parse_args():
     import argparse
     parser = argparse.ArgumentParser(description="BitDB Exploratory Data Analysis & Diagnostic Suite")
     parser.add_argument("--tag", "-t", type=str, default=None,
-                        help="Name / tag for this run (e.g. 'calibrated', 'itq', 'baseline'). If omitted, a timestamped folder is generated.")
+                        help="Optional tag to include in the unique run directory name (e.g. 'calibrated').")
     parser.add_argument("--out", "-o", type=str, default=None,
                         help="Custom target directory for plots.")
     parser.add_argument("--no-latest", action="store_true",
                         help="Skip updating eda_output/latest mirror.")
+    parser.add_argument("--keep", type=int, default=5,
+                        help="Number of latest complete runs to keep in eda_output (default: 5).")
+    parser.add_argument("--no-prune", action="store_true",
+                        help="Skip pruning incomplete or older runs.")
     return parser.parse_args()
 
 def main():
@@ -493,15 +537,21 @@ def main():
     global OUTPUT_DIR
     args = parse_args()
     base_eda = os.path.join(BASE_DIR, "eda_output")
+    os.makedirs(base_eda, exist_ok=True)
 
+    # Automatically clean up incomplete/broken runs first to eliminate useless directories
+    if not args.no_prune:
+        prune_stale_or_incomplete_runs(base_eda, keep_count=args.keep)
+
+    # Create a unique directory each time it runs
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
     if args.out:
         run_dir = os.path.abspath(args.out)
         run_name = os.path.basename(run_dir)
     elif args.tag:
-        run_name = args.tag
+        run_name = f"run_{timestamp}_{args.tag}"
         run_dir = os.path.join(base_eda, run_name)
     else:
-        timestamp = time.strftime("%Y%m%d_%H%M%S")
         run_name = f"run_{timestamp}"
         run_dir = os.path.join(base_eda, run_name)
 
@@ -512,37 +562,62 @@ def main():
     print("  BitDB Exploratory Data Analysis (EDA) Generator")
     print(f"  Target Run Directory: {OUTPUT_DIR}")
     print("==================================================")
-    
+
+    # Pre-populate required telemetry files into OUTPUT_DIR if available
+    bench_dest = os.path.join(OUTPUT_DIR, "benchmark_data.json")
+    if not os.path.exists(bench_dest):
+        for candidate in [
+            os.path.join(base_eda, "benchmark_data.json"),
+            os.path.join(base_eda, "latest", "benchmark_data.json"),
+            os.path.join(base_eda, "baseline_uncalibrated", "benchmark_data.json")
+        ]:
+            if os.path.exists(candidate):
+                shutil.copy2(candidate, bench_dest)
+                break
+
+    tel_dest = os.path.join(OUTPUT_DIR, "build_telemetry.json")
+    if not os.path.exists(tel_dest):
+        for candidate in [
+            os.path.join(base_eda, "build_telemetry.json"),
+            os.path.join(base_eda, "latest", "build_telemetry.json"),
+            os.path.join(base_eda, "baseline_uncalibrated", "build_telemetry.json")
+        ]:
+            if os.path.exists(candidate):
+                shutil.copy2(candidate, tel_dest)
+                break
+
     # 1. Segment Populations
     populations = parse_segment_population()
     total_vectors = sum(populations)
     plot_segment_distribution(populations)
-    
+
     # 2. Chunk Sizes
     chunk_lengths = parse_chunk_sizes()
     plot_chunk_sizes(chunk_lengths)
-    
+
     # 3. Workload Scaling & Resource Utilization
     plot_workload_scaling()
-    
+
     # 4 & 5. Live Telemetry
     metrics = run_sample_query("SSD approximate nearest neighbor vector search")
     if metrics:
         plot_latency_breakdown(metrics)
         plot_pruning_efficiency(metrics)
-        
+
     # 6 & 7. Storage Insights
     plot_storage_compression(total_vectors)
     plot_storage_footprint()
-    
+
     # 8 & 9. Build Telemetry (LSH Bits & Extent Radii)
     tel_path = os.path.join(OUTPUT_DIR, "build_telemetry.json")
     if os.path.exists(tel_path):
-        import json
         with open(tel_path, 'r') as f:
             tel = json.load(f)
         if "bit_tally" in tel and tel["bit_tally"]:
             plot_lsh_bit_distribution(tel["bit_tally"])
+        if "extent_radii" in tel and tel["extent_radii"]:
+            plot_extent_radii(tel["extent_radii"])
+
     # 10. Hyperplane Variance Analysis
     try:
         from plot_hyperplane_variance import load_chunk_embeddings, load_probe_vectors, generate_uncalibrated_plots
@@ -568,11 +643,13 @@ def main():
         print(f"    [Warning] Failed to generate stress test heatmaps: {e}")
 
     # Write run metadata manifest
+    files_generated = sorted([f for f in os.listdir(OUTPUT_DIR) if os.path.isfile(os.path.join(OUTPUT_DIR, f))])
     meta = {
         "run_name": run_name,
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
         "total_vectors": total_vectors,
-        "files_generated": [f for f in os.listdir(OUTPUT_DIR) if os.path.isfile(os.path.join(OUTPUT_DIR, f))]
+        "files_count": len(files_generated),
+        "files_generated": files_generated
     }
     with open(os.path.join(OUTPUT_DIR, "run_meta.json"), "w") as mf:
         json.dump(meta, mf, indent=2)
@@ -587,7 +664,11 @@ def main():
                 shutil.copy2(src_path, os.path.join(latest_dir, fname))
         print(f"[*] Updated latest mirror: {latest_dir}")
 
-    print(f"\n[SUCCESS] EDA Analysis complete! Run archived to: {OUTPUT_DIR}")
+    print("==================================================")
+    print(f"[SUCCESS] EDA Analysis complete!")
+    print(f"  Run Directory: {OUTPUT_DIR}")
+    print(f"  Total Assets : {len(files_generated)} files (All 12 graphs + telemetry JSONs)")
+    print("==================================================")
 
 if __name__ == "__main__":
     main()

@@ -14,7 +14,14 @@ import struct
 import numpy as np
 import matplotlib.pyplot as plt
 
-def load_chunk_embeddings(chunk_store_path="DataStorage/chunk_store.bin"):
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, '..'))
+DATA_DIR = os.path.join(PROJECT_ROOT, 'DataStorage')
+SRC_DIR = os.path.join(PROJECT_ROOT, 'src')
+
+def load_chunk_embeddings(chunk_store_path=None):
+    if chunk_store_path is None:
+        chunk_store_path = os.path.join(DATA_DIR, "chunk_store.bin")
     print("[*] Loading embeddings from chunk_store.bin...")
     embeddings = []
     if not os.path.exists(chunk_store_path):
@@ -36,7 +43,9 @@ def load_chunk_embeddings(chunk_store_path="DataStorage/chunk_store.bin"):
     print(f"[*] Loaded {len(X)} vector embeddings (shape: {X.shape})")
     return X
 
-def load_probe_vectors(probe_header_path="src/probe_vectors.h"):
+def load_probe_vectors(probe_header_path=None):
+    if probe_header_path is None:
+        probe_header_path = os.path.join(SRC_DIR, "probe_vectors.h")
     print(f"[*] Loading probe vectors from {probe_header_path}...")
     probes = []
     with open(probe_header_path, "r") as f:
@@ -208,7 +217,7 @@ def parse_args():
 def main():
     import shutil
     args = parse_args()
-    base_eda = "eda_output"
+    base_eda = os.path.join(PROJECT_ROOT, "eda_output")
     if args.out:
         target_dir = os.path.abspath(args.out)
     elif args.tag:
