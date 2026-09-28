@@ -50,9 +50,9 @@
       "primary_segment": 165,
       "records_scored": 336,
       "total_candidates": 336,
-      "ssd_scan_ms": 1.39,
+      "ssd_scan_ms": 1.13,
       "bulk_io_kb": 474.69,
-      "total_latency_ms": 33.35
+      "total_latency_ms": 29.78
     },
     {
       "query_idx": 3,
@@ -66,9 +66,9 @@
       "primary_segment": 76,
       "records_scored": 250,
       "total_candidates": 250,
-      "ssd_scan_ms": 0.91,
+      "ssd_scan_ms": 1.56,
       "bulk_io_kb": 365.68,
-      "total_latency_ms": 24.86
+      "total_latency_ms": 33.93
     },
     {
       "query_idx": 4,
@@ -82,9 +82,9 @@
       "primary_segment": 86,
       "records_scored": 136,
       "total_candidates": 136,
-      "ssd_scan_ms": 2.38,
+      "ssd_scan_ms": 1.71,
       "bulk_io_kb": 63.09,
-      "total_latency_ms": 40.1
+      "total_latency_ms": 26.93
     },
     {
       "query_idx": 5,
@@ -98,9 +98,9 @@
       "primary_segment": 44,
       "records_scored": 173,
       "total_candidates": 173,
-      "ssd_scan_ms": 1.19,
+      "ssd_scan_ms": 2.08,
       "bulk_io_kb": 267.14,
-      "total_latency_ms": 22.55
+      "total_latency_ms": 29.54
     },
     {
       "query_idx": 6,
@@ -114,9 +114,9 @@
       "primary_segment": 101,
       "records_scored": 207,
       "total_candidates": 207,
-      "ssd_scan_ms": 1.02,
+      "ssd_scan_ms": 1.27,
       "bulk_io_kb": 259.48,
-      "total_latency_ms": 18.27
+      "total_latency_ms": 26.11
     },
     {
       "query_idx": 7,
@@ -130,9 +130,9 @@
       "primary_segment": 100,
       "records_scored": 230,
       "total_candidates": 230,
-      "ssd_scan_ms": 1.0,
+      "ssd_scan_ms": 0.87,
       "bulk_io_kb": 370.37,
-      "total_latency_ms": 16.39
+      "total_latency_ms": 15.45
     },
     {
       "query_idx": 8,
@@ -146,9 +146,9 @@
       "primary_segment": 173,
       "records_scored": 217,
       "total_candidates": 217,
-      "ssd_scan_ms": 1.56,
+      "ssd_scan_ms": 1.44,
       "bulk_io_kb": 170.26,
-      "total_latency_ms": 17.0
+      "total_latency_ms": 16.15
     },
     {
       "query_idx": 9,
@@ -162,9 +162,9 @@
       "primary_segment": 181,
       "records_scored": 104,
       "total_candidates": 104,
-      "ssd_scan_ms": 0.86,
+      "ssd_scan_ms": 0.92,
       "bulk_io_kb": 142.43,
-      "total_latency_ms": 16.16
+      "total_latency_ms": 14.6
     },
     {
       "query_idx": 10,
@@ -178,9 +178,9 @@
       "primary_segment": 101,
       "records_scored": 250,
       "total_candidates": 250,
-      "ssd_scan_ms": 0.85,
+      "ssd_scan_ms": 1.21,
       "bulk_io_kb": 367.69,
-      "total_latency_ms": 15.95
+      "total_latency_ms": 16.21
     }
   ]
 }

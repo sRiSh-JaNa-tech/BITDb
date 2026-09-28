@@ -228,19 +228,19 @@ def plot_stress_test_analysis(query_logs, checkpoint_snapshots, seg_info, output
     left_pct = (left_half_probes / total_probes * 100) if total_probes > 0 else 0
     right_pct = 100.0 - left_pct
 
-    # Highlight top 3 hottest segments
+    # Highlight top 3 hottest segments with clean callout tags (no awkward arrowheads)
     top_segs = np.argsort(total_seg_hits)[::-1][:3]
     for ts in top_segs:
-        ax1.annotate(f"Seg {ts}\n({total_seg_hits[ts]} hits)",
-                     xy=(ts, total_seg_hits[ts]), xytext=(ts, total_seg_hits[ts] + 3),
-                     fontsize=8, fontweight='bold', ha='center', color='#900C3F',
-                     arrowprops=dict(facecolor='black', shrink=0.08, width=1, headwidth=4))
+        ax1.annotate(f"Seg {ts}: {total_seg_hits[ts]} hits",
+                     xy=(ts, total_seg_hits[ts]), xytext=(ts, total_seg_hits[ts] + 2.5),
+                     fontsize=8, fontweight='bold', ha='center', color='#78281f',
+                     bbox=dict(boxstyle='round,pad=0.25', facecolor='#fadbd8', edgecolor='#c0392b', alpha=0.92))
 
     ax1.set_title("1. Segment Access Frequency (All 256 Segments)", fontsize=13, fontweight='bold', pad=10)
     ax1.set_xlabel("Segment ID (0 to 255)", fontsize=11)
     ax1.set_ylabel("Total Probes Received", fontsize=11)
     ax1.set_xlim(-2, 258)
-    ax1.set_ylim(0, max(float(np.max(total_seg_hits)) * 1.22, 10.0))
+    ax1.set_ylim(0, max(float(np.max(total_seg_hits)) * 1.35, 12.0))
     ax1.grid(True, linestyle='--', alpha=0.5)
 
     # Legend & Stats Box
@@ -295,7 +295,7 @@ def plot_stress_test_analysis(query_logs, checkpoint_snapshots, seg_info, output
     ax2.set_xticklabels([f"{c} Prompts" for c in checkpoints], fontweight='bold')
     ax2.set_ylim(0, 105)
     ax2.grid(True, linestyle='--', alpha=0.5, axis='y')
-    ax2.legend(loc='lower right', frameon=True, fontsize=9)
+    ax2.legend(loc='upper left', frameon=True, fontsize=8.5, facecolor='white', framealpha=0.92)
 
     # ─────────────────────────────────────────────────────────────────
     # Subplot 3 (Bottom-Left): Compound Bottleneck (Stored Chunks vs Query Accesses)
@@ -306,7 +306,11 @@ def plot_stress_test_analysis(query_logs, checkpoint_snapshots, seg_info, output
 
     # Color code by segment range (left vs right half)
     point_colors = ['#e74c3c' if s < 128 else '#3498db' for s in range(256)]
-    scatter = ax3.scatter(stored_chunks, query_hits, c=point_colors, s=45, alpha=0.75, edgecolors='black', linewidth=0.5)
+    scatter = ax3.scatter(stored_chunks, query_hits, c=point_colors, s=50, alpha=0.75, edgecolors='black', linewidth=0.5)
+
+    # Highlight top bottleneck segments with prominent red halos (no dangling arrows)
+    for s in top5_overall[:4]:
+        ax3.scatter(stored_chunks[s], query_hits[s], s=120, facecolors='none', edgecolors='#c0392b', linewidth=2.2, zorder=5)
 
     # Add trend line
     if np.max(stored_chunks) > 0 and np.max(query_hits) > 0:
@@ -315,19 +319,21 @@ def plot_stress_test_analysis(query_logs, checkpoint_snapshots, seg_info, output
         x_vals = np.linspace(0, np.max(stored_chunks), 100)
         ax3.plot(x_vals, p(x_vals), color='#2c3e50', linestyle='--', linewidth=2, label=f'Linear Fit (Slope={z[0]:.2f})')
 
-    # Annotate top outlier segments in quadrant
-    for s in top5_overall:
-        ax3.annotate(f"Seg {s} ({stored_chunks[s]} chunks, {query_hits[s]} hits)",
-                     xy=(stored_chunks[s], query_hits[s]),
-                     xytext=(stored_chunks[s] + 15, query_hits[s] + 1),
-                     fontsize=8, fontweight='bold', color='#900C3F',
-                     arrowprops=dict(facecolor='black', shrink=0.08, width=1, headwidth=4))
+    # Elegant callout card summarizing top outlier segments
+    top_outlier_text = "Top Overloaded Segments (Halos):\n" + "\n".join(
+        [f"• Seg {s:3d}: {stored_chunks[s]} chunks -> {query_hits[s]} hits" for s in top5_overall[:4]]
+    )
+    ax3.text(0.04, 0.96, top_outlier_text, transform=ax3.transAxes, ha='left', va='top',
+             fontsize=8.5, fontweight='semibold', color='#78281f',
+             bbox=dict(boxstyle='round,pad=0.4', facecolor='#fadbd8', edgecolor='#c0392b', alpha=0.92))
 
     ax3.set_title("3. Compound Bottleneck: Storage Size vs. Query Access Frequency", fontsize=13, fontweight='bold', pad=10)
     ax3.set_xlabel("Stored Chunks in Segment (from segment_dir.bin)", fontsize=11)
     ax3.set_ylabel("Query Probes Received during Stress Test", fontsize=11)
+    ax3.set_xlim(-5, max(stored_chunks) * 1.25)
+    ax3.set_ylim(-2, max(query_hits) * 1.48)
     ax3.grid(True, linestyle='--', alpha=0.5)
-    ax3.legend(loc='upper left', frameon=True)
+    ax3.legend(loc='lower right', frameon=True)
 
     ax3.text(0.96, 0.15,
              "High Correlation:\nHot segments that stored the most chunks\nare ALSO hit most often by incoming queries.",
@@ -367,8 +373,8 @@ def plot_stress_test_analysis(query_logs, checkpoint_snapshots, seg_info, output
     ax4.bar(x_c + w/2, cat_scan_means, width=w, label='SSD Extent Scan Time (ms)', color='#e74c3c', alpha=0.85, edgecolor='black')
 
     for i in range(len(categories)):
-        ax4.text(x_c[i] - w/2, cat_lat_means[i] + 0.5, f"{cat_lat_means[i]:.1f}ms", ha='center', fontsize=9, fontweight='bold')
-        ax4.text(x_c[i] + w/2, cat_scan_means[i] + 0.5, f"{cat_scan_means[i]:.1f}ms", ha='center', fontsize=9, fontweight='bold')
+        ax4.text(x_c[i] - w/2, cat_lat_means[i] + 0.6, f"{cat_lat_means[i]:.1f}ms", ha='center', fontsize=9, fontweight='bold')
+        ax4.text(x_c[i] + w/2, cat_scan_means[i] + 0.6, f"{cat_scan_means[i]:.1f}ms", ha='center', fontsize=9, fontweight='bold')
         ax4.text(x_c[i], 1.0, f"n={cat_sample_sizes[i]}", ha='center', fontsize=8, color='white', fontweight='bold', bbox=dict(boxstyle='square,pad=0.2', facecolor='black', alpha=0.6))
 
     ax4.set_title("4. Latency Penalty vs. Hot/Overloaded Segments Probed", fontsize=13, fontweight='bold', pad=10)
@@ -376,6 +382,7 @@ def plot_stress_test_analysis(query_logs, checkpoint_snapshots, seg_info, output
     ax4.set_ylabel("Average Time (Milliseconds)", fontsize=11)
     ax4.set_xticks(x_c)
     ax4.set_xticklabels([f"{c} Hot Segments" for c in categories], fontweight='bold')
+    ax4.set_ylim(0, max(cat_lat_means) * 1.35)
     ax4.grid(True, linestyle='--', alpha=0.5, axis='y')
     ax4.legend(loc='upper left', frameon=True)
 

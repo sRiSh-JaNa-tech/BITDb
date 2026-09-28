@@ -59,9 +59,9 @@ def generate_heatmaps(stored_chunks, checkpoint_snapshots, output_dir=OUTPUT_DIR
 
     from matplotlib.colors import PowerNorm
 
-    # Define bins for Segment Storage Size (X-Axis)
-    size_bins = [0, 20, 40, 70, 110, 250]
-    size_bin_labels = ["0-20\n(Cold)", "21-40\n(Low)", "41-70\n(Medium)", "71-110\n(High)", "111+\n(Peak)"]
+    # Define balanced bins for Segment Storage Size (X-Axis) based on actual corpus percentiles
+    size_bins = [0, 25, 45, 65, 85, 200]
+    size_bin_labels = ["0-25\n(Cold)", "26-45\n(Low)", "46-65\n(Medium)", "66-85\n(High)", "86+\n(Peak)"]
     num_x_bins = len(size_bin_labels)
 
     # 4-panel figure (2x2 grid)

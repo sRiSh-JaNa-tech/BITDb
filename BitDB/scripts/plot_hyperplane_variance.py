@@ -125,7 +125,7 @@ def generate_uncalibrated_plots(X, W, output_dir="eda_output"):
     ax1.set_xlabel("Hyperplane / Bit Index (0 to 31)", fontsize=11)
     ax1.set_ylabel("Variance of Projected Values", fontsize=11)
     ax1.set_xticks(bits_idx)
-    ax1.set_ylim(0, 48)
+    ax1.set_ylim(0, max(variances) * 1.25)
     ax1.grid(True, linestyle='--', alpha=0.5)
 
     # ─────────────────────────────────────────────────────────────────
@@ -141,6 +141,7 @@ def generate_uncalibrated_plots(X, W, output_dir="eda_output"):
         if abs(means[i]) > 2.0:
             ax2.plot(i, means[i], 'ro', markersize=7)
 
+    # Decision boundary and legend
     ax2.axhline(0.0, color='black', linestyle='-', linewidth=1.5, label='Decision Boundary (Threshold = 0.0)')
     ax2.set_title("2. Projection Spread & Centering: Mean (μ) ± 1 StdDev (σ)", fontsize=13, fontweight='bold', pad=10)
     ax2.set_xlabel("Hyperplane / Bit Index (0 to 31)", fontsize=11)
@@ -149,11 +150,17 @@ def generate_uncalibrated_plots(X, W, output_dir="eda_output"):
     ax2.grid(True, linestyle='--', alpha=0.5)
     ax2.legend(loc='lower right', frameon=True)
 
-    # Callout on Bit 7
-    ax2.annotate(f"Bit 7: μ={means[7]:.2f}, σ={stds[7]:.2f}\n(Shifted below 0 -> 80.7% Zeros)",
-                 xy=(7, means[7]), xytext=(7, -13),
-                 arrowprops=dict(facecolor='black', shrink=0.08, width=1.5, headwidth=6),
-                 fontsize=9, fontweight='bold', color='#c0392b', ha='center')
+    # Clean structured stats card in upper right (eliminating crossing diagonal arrow)
+    stats_box = (
+        "Centering Drift Summary:\n"
+        f"• Max Positive Drift : Bit 1 (μ=+{means[1]:.2f})\n"
+        f"• Max Negative Drift : Bit 29 (μ={means[29]:.2f})\n"
+        f"• Skewed Planes (|μ| > 5) : {sum(1 for m in means if abs(m) > 5)} of 32\n"
+        "-> Requires Centroid Subtraction"
+    )
+    ax2.text(0.96, 0.95, stats_box, transform=ax2.transAxes, ha='right', va='top',
+             fontsize=9, fontweight='semibold', color='#78281f',
+             bbox=dict(boxstyle='round,pad=0.4', facecolor='#fadbd8', edgecolor='#c0392b', alpha=0.92))
 
     # ─────────────────────────────────────────────────────────────────
     # Subplot 3: Binary Bit Partition Balance (% Ones vs % Zeros)
@@ -162,6 +169,7 @@ def generate_uncalibrated_plots(X, W, output_dir="eda_output"):
     ax3.bar(bits_idx, p_ones, color='#3498db', alpha=0.85, edgecolor='black', linewidth=0.8, label='% Ones (Bit = 1)')
     ax3.bar(bits_idx, p_zeros, bottom=p_ones, color='#95a5a6', alpha=0.4, edgecolor='black', linewidth=0.8, label='% Zeros (Bit = 0)')
     ax3.axhline(50.0, color='#e74c3c', linestyle='--', linewidth=2, label='Ideal 50% / 50% Balance')
+    ax3.axhspan(40.0, 60.0, color='#2ecc71', alpha=0.12, label='Balanced Range (40%-60%)')
     
     ax3.set_title("3. Partition Bit Balance: % Ones vs % Zeros", fontsize=13, fontweight='bold', pad=10)
     ax3.set_xlabel("Hyperplane / Bit Index (0 to 31)", fontsize=11)
@@ -171,12 +179,14 @@ def generate_uncalibrated_plots(X, W, output_dir="eda_output"):
     ax3.grid(True, linestyle='--', alpha=0.5)
     ax3.legend(loc='upper right', frameon=True)
 
-    # Highlight skewed bits
-    for b in [0, 2, 5, 7, 11, 26, 29]:
-        ax3.annotate(f"{p_ones[b]:.1f}%",
-                     xy=(b, p_ones[b]), xytext=(b, p_ones[b] + (5 if p_ones[b] < 50 else -10)),
-                     fontsize=8, fontweight='bold', ha='center',
-                     color='#c0392b' if p_ones[b] < 35 or p_ones[b] > 65 else '#2c3e50')
+    # Clean structured callout box for actual top 3 skewed bits
+    top_skewed = np.argsort(np.abs(p_ones - 50.0))[::-1][:3]
+    skew_text = "Severe Directional Skew Detected:\n" + "\n".join(
+        [f"• Bit {b:2d}: {p_ones[b]:.1f}% Ones ({p_zeros[b]:.1f}% Zeros)" for b in top_skewed]
+    )
+    ax3.text(0.04, 0.15, skew_text, transform=ax3.transAxes, fontsize=8.5, fontweight='semibold',
+             bbox=dict(boxstyle='round,pad=0.4', facecolor='#fadbd8', edgecolor='#c0392b', alpha=0.92),
+             color='#78281f')
 
     # ─────────────────────────────────────────────────────────────────
     # Subplot 4: Cumulative Variance of Uncalibrated Hyperplanes
