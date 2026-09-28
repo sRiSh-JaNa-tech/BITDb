@@ -67,7 +67,8 @@ inline uint32_t compute_probe_bitmask(const int8_t* emb) {
     for (int i = 0; i < P3_NUM_PROBES; ++i) {
         float dot = 0.0f;
         for (uint32_t j = 0; j < DIMS; ++j) {
-            dot += static_cast<float>(emb[j]) * PROBE_VECTORS[i][j];
+            float centered_val = (static_cast<float>(emb[j]) / 127.0f) - CENTROID_VECTOR[j];
+            dot += centered_val * PROBE_VECTORS[i][j];
         }
         if (dot > 0.0f) {
             mask |= (1u << i);
@@ -85,7 +86,8 @@ inline uint32_t compute_probe_bitmask_and_margins(const int8_t* emb, float* out_
     for (int i = 0; i < P3_NUM_PROBES; ++i) {
         float dot = 0.0f;
         for (uint32_t j = 0; j < DIMS; ++j) {
-            dot += static_cast<float>(emb[j]) * np[i][j];
+            float centered_val = (static_cast<float>(emb[j]) / 127.0f) - CENTROID_VECTOR[j];
+            dot += centered_val * np[i][j];
         }
         if (dot > 0.0f) {
             mask |= (1u << i);

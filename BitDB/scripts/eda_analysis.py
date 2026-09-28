@@ -39,7 +39,7 @@ BASE_DIR = find_prototype_base_dir()
 DATA_DIR = os.path.join(BASE_DIR, "DataStorage")
 SEGMENT_DIR_FILE = os.path.join(DATA_DIR, "segment_dir.bin")
 CHUNK_STORE_FILE = os.path.join(DATA_DIR, "chunk_store.bin")
-OUTPUT_DIR = os.path.join(BASE_DIR, "eda_output")
+OUTPUT_DIR = os.path.join(BASE_DIR, "eda_output", "latest")
 
 # Cross-platform binary detection (Windows .exe or Unix ELF)
 _candidate_bins = [

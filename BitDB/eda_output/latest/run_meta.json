@@ -1,17 +1,19 @@
 {
-  "run_name": "test_experiment",
-  "created_at": "2026-09-28 12:00:16",
-  "total_vectors": 9835,
+  "run_name": "run_20260928_233435",
+  "created_at": "2026-09-28 23:36:09",
+  "total_vectors": 10018,
   "files_generated": [
     "10_uncalibrated_hyperplane_variance.png",
     "11_query_segment_access_distribution.png",
     "12_storage_vs_query_access_heatmap.png",
     "1_segment_distribution.png",
     "2_chunk_size_distribution.png",
+    "3_workload_scaling.png",
     "4_latency_breakdown.png",
     "5_pruning_efficiency.png",
     "6_storage_compression.png",
     "7_storage_footprint.png",
+    "benchmark_data.json",
     "pruning_data.json",
     "stress_test_telemetry.json"
   ]
