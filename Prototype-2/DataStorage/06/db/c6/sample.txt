@@ -1,3 +1,0 @@
-Locality Sensitive Hashing (LSH) is an algorithmic technique that hashes similar input items into the same buckets with high probability. 
-Unlike cryptographic hash functions like SHA-256 where a single bit flip completely changes the hash, LSH aims to maximize hash collisions for similar items.
-This is incredibly useful for approximate nearest neighbor searches in high dimensional spaces, such as vector databases.

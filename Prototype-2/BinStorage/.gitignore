@@ -1,3 +1,0 @@
-# Ignore binary index files in storage
-*.bin
-!.gitignore
