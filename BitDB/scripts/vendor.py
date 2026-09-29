@@ -48,8 +48,11 @@ if backend_type == "cpu":
     from sentence_transformers import SentenceTransformer
     device = "cuda" if torch.cuda.is_available() else "cpu"
     st_model = SentenceTransformer(_MODEL_NAME_OR_PATH, device=device, local_files_only=_HAS_LOCAL_MINILM)
+    st_model.eval()
+    for param in st_model.parameters():
+        param.requires_grad = False
     backend_type = device
-    print(f"[vendor.py] Hardware Acceleration: Running on {device.upper()}.", flush=True)
+    print(f"[vendor.py] Hardware Acceleration: Running on {device.upper()} (Weights Frozen, Eval Mode).", flush=True)
 
 # ─────────────────────────────────────────────────────────────────────
 # Embedding functions
