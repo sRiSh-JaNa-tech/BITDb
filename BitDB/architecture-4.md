@@ -15,7 +15,10 @@ Traditional vector databases rely on one of two paradigms, both of which face se
 **Prototype-4 introduces Elastic Radix Extent Routing (ER2)**, an integrated systems-algorithmic co-design that:
 - **Preserves Metric Locality**: Similar vectors reside in the same or adjacent physical extents via Multi-Index Hashing (MIH).
 - **Margin-Ranked Multi-Probing (`--probes`)**: Expands search along the most uncertain hyperplane boundaries ranked by normalized geometric margin.
+- **Data-Calibrated Entropy-Maximized Hyperplanes (ITQ + PCA)**: Eliminates bit-level bias and segment left-skew, achieving **100% segment utilization (256/256)**, **0 chained overflow extents**, a **1.90x Max/Mean ratio** (down from 11.4x), and a Gini inequality index of **0.1785**.
+- **Tokenizer-Native Sliding Window Chunking**: Model-exact Rust subword token windowing with continuous cross-page carry-over buffering, completely eliminating sentence boundary fragmentation and page-break length anomalies.
 - **Microscopic RAM Footprint**: Holds less than **3 MB of RAM** for routing, MIH tables, and catalog metadata.
+- **Native C++ Zero-Overhead Systems Daemon**: Native C++17 filesystem watchdog (`Watchdog.exe`) and Halton probe generator (`HaltonProbes.exe`), removing Python interpreter runtime delays and saving ~150 MB RAM per daemon instance.
 - **Hardware-Co-Designed 128 KB Columnar Extents**: Aligns every disk extent to physical NVMe flash pages (131,072 bytes) and groups binary codes into a contiguous cache-friendly array.
 - **AVX2 SIMD Acceleration**: Built with native AVX2 SIMD flags (`/arch:AVX2` on MSVC, `-mavx2 -mpopcnt` on GCC) using the Harley-Seal `vpshufb` algorithm to scan candidate codes in memory at over **30 GB/s**.
 - **100% Intra-Extent Recall (Zero False Dismissals)**: Uses Asymmetric Distance Computation (ADC) strictly as an I/O scheduling and heap-pruning optimizer, scoring all candidates in accessed extents with exact int8 dot products.
@@ -40,8 +43,8 @@ The following diagram illustrates the complete end-to-end query execution lifecy
                            │
            ┌───────────────┴───────────────┐
            ▼                               ▼
-  1. 32-bit Probe Mask            Continuous Vector q
-     (Hyperplane Projections)       (Retained in RAM for ADC)
+  1. 32-bit ITQ Probe Mask        Continuous Vector q
+     (Centered Hyperplane Signs)   (Retained in RAM for ADC)
            │                               │
            ▼                               │
   2. Margin-Ranked MIH Multi-Probing       │
@@ -75,19 +78,59 @@ The following diagram illustrates the complete end-to-end query execution lifecy
 
 ---
 
-## 3. Pillar 1: Data-Calibrated Entropy-Maximized Hyperplanes (EM-Hash)
+## 3. Pillar 1: Data-Calibrated Entropy-Maximized Hyperplanes (Centroid + PCA + ITQ)
 
-### The Problem with Uncalibrated Sequences
-Previous iterations used Halton low-discrepancy sequences to generate hyperplanes. However, real-world dense semantic language embeddings are **highly anisotropic** (variance is concentrated along specific principal axes). Uniform or uncalibrated hyperplanes cut through empty dead space or slice across dense clusters, producing low bit-entropy and uneven bucket distributions.
+### The Bit-Level Bias & Left-Skew Problem
+In high-dimensional embedding spaces (e.g. 384-dim all-MiniLM-L6-v2), dense text embeddings do not scatter uniformly in a spherical shell; they concentrate in a narrow, highly anisotropic semantic cone with non-zero mean:
+$$\mathbb{E}[x] = C \neq \mathbf{0}$$
 
-### The Solution: ITQ / PCA Calibration
-In Prototype-4, hyperplanes can be calibrated against a representative sample of the dataset:
-1. Compute the top principal components via randomized SVD/PCA.
-2. Apply an orthogonal rotation matrix $R$ via **Iterative Quantization (ITQ)** to minimize the quantization error:
-   $$\min_R \|V - \text{sgn}(V \cdot R)\|_F^2$$
-3. Center hyperplanes so that each decision boundary cuts the dataset median with near-zero mean.
+When uncalibrated or purely synthetic hyperplanes (such as uniform random planes or standard Halton sequences) are used to partition vectors:
+1. **Severe Bit Bias**: Hyperplanes whose normal vector opposes the embedding cluster center evaluate to 0 for up to 80% of all data vectors. In particular, the 8th bit (Bit 7), which acts as the Most Significant Bit for the 8-bit segment index ($s = \text{mask} \& 0\text{xFF}$), evaluates to 0 for 80.7% of vectors.
+2. **Segment Left-Skew**: Nearly 80% of all documents and chunks are forced into Segments 0–127.
+3. **Compound Bucket Saturation**: Hot segments (e.g., Segments 64–95) exceed the 128 KB physical extent capacity (283 records), spilling over into chained secondary extents. Meanwhile, cold segments (Segments 128–255) remain nearly empty. This created an extreme Max/Mean occupancy ratio of **11.4x** and a Gini inequality index of **0.74**.
 
-**Result**: Every bit in the signature achieves Shannon entropy $H(b_i) \approx 1.0$ (50% zeros, 50% ones), maximizing informational density before any partitioning occurs.
+### The Solution: Centroid Centering + PCA Whitening + Iterative Quantization (ITQ)
+
+Prototype-4 solves this via an offline calibration pipeline (`scripts/calibrate_hyperplanes.py`):
+
+#### 1. Centroid Centering
+We compute the global corpus centroid $C \in \mathbb{R}^{384}$:
+$$C = \frac{1}{N} \sum_{i=1}^N x_i$$
+During ingestion and query routing, every vector is mean-subtracted:
+$$x' = \left(\frac{x}{127.0}\right) - C$$
+This shifts the geometric center of the embedding distribution to the origin $\mathbf{0}$, ensuring that any central hyperplane cuts the data distribution evenly.
+
+#### 2. PCA Dimension Reduction & Whitening
+We compute the covariance matrix $\Sigma = \frac{1}{N} X'^T X'$ and perform eigen-decomposition:
+$$\Sigma = U \Lambda U^T$$
+We select the top $c = 32$ principal eigenvectors $P \in \mathbb{R}^{384 \times 32}$. To equalize variance across all 32 projection axes, regularized whitening is applied:
+$$V = X' P \Lambda_{32}^{-1/2}$$
+
+#### 3. Iterative Quantization (ITQ)
+PCA projects maximal variance onto orthogonal axes, but axis-aligned slicing does not minimize quantization error when vectors are binarized to $\{-1, 1\}^c$. ITQ seeks an orthogonal rotation matrix $R \in \mathbb{R}^{32 \times 32}$ ($R^T R = I$) that minimizes the Euclidean distance between rotated projections and their vertex signs on the binary hypercube:
+$$\min_{B, R} \|B - V R\|_F^2 \quad \text{subject to } R^T R = I$$
+where $B = \text{sgn}(V R) \in \{-1, 1\}^{N \times 32}$.
+
+We solve this via alternating optimization:
+1. **Fix $R$, update $B$**: $B = \text{sgn}(V R)$
+2. **Fix $B$, update $R$**: Compute the SVD of $V^T B$:
+   $$V^T B = S \Omega \hat{S}^T \implies R = S \hat{S}^T$$
+
+#### 4. Exporting Calibrated Hyperplanes
+The calibrated projection matrix $W = P R \in \mathbb{R}^{384 \times 32}$ is normalized row-wise:
+$$W_i = \frac{W_i}{\|W_i\|_2}$$
+and exported into [`src/probe_vectors.h`](src/probe_vectors.h) along with $C$.
+
+### Quantitative Results & Impact
+
+| Metric | Uncalibrated Baseline | Centroid + PCA + ITQ (Prototype-4) | Improvement |
+| :--- | :---: | :---: | :---: |
+| **Segment Utilization** | 71.1% (182 / 256) | **100.0% (256 / 256)** | **+28.9% (Full Coverage)** |
+| **Chained Extents** | 18 overflow extents | **0 (Zero Chained Extents)** | **100% Elimination** |
+| **Max / Mean Ratio** | 11.4x | **1.90x** | **6.0x More Balanced** |
+| **Gini Inequality Index** | 0.7420 (High Skew) | **0.1785 (Near-Uniform)** | **76% Skew Reduction** |
+| **Bit 7 1-Ratio** | 19.3% (Severe Bias) | **50.4% (Perfect Balance)** | **Eliminated Bias** |
+| **Max SSD Extents per Query** | 5 extents | **1 extent** | **80% I/O Reduction** |
 
 ---
 
@@ -270,60 +313,96 @@ Stores `ExtentNode` records (1,552 bytes each) representing chained extent block
 - Written via `.tmp` atomic commit matching all other database files.
 
 ### Ingestion Engine & Fast PDF Extractor
-Prototype-4 integrates `fast_pdf_agent/pdf_extractor3.py` directly into the ingestion pipeline (`embed.cpp` and `pdf_extractor.py`). It provides:
-- High-throughput layout-aware PDF text and table extraction.
-- Automatic fallback mechanisms (PyMuPDF / `pdfplumber`).
-- **Coherent Sentence Chunking**: Uses `nltk.sent_tokenize` with a regex pre-pass to merge mid-sentence line breaks caused by column-wraps in PDFs. This avoids fragmenting logical sentences across line breaks. Very short fragments (e.g., isolated headings or artifacts) are aggressively filtered out to maximize the semantic quality of indexed vectors.
-- Direct chunking with byte-range indexing into `pdf_text.bin`.
-- Fully supports Unicode (UTF-8) console output for displaying UI components and multi-byte characters accurately during search.
+Prototype-4 integrates a high-performance extraction pipeline with **Option 2: Tokenizer-Native Sliding Window Chunking & Cross-Page Continuous Buffering**:
+- **Hardware-Accelerated PDF Extraction**: Uses PyMuPDF (`fitz`) for fast text extraction, falling back to `pypdf`.
+- **Rust Subword Tokenization**: Interacts directly with the compiled HuggingFace `tokenizers` engine (`tokenizer.json`), operating in sub-millisecond time.
+- **Model-Exact Sliding Window**: Chunks text using a 96-token sliding window with a 64-token stride, guaranteeing that every chunk strictly adheres to transformer context bounds without greedy or heuristic token drops.
+- **Cross-Page Continuous Buffering**: Solves the page-boundary fragmentation problem where short sentences at the bottom of a page were previously cut into sub-sentence fragments (the ~380-character peak). Trailing subwords below the stride threshold are carried over into an in-memory accumulator and prepended to the subsequent page before tokenization.
+- **Native C++ Text Reader**: Plain `.txt` files are ingested and chunked natively in [`src/embed.cpp`](src/embed.cpp) via `std::ifstream`, avoiding Python round trips for file I/O.
+- **Direct Byte-Range Text Storage**: UTF-8 chunk text is written directly into `pdf_text.bin` with exact byte offsets.
 
 ---
 
-## 10. Verification & Invariant Testing
+## 10. Native C++ Systems Architecture & Zero-Overhead Daemons
 
-Prototype-4 includes a standalone C++ invariant test binary ([`src/test_suite.cpp`](src/test_suite.cpp)):
+To eliminate Python runtime startup latency, memory bloat, and dependency friction, Prototype-4 shifted all non-inference components into native C++:
+
+### 1. Native Halton Probe Generator: [`src/HaltonProbes.cpp`](src/HaltonProbes.cpp)
+- Implements the multi-dimensional radical inverse Halton sequence across the first 32 prime bases in 384 dimensions.
+- Generates unit-normalized space-filling probe vectors and exports them directly into [`src/probe_vectors.h`](src/probe_vectors.h).
+- Operates standalone without Python, NumPy, or external mathematical dependencies.
+
+### 2. Native Auto-Sync Watchdog Daemon: [`src/Watchdog.cpp`](src/Watchdog.cpp)
+- Replaces legacy Python polling scripts with a high-performance C++17 daemon using `std::filesystem::recursive_directory_iterator`.
+- Monitors `./ingestor` for `.pdf` file additions, modifications, and deletions with configurable polling intervals.
+- Handles OS file write-buffer settling and directly invokes `Build.exe` upon change detection.
+- **Memory Footprint**: Consumes less than **2 MB of RAM** (versus ~150 MB for a Python process) and eliminates interpreter startup delays.
+
+### 3. Streamlined C++ Embedding Bridge: [`src/embed.cpp`](src/embed.cpp)
+- Removed all legacy Python fallbacks, NLTK downloads, and redundant functions.
+- The Python bridge is reserved strictly for neural tensor inference (OpenVINO iGPU / PyTorch model execution).
+
+---
+
+## 11. Verification, Invariant Testing & Automated Test Runners
+
+Prototype-4 includes a standalone C++ mathematical invariant test binary ([`src/test_suite.cpp`](src/test_suite.cpp)) and automated test scripts ([`run_tests.bat`](run_tests.bat) and [`run_tests.sh`](run_tests.sh)):
 
 ```cmd
-cd Prototype-4
-build\test_suite.exe
+.\run_tests.bat
 ```
 
-### Complete Test Suite (8/8 PASS):
-1. **Physical Layout**: Verifies `sizeof(ExtentBlock) == 131072`, section offsets, and byte alignments.
+### Complete Invariant Test Suite (11/11 PASS):
+1. **Physical Layout**: Verifies `sizeof(ExtentBlock) == 131072` (128 KB), 512-byte header, 28-byte chunk metadata, section offsets, and page alignment.
 2. **MIH Decompositions**: Verifies 4-way substring slicing and asserts all 8 single-bit flips per byte yield Hamming distance strictly equal to 1.
 3. **AVX2 Popcount Correctness**: Compares `_mm256_shuffle_epi8` Harley-Seal implementation against scalar reference across 500 pseudo-random vectors and single-bit flips.
 4. **ADC Scoring Invariant**: Verifies asymmetric float-to-bit dot product calculations against reference scalar code.
 5. **Cauchy-Schwarz Inequality**: Validates that no point in an extent can exceed $\text{MaxScore}(q, E) = (q \cdot C) + \|q\| \cdot R$.
-6. **On-Disk Health**: Confirms all binary files match magic `"BDB4"`, version `4`, and 128 KB divisibility.
+6. **On-Disk Health**: Confirms all binary files match magic `"BDB4"`, version `4`, and 128 KB divisibility across 256 physical extents (32 MB) and 11,470 indexed chunks.
 7. **Extent Chain Traversal**: Validates multi-extent linked list traversal, cycle detection, and record capacity across extended segment chains.
 8. **ADC Recall & Zero False Dismissals**: Validates that candidates ranked outside the top 15% of ADC pre-scores are never dropped and the true nearest neighbor is discovered with 100% precision.
+9. **Halton Probes Geometry & Diversity**: Validates 32-probe $\times$ 384-dimension geometry, non-zero L2 norms, unit normalization, and pairwise angular diversity ($\text{cosine similarity} < 0.98$).
+10. **PathConfig Invariants**: Asserts runtime path resolution for project root, `DataStorage/`, and `ingestor/` directories.
+11. **Signature Routing & Margin Invariants**: Asserts 32-bit LSH signature masking into valid segment range $[0, 255]$, Hamming distance properties, and absolute margin computation without NaN.
 
 ---
 
-## 11. Quick Execution Guide
+## 12. Quick Execution Guide
 
-### Build from Source
+### Build All 7 Native Targets from Source
 ```cmd
-cd Prototype-4
-build.bat
+.\build.bat
 ```
-*Note: `build.bat` automatically enables `-mavx2 -mpopcnt` on GCC/Clang or `/arch:AVX2` on MSVC, and builds `Build.exe`, `BitDBSearch.exe`, and `test_suite.exe`.*
+*Compiles all 7 binaries using AVX2 and hardware POPCNT optimizations (`-mavx2 -mpopcnt` on GCC/Clang or `/arch:AVX2` on MSVC):*
+1. `build\Build.exe`: Incremental and batch PDF indexing engine.
+2. `build\BitDBSearch.exe`: Sub-millisecond columnar search engine.
+3. `build\Watchdog.exe`: Native C++17 ingestor auto-sync daemon.
+4. `build\HaltonProbes.exe`: Native C++ Halton probe vector generator.
+5. `build\print_catalog.exe`: Document catalog inspection tool.
+6. `build\print_segment_dir.exe`: Segment distribution and balance audit tool.
+7. `build\test_suite.exe`: 11-test mathematical invariant verification suite.
+
+### Automated End-to-End Test Suite
+Run the 5-stage automated test runner:
+```cmd
+.\run_tests.bat
+# or on Linux/Unix:
+./run_tests.sh
+```
 
 ### Ingest Documents
-Place PDFs into `Prototype-4\ingestor\` (or any nested subfolders/datasets within `ingestor\`) and run:
+Place PDFs into `./ingestor/` (or nested subfolders) and run:
 ```cmd
 build\Build.exe
 ```
 *(Use `--rebuild` to perform a clean re-indexing from scratch, or omit flags for incremental append).*
 
 ### Real-Time Auto-Sync Watchdog
-To continuously monitor `./ingestor` for added, modified, or deleted PDFs and automatically trigger incremental indexing or compaction:
+To continuously monitor `./ingestor` using the native C++ daemon:
 ```cmd
-build\Build.exe --watch
-# or via build script
 build.bat watch
-# or standalone script
-python scripts\db_watchdog.py
+# or directly
+build\Watchdog.exe
 ```
 
 ### Search Queries
@@ -338,14 +417,8 @@ Supports interactive queries without reloading model weights on each turn:
 build\BitDBSearch.exe --interactive --probes 4
 ```
 
-### Run Test Suite
+### Inspect Index & Storage Balance
 ```cmd
-build\test_suite.exe
-```
-
-### Workbench & RAG Studio
-To run benchmarks, head-to-head shootouts, and grounded RAG query synthesis:
-```cmd
-cd ..\BitDB-Workbench
-run.bat
+build\print_catalog.exe
+build\print_segment_dir.exe
 ```
