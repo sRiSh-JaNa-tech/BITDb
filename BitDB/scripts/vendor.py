@@ -1,16 +1,6 @@
 import os
 import sys
 import numpy as np
-import nltk
-
-# Check punkt tokenizer locally first to avoid network timeout
-try:
-    nltk.data.find('tokenizers/punkt_tab')
-except LookupError:
-    try:
-        nltk.download('punkt_tab', quiet=True)
-    except Exception:
-        pass
 
 # Resolve model paths relative to THIS file
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -80,50 +70,11 @@ def _encode_batch_np(sentences: list) -> np.ndarray:
         emb = st_model.encode(sentences, normalize_embeddings=True)
         return np.clip(emb * 127.0, -128, 127).astype(np.int8)
 
-def get_embedding(text: str):
-    emb = _encode_batch_np([text])
-    return emb[0]
-
-def get_embeddings(texts: list):
-    if isinstance(texts, str):
-        texts = [texts]
-    return _encode_batch_np(texts)
-
 def embed_chunks(sentences: list) -> list:
     if not sentences:
         return []
     embeddings = _encode_batch_np(sentences)
     return embeddings.tolist()
-
-# ─────────────────────────────────────────────────────────────────────
-# Text file chunking (kept for backward compatibility)
-# ─────────────────────────────────────────────────────────────────────
-
-def chunk_file(filepath: str) -> list:
-    """Reads a .txt file and splits into sentence-level chunks via NLTK."""
-    if not os.path.exists(filepath):
-        print(f"[vendor.py] Warning: File not found: {filepath}")
-        return []
-    with open(filepath, 'r', encoding='utf-8') as f:
-        text = f.read()
-    if not text.strip():
-        return []
-    sentences = nltk.sent_tokenize(text)
-    return [s.strip() for s in sentences if s.strip()]
-
-def chunk_file_with_offsets(filepath: str) -> list:
-    """
-    Reads a .txt file, splits into sentences, and returns
-    (sentence_text, byte_offset, byte_length) tuples.
-    """
-    if not os.path.exists(filepath):
-        print(f"[vendor.py] Warning: File not found: {filepath}")
-        return []
-    with open(filepath, 'r', encoding='utf-8', newline='') as f:
-        text = f.read()
-    if not text.strip():
-        return []
-    return _chunk_text_to_offsets(text)
 
 # ─────────────────────────────────────────────────────────────────────
 # Option 2: Tokenizer-Native Windowing & Cross-Page Buffering

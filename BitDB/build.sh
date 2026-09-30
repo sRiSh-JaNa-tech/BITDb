@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 if [ "$1" = "watch" ]; then
-    if [ -f "build/Watchdog" ]; then
-        echo "[*] Starting BitDB Native C++ Auto-Sync Watchdog on ./ingestor..."
-        ./build/Watchdog "${@:2}"
-        exit 0
+    if [ ! -f "build/Watchdog" ]; then
+        echo "[*] Compiling native Watchdog..."
+        mkdir -p build
+        g++ -std=c++17 -O2 -Isrc src/Watchdog.cpp -o build/Watchdog
     fi
-    echo "[*] Starting BitDB Auto-Sync Watchdog on ./ingestor (Python fallback)..."
-    python3 scripts/db_watchdog.py "${@:2}"
+    echo "[*] Starting BitDB Native C++ Auto-Sync Watchdog on ./ingestor..."
+    ./build/Watchdog "${@:2}"
     exit 0
 fi
 

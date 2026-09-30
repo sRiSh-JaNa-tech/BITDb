@@ -3,13 +3,12 @@
 #include "PathConfig.h"
 #include <iostream>
 #include <sstream>
+#include <fstream>
 
 // ──────────────────────────────────────────────────────────────────
 // Module-level state (lives for the lifetime of the program)
 // ──────────────────────────────────────────────────────────────────
 static PyObject* g_pModule              = nullptr;
-static PyObject* g_pChunkFunc           = nullptr;
-static PyObject* g_pChunkOffsetsFunc    = nullptr;
 static PyObject* g_pChunkTextFunc       = nullptr;   // chunk_text_with_offsets
 static PyObject* g_pEmbedFunc           = nullptr;
 static PyObject* g_pPdfToTextPagesFunc  = nullptr;   // pdf_to_text_pages
@@ -44,18 +43,6 @@ void init_python() {
         return;
     }
 
-    g_pChunkFunc = PyObject_GetAttrString(g_pModule, "chunk_file");
-    if (!g_pChunkFunc || !PyCallable_Check(g_pChunkFunc)) {
-        PyErr_Print();
-        std::cerr << "[embed.cpp] FATAL: Cannot find vendor.chunk_file()" << std::endl;
-    }
-
-    g_pChunkOffsetsFunc = PyObject_GetAttrString(g_pModule, "chunk_file_with_offsets");
-    if (!g_pChunkOffsetsFunc || !PyCallable_Check(g_pChunkOffsetsFunc)) {
-        PyErr_Print();
-        std::cerr << "[embed.cpp] FATAL: Cannot find vendor.chunk_file_with_offsets()" << std::endl;
-    }
-
     g_pEmbedFunc = PyObject_GetAttrString(g_pModule, "embed_chunks");
     if (!g_pEmbedFunc || !PyCallable_Check(g_pEmbedFunc)) {
         PyErr_Print();
@@ -81,72 +68,41 @@ void finalize_python() {
     Py_XDECREF(g_pPdfToTextPagesFunc);
     Py_XDECREF(g_pChunkTextFunc);
     Py_XDECREF(g_pEmbedFunc);
-    Py_XDECREF(g_pChunkOffsetsFunc);
-    Py_XDECREF(g_pChunkFunc);
     Py_XDECREF(g_pModule);
     g_pPdfToTextPagesFunc  = nullptr;
     g_pChunkTextFunc       = nullptr;
     g_pEmbedFunc           = nullptr;
-    g_pChunkOffsetsFunc    = nullptr;
-    g_pChunkFunc           = nullptr;
     g_pModule              = nullptr;
     Py_Finalize();
     std::cout << "[embed.cpp] Python finalized." << std::endl;
 }
 
 // ──────────────────────────────────────────────────────────────────
-// chunk_file
+// chunk_file (Native C++ text reader)
 // ──────────────────────────────────────────────────────────────────
 
 std::vector<std::string> chunk_file(const std::string& filepath) {
+    std::ifstream f(filepath, std::ios::in | std::ios::binary);
+    if (!f.is_open()) return {};
+    std::string text((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+    auto infos = chunk_text_with_offsets(text);
     std::vector<std::string> result;
-    if (!g_pChunkFunc) return result;
-
-    PyObject* pArgs = PyTuple_New(1);
-    PyTuple_SetItem(pArgs, 0, PyUnicode_FromString(filepath.c_str()));
-    PyObject* pReturn = PyObject_CallObject(g_pChunkFunc, pArgs);
-    Py_DECREF(pArgs);
-
-    if (!pReturn) { PyErr_Print(); return result; }
-    if (PyList_Check(pReturn)) {
-        Py_ssize_t sz = PyList_Size(pReturn);
-        for (Py_ssize_t i = 0; i < sz; ++i) {
-            const char* s = PyUnicode_AsUTF8(PyList_GetItem(pReturn, i));
-            if (s) result.push_back(std::string(s));
-        }
+    result.reserve(infos.size());
+    for (const auto& ci : infos) {
+        result.push_back(ci.text);
     }
-    Py_DECREF(pReturn);
     return result;
 }
 
 // ──────────────────────────────────────────────────────────────────
-// chunk_file_with_offsets
+// chunk_file_with_offsets (Native C++ text reader)
 // ──────────────────────────────────────────────────────────────────
 
 std::vector<ChunkInfo> chunk_file_with_offsets(const std::string& filepath) {
-    std::vector<ChunkInfo> result;
-    if (!g_pChunkOffsetsFunc) return result;
-
-    PyObject* pArgs = PyTuple_New(1);
-    PyTuple_SetItem(pArgs, 0, PyUnicode_FromString(filepath.c_str()));
-    PyObject* pReturn = PyObject_CallObject(g_pChunkOffsetsFunc, pArgs);
-    Py_DECREF(pArgs);
-
-    if (!pReturn) { PyErr_Print(); return result; }
-    if (PyList_Check(pReturn)) {
-        Py_ssize_t sz = PyList_Size(pReturn);
-        for (Py_ssize_t i = 0; i < sz; ++i) {
-            PyObject* pTup = PyList_GetItem(pReturn, i);
-            if (PyTuple_Check(pTup) && PyTuple_Size(pTup) == 3) {
-                const char* s  = PyUnicode_AsUTF8(PyTuple_GetItem(pTup, 0));
-                uint64_t off   = PyLong_AsUnsignedLongLong(PyTuple_GetItem(pTup, 1));
-                uint32_t len   = static_cast<uint32_t>(PyLong_AsUnsignedLong(PyTuple_GetItem(pTup, 2)));
-                if (s) result.push_back({std::string(s), off, len});
-            }
-        }
-    }
-    Py_DECREF(pReturn);
-    return result;
+    std::ifstream f(filepath, std::ios::in | std::ios::binary);
+    if (!f.is_open()) return {};
+    std::string text((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+    return chunk_text_with_offsets(text);
 }
 
 // ──────────────────────────────────────────────────────────────────

@@ -6,13 +6,14 @@ if /I "%1"=="watch" goto :watch_mode
 goto :start_build
 
 :watch_mode
-if exist "build\Watchdog.exe" (
-    echo [*] Starting BitDB Native C++ Auto-Sync Watchdog on ./ingestor...
-    build\Watchdog.exe %2 %3 %4 %5
-    exit /b %ERRORLEVEL%
+if not exist "build\Watchdog.exe" (
+    echo [*] Compiling native Watchdog.exe...
+    if not exist "build" mkdir "build"
+    g++ -std=c++17 -O2 -I"src" src\Watchdog.cpp -o build\Watchdog.exe
+    if !ERRORLEVEL! neq 0 ( echo [!] FAILED to compile Watchdog.exe & exit /b 1 )
 )
-echo [*] Starting BitDB Auto-Sync Watchdog on ./ingestor [Python fallback]...
-python scripts\db_watchdog.py %2 %3 %4 %5
+echo [*] Starting BitDB Native C++ Auto-Sync Watchdog on ./ingestor...
+build\Watchdog.exe %2 %3 %4 %5
 exit /b %ERRORLEVEL%
 
 :start_build

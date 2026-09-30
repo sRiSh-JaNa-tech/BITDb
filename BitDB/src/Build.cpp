@@ -363,23 +363,19 @@ int main(int argc, char* argv[]) {
     }
 
     if (watchMode) {
-        cout << "[*] Launching BitDB Background Auto-Sync Watchdog on ./ingestor...\n";
-        fs::path nativeWatchdog = PathConfig::getProjectRoot() / "build" / "Watchdog.exe";
-        if (fs::exists(nativeWatchdog)) {
-            string cmd = "\"" + nativeWatchdog.string() + "\"";
-            return system(cmd.c_str());
-        }
-
-        fs::path watchdogScript = PathConfig::getScriptsDir() / "db_watchdog.py";
-        if (!fs::exists(watchdogScript)) {
-            cerr << "[!] Watchdog executable or script not found.\n";
+        cout << "[*] Launching BitDB Native C++ Auto-Sync Watchdog on ./ingestor...\n";
+        fs::path nativeWatchdog = PathConfig::getProjectRoot() / "build" /
+#ifdef _WIN32
+            "Watchdog.exe";
+#else
+            "Watchdog";
+#endif
+        if (!fs::exists(nativeWatchdog)) {
+            cerr << "[!] Watchdog executable not found at: " << nativeWatchdog.string() << "\n";
+            cerr << "    Run build.bat (or build.sh) to compile Watchdog first.\n";
             return 1;
         }
-#ifdef _WIN32
-        string cmd = "python \"" + watchdogScript.string() + "\"";
-#else
-        string cmd = "python3 \"" + watchdogScript.string() + "\"";
-#endif
+        string cmd = "\"" + nativeWatchdog.string() + "\"";
         return system(cmd.c_str());
     }
 

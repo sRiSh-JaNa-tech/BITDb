@@ -83,35 +83,4 @@ def pdf_to_text_pages(filepath: str) -> list:
         return []
 
 
-def pdf_page_count(filepath: str) -> int:
-    """Returns number of pages in a PDF, or 0 on failure."""
-    if not os.path.exists(filepath):
-        return 0
 
-    if _HAS_FITZ:
-        try:
-            doc = fitz.open(filepath)
-            count = len(doc)
-            doc.close()
-            return count
-        except Exception:
-            pass
-
-    try:
-        _ensure_pdf_engine()
-        reader = pypdf.PdfReader(filepath)
-        return len(reader.pages)
-    except Exception:
-        return 0
-
-
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python pdf_extractor.py <path_to_pdf>")
-        sys.exit(1)
-    pages = pdf_to_text_pages(sys.argv[1])
-    engine_name = "PyMuPDF (fitz)" if _HAS_FITZ else "pypdf"
-    print(f"Extracted {len(pages)} pages (Engine: {engine_name})")
-    for pnum, txt in pages[:3]:
-        print(f"\n--- Page {pnum} ({len(txt)} chars) ---")
-        print(txt[:300])
