@@ -535,10 +535,86 @@ static bool test_adc_recall_no_false_dismissal() {
     return true;
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// -------------------------------------------------
+// ─────────────────────────────────────────────────────────────────
+// Test 9: Halton Probe Vector Geometry & Hyperplane Space Filling
+// ─────────────────────────────────────────────────────────────────
+static bool test_halton_probes_geometry() {
+    TEST_ASSERT(P3_NUM_PROBES == 32, "P3_NUM_PROBES must be 32");
+    TEST_ASSERT(P3_DIMS == 384, "P3_DIMS must be 384");
+
+    for (int i = 0; i < P3_NUM_PROBES; ++i) {
+        double norm_sq = 0.0;
+        for (int d = 0; d < P3_DIMS; ++d) {
+            float v = PROBE_VECTORS[i][d];
+            norm_sq += static_cast<double>(v) * static_cast<double>(v);
+        }
+        double norm = std::sqrt(norm_sq);
+        TEST_ASSERT(norm > 0.1, "Probe vector norm must be non-zero");
+
+        // Verify probes are not degenerate/identical
+        for (int j = i + 1; j < P3_NUM_PROBES; ++j) {
+            double dot = 0.0;
+            double norm_j_sq = 0.0;
+            for (int d = 0; d < P3_DIMS; ++d) {
+                dot += static_cast<double>(PROBE_VECTORS[i][d]) * static_cast<double>(PROBE_VECTORS[j][d]);
+                norm_j_sq += static_cast<double>(PROBE_VECTORS[j][d]) * static_cast<double>(PROBE_VECTORS[j][d]);
+            }
+            double cos_sim = std::abs(dot / (norm * std::sqrt(norm_j_sq)));
+            TEST_ASSERT(cos_sim < 0.98, "Probe hyperplanes must be diverse (cosine similarity < 0.98)");
+        }
+    }
+    return true;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Test 10: PathConfig Invariant Resolution
+// ─────────────────────────────────────────────────────────────────
+static bool test_path_config_invariants() {
+    fs::path root = PathConfig::getProjectRoot();
+    TEST_ASSERT(fs::exists(root), "Project root must exist on disk");
+    TEST_ASSERT(fs::is_directory(root), "Project root must be a directory");
+
+    fs::path dataDir = PathConfig::getDataStorageDir();
+    TEST_ASSERT(fs::exists(dataDir), "DataStorage directory must exist on disk");
+
+    fs::path ingestorDir = PathConfig::getIngestorDir();
+    TEST_ASSERT(fs::exists(ingestorDir), "Ingestor directory must exist on disk");
+
+    return true;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Test 11: LSH Signature & Segment Routing Invariants
+// ─────────────────────────────────────────────────────────────────
+static bool test_signature_segment_routing() {
+    // 1. Signature to segment must always be within [0, 255]
+    for (uint32_t sig = 0; sig < 10000; sig += 37) {
+        uint32_t seg = BitDB::signature_to_segment(sig);
+        TEST_ASSERT(seg < 256, "Segment ID must be strictly < 256");
+    }
+
+    // 2. Hamming distance invariants on 32-bit signatures
+    TEST_ASSERT(BitDB::hamming_distance_32(0x00000000u, 0xFFFFFFFFu) == 32, "Hamming distance must be 32");
+    TEST_ASSERT(BitDB::hamming_distance_32(0x12345678u, 0x12345678u) == 0, "Self distance must be 0");
+    TEST_ASSERT(BitDB::hamming_distance_32(0x00000001u, 0x00000000u) == 1, "Single bit flip must be 1");
+
+    // 3. Margin computation should produce non-negative margins without NaN
+    int8_t dummyEmb[384] = {0};
+    for (int i = 0; i < 384; ++i) dummyEmb[i] = static_cast<int8_t>((i % 255) - 128);
+    float margins[32] = {0.0f};
+    uint32_t mask = BitDB::compute_probe_bitmask_and_margins(dummyEmb, margins);
+    (void)mask;
+    for (int i = 0; i < 32; ++i) {
+        TEST_ASSERT(!std::isnan(margins[i]), "Margin must not be NaN");
+        TEST_ASSERT(margins[i] >= 0.0f, "Margin must be non-negative");
+    }
+
+    return true;
+}
+
+// ─────────────────────────────────────────────────────────────────
 // Main Test Runner Entrypoint
-// -------------------------------------------------
+// ─────────────────────────────────────────────────────────────────
 int main() {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
@@ -556,6 +632,9 @@ int main() {
     RUN_TEST(test_storage_integrity);
     RUN_TEST(test_extent_chain_traversal);
     RUN_TEST(test_adc_recall_no_false_dismissal);
+    RUN_TEST(test_halton_probes_geometry);
+    RUN_TEST(test_path_config_invariants);
+    RUN_TEST(test_signature_segment_routing);
 
     cout << "\n--------------------------------------------------\n";
     cout << "  Test Summary: " << g_testsPassed << " passed, " << g_testsFailed << " failed\n";
