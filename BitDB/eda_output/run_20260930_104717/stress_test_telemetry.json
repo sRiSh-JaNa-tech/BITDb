@@ -1,0 +1,186 @@
+{
+  "total_queries": 150,
+  "checkpoints": [
+    30,
+    40,
+    100,
+    150
+  ],
+  "left_half_probes_pct": 33.83,
+  "right_half_probes_pct": 66.17,
+  "top5_segments": [
+    186,
+    185,
+    184,
+    187,
+    203
+  ],
+  "top5_shares_at_checkpoints": {
+    "30": 15.0,
+    "40": 16.25,
+    "100": 15.5,
+    "150": 16.0
+  },
+  "sample_query_logs": [
+    {
+      "query_idx": 1,
+      "query": "approximate nearest neighbor search on SSD",
+      "probed_segments": [
+        155,
+        219,
+        147,
+        27
+      ],
+      "primary_segment": 155,
+      "records_scored": 0,
+      "total_candidates": 0,
+      "ssd_scan_ms": 0.0,
+      "bulk_io_kb": 0.0,
+      "total_latency_ms": 0.0
+    },
+    {
+      "query_idx": 2,
+      "query": "gradient boosted decision tree classifiers",
+      "probed_segments": [
+        231,
+        239,
+        227,
+        199
+      ],
+      "primary_segment": 231,
+      "records_scored": 198,
+      "total_candidates": 198,
+      "ssd_scan_ms": 1.61,
+      "bulk_io_kb": 368.07,
+      "total_latency_ms": 47.9
+    },
+    {
+      "query_idx": 3,
+      "query": "automated evaluation of retrieval augmented generation with Ragas",
+      "probed_segments": [
+        147,
+        145,
+        179,
+        146
+      ],
+      "primary_segment": 147,
+      "records_scored": 130,
+      "total_candidates": 130,
+      "ssd_scan_ms": 1.52,
+      "bulk_io_kb": 154.52,
+      "total_latency_ms": 24.38
+    },
+    {
+      "query_idx": 4,
+      "query": "cache friendly SIMD product quantization for vector databases",
+      "probed_segments": [
+        126,
+        118,
+        124,
+        127
+      ],
+      "primary_segment": 126,
+      "records_scored": 220,
+      "total_candidates": 220,
+      "ssd_scan_ms": 1.19,
+      "bulk_io_kb": 270.55,
+      "total_latency_ms": 27.74
+    },
+    {
+      "query_idx": 5,
+      "query": "performance of chatgpt on usmle medical licensing examination",
+      "probed_segments": [
+        187,
+        191,
+        59,
+        186
+      ],
+      "primary_segment": 187,
+      "records_scored": 174,
+      "total_candidates": 174,
+      "ssd_scan_ms": 0.93,
+      "bulk_io_kb": 367.75,
+      "total_latency_ms": 27.07
+    },
+    {
+      "query_idx": 6,
+      "query": "autonomous chemical research with large language models",
+      "probed_segments": [
+        184,
+        188,
+        186,
+        152
+      ],
+      "primary_segment": 184,
+      "records_scored": 194,
+      "total_candidates": 194,
+      "ssd_scan_ms": 1.05,
+      "bulk_io_kb": 262.9,
+      "total_latency_ms": 20.85
+    },
+    {
+      "query_idx": 7,
+      "query": "a prompt pattern catalog to enhance prompt engineering with chatgpt",
+      "probed_segments": [
+        185,
+        189,
+        169,
+        153
+      ],
+      "primary_segment": 185,
+      "records_scored": 248,
+      "total_candidates": 248,
+      "ssd_scan_ms": 0.92,
+      "bulk_io_kb": 470.56,
+      "total_latency_ms": 18.72
+    },
+    {
+      "query_idx": 8,
+      "query": "attention mechanisms in computer vision a survey",
+      "probed_segments": [
+        139,
+        155,
+        137,
+        131
+      ],
+      "primary_segment": 139,
+      "records_scored": 168,
+      "total_candidates": 168,
+      "ssd_scan_ms": 1.36,
+      "bulk_io_kb": 262.08,
+      "total_latency_ms": 19.84
+    },
+    {
+      "query_idx": 9,
+      "query": "point cloud transformer for 3d deep learning",
+      "probed_segments": [
+        90,
+        91,
+        26,
+        218
+      ],
+      "primary_segment": 90,
+      "records_scored": 219,
+      "total_candidates": 219,
+      "ssd_scan_ms": 1.27,
+      "bulk_io_kb": 469.2,
+      "total_latency_ms": 20.98
+    },
+    {
+      "query_idx": 10,
+      "query": "extreme gradient boosting and tree based pipeline optimization",
+      "probed_segments": [
+        135,
+        199,
+        134,
+        143
+      ],
+      "primary_segment": 135,
+      "records_scored": 165,
+      "total_candidates": 165,
+      "ssd_scan_ms": 1.14,
+      "bulk_io_kb": 260.73,
+      "total_latency_ms": 20.5
+    }
+  ]
+}
