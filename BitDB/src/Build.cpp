@@ -364,9 +364,15 @@ int main(int argc, char* argv[]) {
 
     if (watchMode) {
         cout << "[*] Launching BitDB Background Auto-Sync Watchdog on ./ingestor...\n";
+        fs::path nativeWatchdog = PathConfig::getProjectRoot() / "build" / "Watchdog.exe";
+        if (fs::exists(nativeWatchdog)) {
+            string cmd = "\"" + nativeWatchdog.string() + "\"";
+            return system(cmd.c_str());
+        }
+
         fs::path watchdogScript = PathConfig::getScriptsDir() / "db_watchdog.py";
         if (!fs::exists(watchdogScript)) {
-            cerr << "[!] Watchdog script not found at: " << watchdogScript << "\n";
+            cerr << "[!] Watchdog executable or script not found.\n";
             return 1;
         }
 #ifdef _WIN32

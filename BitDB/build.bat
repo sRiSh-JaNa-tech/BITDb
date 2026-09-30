@@ -2,11 +2,20 @@
 setlocal enabledelayedexpansion
 
 :: Check if user requested watchdog mode
-if /I "%1"=="watch" (
-    echo [*] Starting BitDB Auto-Sync Watchdog on ./ingestor...
-    python scripts\db_watchdog.py %2 %3 %4 %5
+if /I "%1"=="watch" goto :watch_mode
+goto :start_build
+
+:watch_mode
+if exist "build\Watchdog.exe" (
+    echo [*] Starting BitDB Native C++ Auto-Sync Watchdog on ./ingestor...
+    build\Watchdog.exe %2 %3 %4 %5
     exit /b %ERRORLEVEL%
 )
+echo [*] Starting BitDB Auto-Sync Watchdog on ./ingestor [Python fallback]...
+python scripts\db_watchdog.py %2 %3 %4 %5
+exit /b %ERRORLEVEL%
+
+:start_build
 
 echo.
 echo ==================================================
@@ -79,8 +88,10 @@ taskkill /F /IM Build.exe >nul 2>&1
 taskkill /F /IM print_catalog.exe >nul 2>&1
 taskkill /F /IM print_segment_dir.exe >nul 2>&1
 taskkill /F /IM test_suite.exe >nul 2>&1
+taskkill /F /IM Watchdog.exe >nul 2>&1
+taskkill /F /IM HaltonProbes.exe >nul 2>&1
 
-echo [1/4] Compiling Build.exe...
+echo [1/7] Compiling Build.exe...
 %CXX% %FLAGS% src\Build.cpp src\embed.cpp %LIBS% -o build\Build.exe
 if %ERRORLEVEL% neq 0 (
     echo [!] FAILED to compile Build.exe.
@@ -88,7 +99,7 @@ if %ERRORLEVEL% neq 0 (
     exit /b 1
 )
 
-echo [2/4] Compiling BitDBSearch.exe...
+echo [2/7] Compiling BitDBSearch.exe...
 %CXX% %FLAGS% src\Search.cpp src\embed.cpp %LIBS% -o build\BitDBSearch.exe
 if %ERRORLEVEL% neq 0 (
     echo [!] FAILED to compile BitDBSearch.exe.
@@ -96,15 +107,23 @@ if %ERRORLEVEL% neq 0 (
     exit /b 1
 )
 
-echo [3/4] Compiling print_catalog.exe...
+echo [3/7] Compiling Watchdog.exe...
+%CXX% -std=c++17 -O2 -I"src" src\Watchdog.cpp -o build\Watchdog.exe
+if %ERRORLEVEL% neq 0 ( echo [!] FAILED to compile Watchdog.exe & exit /b 1 )
+
+echo [4/7] Compiling HaltonProbes.exe...
+%CXX% -std=c++17 -O2 -I"src" src\HaltonProbes.cpp -o build\HaltonProbes.exe
+if %ERRORLEVEL% neq 0 ( echo [!] FAILED to compile HaltonProbes.exe & exit /b 1 )
+
+echo [5/7] Compiling print_catalog.exe...
 %CXX% -std=c++17 -O2 -I"src" printers\print_catalog.cpp -o build\print_catalog.exe
 if %ERRORLEVEL% neq 0 ( echo [!] FAILED to compile print_catalog.exe & exit /b 1 )
 
-echo [4/5] Compiling print_segment_dir.exe...
+echo [6/7] Compiling print_segment_dir.exe...
 %CXX% -std=c++17 -O2 -I"src" printers\print_segment_dir.cpp -o build\print_segment_dir.exe
 if %ERRORLEVEL% neq 0 ( echo [!] FAILED to compile print_segment_dir.exe & exit /b 1 )
 
-echo [5/5] Compiling test_suite.exe...
+echo [7/7] Compiling test_suite.exe...
 %CXX% -std=c++17 -O2 -mavx2 -mpopcnt -I"src" src\test_suite.cpp -o build\test_suite.exe
 if %ERRORLEVEL% neq 0 ( echo [!] FAILED to compile test_suite.exe & exit /b 1 )
 

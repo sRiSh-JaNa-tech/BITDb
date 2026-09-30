@@ -64,8 +64,16 @@ target_include_directories(print_catalog PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/sr
 add_executable(print_segment_dir printers/print_segment_dir.cpp)
 target_include_directories(print_segment_dir PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
+# 5. Watchdog.exe (Native auto-sync daemon)
+add_executable(Watchdog src/Watchdog.cpp)
+target_include_directories(Watchdog PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
+# 6. HaltonProbes.exe (Deterministic 32-probe vector generator)
+add_executable(HaltonProbes src/HaltonProbes.cpp)
+target_include_directories(HaltonProbes PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
 # ─────────────────────────────────────────────────────────────────────────────
-# 5. test_suite.exe (Unit & invariant test suite — no Python dependency)
+# 7. test_suite.exe (Unit & invariant test suite — no Python dependency)
 # ─────────────────────────────────────────────────────────────────────────────
 add_executable(test_suite src/test_suite.cpp)
 target_include_directories(test_suite PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
@@ -82,6 +90,8 @@ if(MSVC)
     target_compile_options(Build         PRIVATE ${_BITDB_CXX_FLAGS})
     target_compile_options(BitDBSearch   PRIVATE ${_BITDB_CXX_FLAGS})
     target_compile_options(test_suite    PRIVATE /arch:AVX2 /O2 /W3)
+    target_compile_options(Watchdog      PRIVATE /O2 /W3)
+    target_compile_options(HaltonProbes  PRIVATE /O2 /W3)
 else()
     # -mavx2 -mpopcnt — enables AVX2 + hardware POPCNT
     # -O2 -Wall       — standard optimisation + warnings
@@ -90,6 +100,8 @@ else()
     target_compile_options(Build         PRIVATE ${_BITDB_CXX_FLAGS})
     target_compile_options(BitDBSearch   PRIVATE ${_BITDB_CXX_FLAGS})
     target_compile_options(test_suite    PRIVATE -mavx2 -mpopcnt -O2 -Wall)
+    target_compile_options(Watchdog      PRIVATE -O2 -Wall)
+    target_compile_options(HaltonProbes  PRIVATE -O2 -Wall)
 endif()
 
 message(STATUS "  AVX2 SIMD          : ENABLED")

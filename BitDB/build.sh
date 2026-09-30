@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 if [ "$1" = "watch" ]; then
-    echo "[*] Starting BitDB Auto-Sync Watchdog on ./ingestor..."
+    if [ -f "build/Watchdog" ]; then
+        echo "[*] Starting BitDB Native C++ Auto-Sync Watchdog on ./ingestor..."
+        ./build/Watchdog "${@:2}"
+        exit 0
+    fi
+    echo "[*] Starting BitDB Auto-Sync Watchdog on ./ingestor (Python fallback)..."
     python3 scripts/db_watchdog.py "${@:2}"
     exit 0
 fi
@@ -41,6 +46,8 @@ LIBS="-L${PY_LIB} -lpython${PY_LD}"
 
 $CXX $FLAGS src/Build.cpp src/embed.cpp $LIBS -o build/Build
 $CXX $FLAGS src/Search.cpp src/embed.cpp $LIBS -o build/BitDBSearch
+$CXX -std=c++17 -O2 -Isrc src/Watchdog.cpp -o build/Watchdog
+$CXX -std=c++17 -O2 -Isrc src/HaltonProbes.cpp -o build/HaltonProbes
 $CXX -std=c++17 -O2 -Isrc printers/print_catalog.cpp -o build/print_catalog
 $CXX -std=c++17 -O2 -Isrc printers/print_segment_dir.cpp -o build/print_segment_dir
 $CXX -std=c++17 -O2 -mavx2 -mpopcnt -Isrc src/test_suite.cpp -o build/test_suite
