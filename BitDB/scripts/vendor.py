@@ -126,54 +126,133 @@ def chunk_file_with_offsets(filepath: str) -> list:
     return _chunk_text_to_offsets(text)
 
 # ─────────────────────────────────────────────────────────────────────
-# Raw text chunking — Prototype-3 addition
+# Option 2: Tokenizer-Native Windowing & Cross-Page Buffering
 # ─────────────────────────────────────────────────────────────────────
 
-def _chunk_text_to_offsets(text: str) -> list:
+_carry_over_buffer = ""
+_current_doc_pages = 0
+_current_page_idx = 0
+_fast_tokenizer = None
+
+def reset_document_chunker(total_pages: int = 0):
+    global _carry_over_buffer, _current_doc_pages, _current_page_idx
+    _carry_over_buffer = ""
+    _current_doc_pages = total_pages
+    _current_page_idx = 0
+
+def _get_fast_tokenizer():
+    global _fast_tokenizer
+    if _fast_tokenizer is not None:
+        return _fast_tokenizer
+
+    # Priority 1: Direct Rust Tokenizer from tokenizer.json (sub-millisecond speed)
+    tok_json_candidates = [
+        os.path.join(_OV_MODEL_PATH, "tokenizer.json"),
+        os.path.join(_MODEL_PATH, "tokenizer.json"),
+    ]
+    for p in tok_json_candidates:
+        if os.path.isfile(p):
+            try:
+                from tokenizers import Tokenizer
+                t = Tokenizer.from_file(p)
+                t.no_truncation()
+                _fast_tokenizer = t
+                return _fast_tokenizer
+            except Exception:
+                pass
+
+    # Priority 2: In-memory tokenizer from OpenVINO or SentenceTransformer
+    if ov_tokenizer is not None:
+        _fast_tokenizer = ov_tokenizer
+        return _fast_tokenizer
+    if st_model is not None and hasattr(st_model, "tokenizer"):
+        _fast_tokenizer = st_model.tokenizer
+        return _fast_tokenizer
+
+    # Priority 3: Fallback to transformers AutoTokenizer
+    from transformers import AutoTokenizer
+    _fast_tokenizer = AutoTokenizer.from_pretrained(_MODEL_NAME_OR_PATH, local_files_only=_HAS_LOCAL_MINILM)
+    return _fast_tokenizer
+
+def _chunk_text_to_offsets(text: str, window_tokens: int = 96, stride_tokens: int = 64) -> list:
     """
-    Internal helper: chunks a text string into sentences and returns
-    (sentence_text, byte_offset, byte_length) tuples.
+    Option 2: Tokenizer-Native Windowing (Rust compiled subword sliding window).
+    Non-greedy, model-exact token partitions with cross-page carry-over.
     """
-    import re
-    # Clean mid-sentence line breaks from raw PDF extraction so they don't break tokenization.
-    text_clean = re.sub(r'(?<![.!?])\s*\n\s*', ' ', text)
-    
-    sentences = nltk.sent_tokenize(text_clean)
-    
-    refined_sentences = []
-    for s in sentences:
-        s = s.strip()
-        # Filter out very short fragments (like isolated headings, numbers, or 2-word artifacts)
-        # to ensure only rich, complete sentences are indexed.
-        if len(s) > 30 and len(s.split()) >= 5:
-            refined_sentences.append(s)
-            
-    # Group into overlapping windows (e.g. 3 sentences per chunk, overlap by 1 sentence)
-    window_size = 3
-    stride = 2
-    windowed_chunks = []
-    
-    i = 0
-    while i < len(refined_sentences):
-        window = refined_sentences[i : i + window_size]
-        windowed_chunks.append(" ".join(window))
-        if i + window_size >= len(refined_sentences):
-            break
-        i += stride
-            
-    results = []
-    for chunk_text in windowed_chunks:
-        # We just need to return the string and its encoded length;
-        # Prototype-4 Build.cpp calculates its own contiguous text offsets.
-        byte_length = len(chunk_text.encode('utf-8'))
-        results.append((chunk_text, 0, byte_length))
-    return results
+    global _carry_over_buffer, _current_page_idx, _current_doc_pages
+    _current_page_idx += 1
+    is_last_page = (_current_doc_pages > 0 and _current_page_idx >= _current_doc_pages)
+
+    # Cross-page continuous buffering: prepend carry-over from previous page
+    if _carry_over_buffer:
+        full_text = _carry_over_buffer + " " + text
+        _carry_over_buffer = ""
+    else:
+        full_text = text
+
+    full_text = full_text.strip()
+    if not full_text:
+        return []
+
+    tokenizer = _get_fast_tokenizer()
+
+    # Fast path: Native Rust Tokenizer instance
+    if hasattr(tokenizer, "encode") and hasattr(tokenizer, "no_truncation"):
+        enc = tokenizer.encode(full_text)
+        n_tokens = len(enc.ids)
+        if n_tokens < 20:
+            if not is_last_page:
+                _carry_over_buffer = full_text
+            elif len(full_text) >= 40:
+                return [(full_text, 0, len(full_text.encode('utf-8')))]
+            return []
+
+        chunks = []
+        i = 0
+        while i < n_tokens:
+            w_end = min(i + window_tokens, n_tokens)
+            w_len = w_end - i
+
+            # If remaining tail tokens at page end are too short, carry over to next page
+            if w_len < 35 and not is_last_page and i > 0:
+                v_offs = [(s, e) for s, e in enc.offsets[i:w_end] if not (s == 0 and e == 0)]
+                if v_offs:
+                    _carry_over_buffer = full_text[v_offs[0][0]:v_offs[-1][1]].strip()
+                break
+
+            v_offs = [(s, e) for s, e in enc.offsets[i:w_end] if not (s == 0 and e == 0)]
+            if v_offs:
+                chunk = full_text[v_offs[0][0]:v_offs[-1][1]].strip()
+                if len(chunk) >= 50:
+                    byte_len = len(chunk.encode('utf-8'))
+                    chunks.append((chunk, 0, byte_len))
+            if w_end >= n_tokens:
+                break
+            i += stride_tokens
+        return chunks
+    else:
+        # Fallback for HuggingFace PreTrainedTokenizerFast
+        out = tokenizer(
+            full_text,
+            max_length=window_tokens,
+            stride=window_tokens - stride_tokens,
+            truncation=True,
+            return_overflowing_tokens=True,
+            return_offsets_mapping=True,
+            padding=False
+        )
+        chunks = []
+        for ids, offsets in zip(out.input_ids, out.offset_mapping):
+            valid_offsets = [(s, e) for s, e in offsets if not (s == 0 and e == 0)]
+            if valid_offsets:
+                chunk = full_text[valid_offsets[0][0]:valid_offsets[-1][1]].strip()
+                if len(chunk) >= 50:
+                    chunks.append((chunk, 0, len(chunk.encode('utf-8'))))
+        return chunks
 
 def chunk_text_with_offsets(text: str) -> list:
     """
-    Prototype-3: Chunks a raw text string (not a file path) into sentences.
-    Returns (sentence_text, byte_offset, byte_length) tuples.
-    Used for per-page PDF text already extracted in memory.
+    Chunks raw text into Rust-tokenized subword windows with cross-page carry-over.
     """
     if not text or not text.strip():
         return []
@@ -185,12 +264,14 @@ def chunk_text_with_offsets(text: str) -> list:
 
 def pdf_to_text_pages(filepath: str) -> list:
     """
-    Prototype-3: Extracts text from a PDF file page by page.
-    Returns a list of (page_num, page_text) tuples (0-indexed page_num).
+    Extracts text from a PDF file page by page and initializes
+    cross-page document buffering state.
     """
     try:
         from pdf_extractor import pdf_to_text_pages as _extract
-        return _extract(filepath)
+        pages = _extract(filepath)
+        reset_document_chunker(len(pages))
+        return pages
     except ImportError as e:
         print(f"[vendor.py] ERROR: pdf_extractor not available: {e}")
         return []
