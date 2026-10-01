@@ -53,14 +53,14 @@ class Prototype4Adapter(BasePrototypeAdapter):
                     extra_details["mih_table_size_bytes"] = size
 
         if doc_catalog.exists():
-            # In doc_catalog.bin: 8-byte header (magic+count) + entries
+            # In doc_catalog.bin: 8-byte header (num_docs, active_docs) + entries
             try:
                 with open(doc_catalog, "rb") as f:
                     data = f.read(8)
                     if len(data) >= 8:
                         import struct
-                        _, count = struct.unpack("<II", data[:8])
-                        doc_count = count
+                        num_docs, active_docs = struct.unpack("<II", data[:8])
+                        doc_count = active_docs if active_docs > 0 else num_docs
             except Exception:
                 pass
 
@@ -140,15 +140,8 @@ class Prototype4Adapter(BasePrototypeAdapter):
 
     def _parse_items(self, output: str) -> list:
         items = []
-        # Matches blocks like:
-        # ┌─ Rank 1 ─────────────────────────────────────────
-        # │  Score   : 0.730335
-        # │  Doc ID  : 16 (Chunk #888, Page 1) [Optional]
-        # │  File    : ...
-        # │  Page    : 1
-        # │  Passage : "..."
-        # └──────────────────────────────────────────────────
-        rank_blocks = re.split(r"┌─ Rank\s+(\d+)", output)
+        # Matches blocks with Unicode (┌─ / │ / └) or ASCII (+-- / | / +--)
+        rank_blocks = re.split(r"(?:┌─|\+--)\s*Rank\s+(\d+)", output)
         for i in range(1, len(rank_blocks), 2):
             rank = int(rank_blocks[i])
             block = rank_blocks[i+1]
@@ -162,8 +155,8 @@ class Prototype4Adapter(BasePrototypeAdapter):
             page_match = re.search(r"Page\s*:\s*(\d+)", block)
             page = int(page_match.group(1)) if page_match else 0
 
-            passage_match = re.search(r'Passage\s*:\s*["\']?(.*?)["\']?\s*(?=\n\s*└|\n\s*│|\Z)', block, re.DOTALL)
-            passage = passage_match.group(1).strip() if passage_match else ""
+            passage_match = re.search(r'Passage\s*:\s*["\']?(.*?)(?:["\']?\s*(?:\n\s*[+\└│|]|\Z))', block, re.DOTALL)
+            passage = passage_match.group(1).strip().rstrip('"\'') if passage_match else ""
 
             doc_id_match = re.search(r"Doc ID\s*:\s*(\d+)", block)
             doc_id = int(doc_id_match.group(1)) if doc_id_match else None
@@ -188,19 +181,33 @@ class Prototype4Adapter(BasePrototypeAdapter):
         if m_embed:
             prof.embed_ms = float(m_embed.group(1))
 
-        m_disk = re.search(r"SSD Extent Scan\s*:\s*([\d\.]+)\s*ms\s*\((?:(\d+)\s*scored\s*/\s*(\d+)\s*candidates)?\)", output)
+        m_disk = re.search(r"SSD Extent Scan\s*:\s*([\d\.]+)\s*ms", output)
         if m_disk:
             prof.disk_ms = float(m_disk.group(1))
-            if m_disk.group(2) and m_disk.group(3):
-                prof.scored_candidates = int(m_disk.group(2))
-                prof.total_candidates = int(m_disk.group(3))
-                if prof.total_candidates > 0:
-                    prof.bypass_rate_pct = round(100.0 * (1.0 - prof.scored_candidates / prof.total_candidates), 2)
 
-        m_io = re.search(r"Bulk I/O Read\s*:\s*([\d\.]+)\s*KB\s*in\s*(\d+)\s*segments", output)
+        # Check records scored vs candidates
+        m_scored = re.search(r"(?:Records Scored|scored)\s*:\s*(\d+)\s*/\s*(\d+)\s*candidates", output)
+        if not m_scored:
+            m_scored = re.search(r"SSD Extent Scan\s*:\s*[\d\.]+\s*ms\s*\(\s*(\d+)\s*scored\s*/\s*(\d+)\s*candidates\)", output)
+        if m_scored:
+            prof.scored_candidates = int(m_scored.group(1))
+            prof.total_candidates = int(m_scored.group(2))
+            if prof.total_candidates > 0:
+                prof.bypass_rate_pct = round(100.0 * (1.0 - prof.scored_candidates / prof.total_candidates), 2)
+
+        # Bulk I/O read
+        m_io = re.search(r"Bulk I/O Read\s*:\s*([\d\.]+)\s*KB", output)
         if m_io:
             prof.bulk_read_kb = float(m_io.group(1))
-            prof.segments_probed = int(m_io.group(2))
+
+        # Segments probed
+        m_seg = re.search(r"Segments Probed\s*:\s*(\d+)", output)
+        if not m_seg:
+            m_seg = re.search(r"Bulk I/O Read\s*:\s*[\d\.]+\s*KB\s*in\s*(\d+)\s*segments", output)
+        if not m_seg:
+            m_seg = re.search(r"Probing\s+(\d+)\s+segment", output)
+        if m_seg:
+            prof.segments_probed = int(m_seg.group(1))
 
         m_pass = re.search(r"Passage Fetch\s*:\s*([\d\.]+)\s*ms", output)
         if m_pass:
@@ -221,3 +228,26 @@ class Prototype4Adapter(BasePrototypeAdapter):
             return res.returncode == 0
         except Exception:
             return False
+
+    def get_catalog_output(self) -> str:
+        """Runs print_catalog.exe to display indexed document status."""
+        cat_bin = self.build_dir / "print_catalog.exe"
+        if not cat_bin.exists():
+            return "print_catalog.exe not found in build directory."
+        try:
+            res = subprocess.run([str(cat_bin)], cwd=str(self.root_path), capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=30)
+            return res.stdout
+        except Exception as e:
+            return f"Error executing print_catalog: {e}"
+
+    def get_segment_dir_output(self) -> str:
+        """Runs print_segment_dir.exe to display segment distribution."""
+        seg_bin = self.build_dir / "print_segment_dir.exe"
+        if not seg_bin.exists():
+            return "print_segment_dir.exe not found in build directory."
+        try:
+            res = subprocess.run([str(seg_bin)], cwd=str(self.root_path), capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=30)
+            return res.stdout
+        except Exception as e:
+            return f"Error executing print_segment_dir: {e}"
+

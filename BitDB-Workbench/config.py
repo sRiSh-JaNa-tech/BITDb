@@ -14,13 +14,30 @@ WORKSPACE_ROOT = WORKBENCH_DIR.parent
 
 ENV_FILE = WORKBENCH_DIR / ".env"
 
+def resolve_proto_dir(candidates):
+    """Returns the first existing candidate directory, or the first entry if none exist."""
+    for c in candidates:
+        if c.exists():
+            return c
+    return candidates[0]
+
+# Dynamic prototype path resolution: BitDB is the consolidated active Prototype-4 engine
+P4_PATH = resolve_proto_dir([WORKSPACE_ROOT / "BitDB", WORKSPACE_ROOT / "Prototype-4"])
+P3_PATH = resolve_proto_dir([WORKSPACE_ROOT / "Prototype-3", WORKSPACE_ROOT / "historical" / "Prototype-3"])
+P2_PATH = resolve_proto_dir([WORKSPACE_ROOT / "Prototype-2"])
+P1_PATH = resolve_proto_dir([WORKSPACE_ROOT / "Prototype-1"])
+
 PROTOTYPE_DEFS = {
     "Prototype-4": {
-        "name": "Prototype-4 (ER2 Columnar Extents + MIH + WAND)",
+        "name": "Prototype-4 / BitDB (ER2 Columnar Extents + MIH + WAND)",
         "description": "Elastic Radix Extent Routing with Multi-Index Hashing, 128KB Columnar Extents, AVX2 Popcount, and Asymmetric Distance Computation.",
-        "path": WORKSPACE_ROOT / "Prototype-4",
+        "path": P4_PATH,
         "search_bin": "BitDBSearch.exe",
         "build_bin": "Build.exe",
+        "test_bin": "test_suite.exe",
+        "watchdog_bin": "Watchdog.exe",
+        "print_catalog_bin": "print_catalog.exe",
+        "print_segment_dir_bin": "print_segment_dir.exe",
         "storage_dir": "DataStorage",
         "version": 4,
         "type": "columnar_er2"
@@ -28,7 +45,7 @@ PROTOTYPE_DEFS = {
     "Prototype-3": {
         "name": "Prototype-3 (Avalanche Hash + Segment Chains)",
         "description": "Fixed 256-segment inverted file using 32-bit Avalanche Hash, confidence-margin multi-probing, and row-based extent blocks.",
-        "path": WORKSPACE_ROOT / "Prototype-3",
+        "path": P3_PATH,
         "search_bin": "BitDBSearch.exe",
         "build_bin": "Build.exe",
         "storage_dir": "DataStorage",
@@ -38,7 +55,7 @@ PROTOTYPE_DEFS = {
     "Prototype-2": {
         "name": "Prototype-2 (Hierarchical BBQ Tree + Beam Search)",
         "description": "Hierarchical K-means tree with beam search navigation and leaf centroids.",
-        "path": WORKSPACE_ROOT / "Prototype-2",
+        "path": P2_PATH,
         "search_bin": "Search.exe",
         "build_bin": "Node.exe",
         "storage_dir": "BinStorage",
@@ -48,7 +65,7 @@ PROTOTYPE_DEFS = {
     "Prototype-1": {
         "name": "Prototype-1 (Hierarchical BBQ Tree Baseline)",
         "description": "Foundational binary-balanced quantization hierarchical tree.",
-        "path": WORKSPACE_ROOT / "Prototype-1",
+        "path": P1_PATH,
         "search_bin": "Search.exe",
         "build_bin": "Node.exe",
         "storage_dir": "BinStorage",

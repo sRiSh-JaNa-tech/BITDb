@@ -447,9 +447,25 @@ class WorkbenchApp:
                 sz = p.stat().st_size
                 file_table.add_row(p.name, f"{sz / 1024:.1f} KB", f"{sz:,}")
 
-            console.print(file_table)
-
-        Prompt.ask("\n[dim]Press Enter to return to main menu...[/]")
+        if hasattr(self.active_adapter, "get_catalog_output") or hasattr(self.active_adapter, "get_segment_dir_output"):
+            console.print()
+            sub_choice = Prompt.ask(
+                "[bold cyan]Inspection Tools:[/] [1] View Document Catalog, [2] View Segment Extents Layout, [Enter] Return to Menu",
+                choices=["1", "2", ""],
+                default=""
+            )
+            if sub_choice == "1" and hasattr(self.active_adapter, "get_catalog_output"):
+                console.clear()
+                console.print(Panel(f"[bold cyan]Document Catalog: {self.active_key}[/]", border_style="cyan"))
+                console.print(self.active_adapter.get_catalog_output())
+                Prompt.ask("\n[dim]Press Enter to return...[/]")
+            elif sub_choice == "2" and hasattr(self.active_adapter, "get_segment_dir_output"):
+                console.clear()
+                console.print(Panel(f"[bold cyan]Segment Directory & Extents Layout: {self.active_key}[/]", border_style="cyan"))
+                console.print(self.active_adapter.get_segment_dir_output())
+                Prompt.ask("\n[dim]Press Enter to return...[/]")
+        else:
+            Prompt.ask("\n[dim]Press Enter to return to main menu...[/]")
 
     def action_rebuild_index(self):
         console.clear()

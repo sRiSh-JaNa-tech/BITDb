@@ -105,8 +105,8 @@ class LegacyTreeAdapter(BasePrototypeAdapter):
         items = []
         # Matches lines like:
         # Rank 1 | Score: 2450 | File: C:/...
-        # Sentence: "..."
-        pattern = r"Rank\s+(\d+)\s*\|\s*Score:\s*([\d\.\-]+)\s*\|\s*File:\s*(.*?)\n\s*Sentence:\s*\"(.*?)\""
+        # Sentence: "..." or Passage: "..."
+        pattern = r"Rank\s+(\d+)\s*\|\s*Score:\s*([\d\.\-]+)\s*\|\s*File:\s*(.*?)\n\s*(?:Sentence|Passage):\s*\"?(.*?)\"?(?=\n\s*(?:Rank|\Z))"
         matches = re.findall(pattern, output, re.DOTALL)
         for m in matches:
             items.append(SearchItem(
@@ -116,6 +116,18 @@ class LegacyTreeAdapter(BasePrototypeAdapter):
                 page=0,
                 passage=m[3].strip()
             ))
+
+        if not items:
+            # Fallback simple line-by-line rank match
+            rank_matches = re.finditer(r"Rank\s+(\d+)\s*\|\s*Score:\s*([\d\.\-]+)\s*\|\s*File:\s*([^\n\r]+)", output)
+            for rm in rank_matches:
+                items.append(SearchItem(
+                    rank=int(rm.group(1)),
+                    score=float(rm.group(2)),
+                    filename=Path(rm.group(3).strip()).name,
+                    page=0,
+                    passage=""
+                ))
         return items
 
     def rebuild_index(self) -> bool:
@@ -126,3 +138,4 @@ class LegacyTreeAdapter(BasePrototypeAdapter):
             return res.returncode == 0
         except Exception:
             return False
+
