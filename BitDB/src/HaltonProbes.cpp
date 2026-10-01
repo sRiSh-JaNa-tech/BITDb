@@ -58,7 +58,7 @@ static vector<float> generate_probe_vector(int probe_idx) {
     return vec;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     cout << "==================================================\n";
     cout << "  BitDB Native C++ Halton Probe Generator\n";
     cout << "==================================================\n";
@@ -69,7 +69,7 @@ int main() {
         probes[i] = generate_probe_vector(i);
     }
 
-    fs::path outPath = PathConfig::getProjectRoot() / "src" / "probe_vectors.h";
+    fs::path outPath = (argc > 1) ? fs::path(argv[1]) : (PathConfig::getProjectRoot() / "src" / "halton_probe_vectors.h");
     ofstream f(outPath.string(), ios::trunc);
     if (!f) {
         cerr << "[!] ERROR: Cannot open output path: " << outPath.string() << "\n";

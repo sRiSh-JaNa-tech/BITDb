@@ -2,11 +2,11 @@
 chcp 65001 >nul
 setlocal enabledelayedexpansion
 
-echo.
+echo(
 echo ==================================================
 echo   BitDB Automated Test ^& Invariant Verification
 echo ==================================================
-echo.
+echo(
 
 :: Ensure build directory exists
 if not exist "build" (
@@ -41,7 +41,7 @@ if not exist "build\HaltonProbes.exe" (
 set TESTS_FAILED=0
 
 echo --------------------------------------------------
-echo  [STEP 1/5] Invariant ^& Unit Test Suite (11 tests)
+echo  [STEP 1/5] Invariant ^& Unit Test Suite (18 tests)
 echo --------------------------------------------------
 build\test_suite.exe
 if errorlevel 1 (
@@ -50,7 +50,7 @@ if errorlevel 1 (
 ) else (
     echo [OK] All unit and mathematical invariant tests passed.
 )
-echo.
+echo(
 
 echo --------------------------------------------------
 echo  [STEP 2/5] Native Halton Probes Generator
@@ -62,7 +62,7 @@ if errorlevel 1 (
 ) else (
     echo [OK] Halton probe generation verified.
 )
-echo.
+echo(
 
 echo --------------------------------------------------
 echo  [STEP 3/5] Document Catalog Integrity Audit
@@ -78,7 +78,7 @@ if exist "build\print_catalog.exe" (
 ) else (
     echo [*] print_catalog.exe not built yet. Run build.bat.
 )
-echo.
+echo(
 
 echo --------------------------------------------------
 echo  [STEP 4/5] 256-Segment Balance ^& Skew Audit
@@ -94,7 +94,7 @@ if exist "build\print_segment_dir.exe" (
 ) else (
     echo [*] print_segment_dir.exe not built yet. Run build.bat.
 )
-echo.
+echo(
 
 echo --------------------------------------------------
 echo  [STEP 5/5] Live End-to-End Query Verification
@@ -110,15 +110,15 @@ if exist "build\BitDBSearch.exe" (
 ) else (
     echo [*] BitDBSearch.exe not built yet. Run build.bat.
 )
-echo.
+echo(
 
 echo ==================================================
-if %TESTS_FAILED% equ 0 (
+if !TESTS_FAILED! equ 0 (
     echo   ALL TESTS PASSED SUCCESSFULLY - 0 Failures
 ) else (
-    echo   TEST RUN FINISHED WITH %TESTS_FAILED% FAILURE(S).
+    echo   TEST RUN FINISHED WITH !TESTS_FAILED! FAILURES
 )
 echo ==================================================
-echo.
+echo(
 
-exit /b %TESTS_FAILED%
+exit /b !TESTS_FAILED!
