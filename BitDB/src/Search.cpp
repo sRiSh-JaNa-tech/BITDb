@@ -122,7 +122,9 @@ struct DocEntry {
     uint64_t chunk_store_start;
     uint32_t chunk_count;
     uint32_t is_deleted;
-    char     filename[232];
+    uint64_t file_size;
+    uint64_t last_write_time;
+    char     filename[216];
 };
 #pragma pack(pop)
 
@@ -148,6 +150,7 @@ struct CandidateHit {
 
 struct FinalResult {
     int32_t  score;
+    float    cosine_sim;
     uint32_t doc_id;
     uint32_t page_num;
     string   filename;
@@ -189,8 +192,22 @@ public:
         const string segFile = PathConfig::getSegmentDirFile().string();
         const string extFile = PathConfig::getSegmentExtentsFile().string();
         const string catFile = PathConfig::getDocCatalogFile().string();
+        const string manifestFile = PathConfig::getManifestFile().string();
         chunkFile = PathConfig::getChunkStoreFile().string();
         textFile  = PathConfig::getPdfTextFile().string();
+
+        // 0. Verify manifest if present
+        if (fs::exists(manifestFile)) {
+            ifstream manIn(manifestFile, ios::binary);
+            if (manIn) {
+                PathConfig::StorageManifest man;
+                if (manIn.read(reinterpret_cast<char*>(&man), sizeof(man)) && manIn.gcount() == sizeof(man)) {
+                    if (!man.is_valid()) {
+                        cerr << "[Search] WARNING: Storage manifest verification failed (checksum/version mismatch). Rebuilding is recommended.\n";
+                    }
+                }
+            }
+        }
 
         // 1. Load segment directory
         ifstream segIn(segFile, ios::binary);
@@ -199,12 +216,18 @@ public:
             return false;
         }
         SegDirHeader hdr;
-        segIn.read(reinterpret_cast<char*>(&hdr), sizeof(hdr));
+        if (!segIn.read(reinterpret_cast<char*>(&hdr), sizeof(hdr)) || segIn.gcount() != sizeof(hdr)) {
+            cerr << "[Search] ERROR: Failed to read SegDirHeader from " << segFile << "\n";
+            return false;
+        }
         if (hdr.magic != MAGIC || hdr.version != VERSION || hdr.num_segments != NUM_SEGMENTS) {
             cerr << "[Search] ERROR: incompatible segment index. Run Build.exe --rebuild.\n";
             return false;
         }
-        segIn.read(reinterpret_cast<char*>(segDir), sizeof(segDir));
+        if (!segIn.read(reinterpret_cast<char*>(segDir), sizeof(segDir)) || segIn.gcount() != sizeof(segDir)) {
+            cerr << "[Search] ERROR: Incomplete read of segment directory data from " << segFile << "\n";
+            return false;
+        }
         segIn.close();
 
         // 2. Load extents if present
@@ -213,7 +236,9 @@ public:
             if (extIn) {
                 ExtentNode node;
                 while (extIn.read(reinterpret_cast<char*>(&node), sizeof(node))) {
-                    extents.push_back(node);
+                    if (extIn.gcount() == sizeof(node)) {
+                        extents.push_back(node);
+                    }
                 }
             }
         }
@@ -222,14 +247,20 @@ public:
         ifstream catIn(catFile, ios::binary);
         if (catIn) {
             CatalogHeader catHdr;
-            catIn.read(reinterpret_cast<char*>(&catHdr), sizeof(catHdr));
-            catalog.resize(catHdr.num_docs);
-            catIn.read(reinterpret_cast<char*>(catalog.data()), catHdr.num_docs * sizeof(DocEntry));
-            for (const auto& de : catalog) {
-                if (de.is_deleted) {
-                    tombstonedDocs.insert(de.doc_id);
+            if (catIn.read(reinterpret_cast<char*>(&catHdr), sizeof(catHdr)) && catIn.gcount() == sizeof(catHdr)) {
+                catalog.resize(catHdr.num_docs);
+                size_t expectedBytes = catHdr.num_docs * sizeof(DocEntry);
+                if (catIn.read(reinterpret_cast<char*>(catalog.data()), expectedBytes) && static_cast<size_t>(catIn.gcount()) == expectedBytes) {
+                    for (const auto& de : catalog) {
+                        if (de.is_deleted) {
+                            tombstonedDocs.insert(de.doc_id);
+                        } else {
+                            docFilenames[de.doc_id] = string(de.filename);
+                        }
+                    }
                 } else {
-                    docFilenames[de.doc_id] = string(de.filename);
+                    cerr << "[Search] ERROR: Incomplete read of doc_catalog entries in " << catFile << "\n";
+                    return false;
                 }
             }
         }
@@ -239,8 +270,9 @@ public:
         if (fs::exists(mihFile)) {
             ifstream mihIn(mihFile, ios::binary);
             if (mihIn) {
-                mihIn.read(reinterpret_cast<char*>(mih_tables), sizeof(mih_tables));
-                hasMih = true;
+                if (mihIn.read(reinterpret_cast<char*>(mih_tables), sizeof(mih_tables)) && mihIn.gcount() == sizeof(mih_tables)) {
+                    hasMih = true;
+                }
             }
         }
 
@@ -257,9 +289,16 @@ public:
             return false;
         }
         CatalogHeader catHdr;
-        catIn.read(reinterpret_cast<char*>(&catHdr), sizeof(catHdr));
+        if (!catIn.read(reinterpret_cast<char*>(&catHdr), sizeof(catHdr)) || catIn.gcount() != sizeof(catHdr)) {
+            cerr << "[Search] ERROR: Failed to read CatalogHeader from " << catFile << "\n";
+            return false;
+        }
         catalog.resize(catHdr.num_docs);
-        catIn.read(reinterpret_cast<char*>(catalog.data()), catHdr.num_docs * sizeof(DocEntry));
+        size_t expectedBytes = catHdr.num_docs * sizeof(DocEntry);
+        if (!catIn.read(reinterpret_cast<char*>(catalog.data()), expectedBytes) || static_cast<size_t>(catIn.gcount()) != expectedBytes) {
+            cerr << "[Search] ERROR: Incomplete read of doc_catalog entries from " << catFile << "\n";
+            return false;
+        }
         for (const auto& de : catalog) {
             if (de.is_deleted) {
                 tombstonedDocs.insert(de.doc_id);
@@ -325,15 +364,21 @@ public:
         BitDB::compute_binary_code(queryVec.data(), queryCode);
         double embedMs = chrono::duration<double, milli>(tEmb1 - tEmb0).count();
 
-        // ─── Step 2: Probe Candidate Segments via Multi-Index Hashing (MIH) ───
+        float query_len = 0.0f;
+        for (uint32_t d = 0; d < DIMS; ++d) {
+            query_len += static_cast<float>(queryVec[d]) * static_cast<float>(queryVec[d]);
+        }
+        query_len = sqrt(query_len);
+
+        // ─── Step 2: Multi-Probe Primary Segment Ranking (numProbes = number of segment IDs) ───
+        // In Prototype-4, each document is assigned to one of 256 primary Voronoi segment partitions
+        // determined by the first 8 bits of the 32-bit signature (signature_to_segment = mask & 0xFF).
+        // Multi-probe routing ranks the 8 segment-routing hyperplane margins and visits adjacent
+        // 1-bit and 2-bit neighbor segment IDs up to numProbes partitions.
+        // NOTE: numProbes specifies the count of partition segment IDs probed, not 32 signature dimensions.
         //
-        // numProbes controls how many additional Hamming-1 neighbours are included
-        // beyond the exact-match primary segment. Probe bits are ranked by their
-        // normalised margin (|q · probe_i|) — bits close to the decision boundary
-        // are most likely to cross it and should be probed first.
-        //
-        // numProbes=1  → exact segment only (fastest, lowest recall)
-        // numProbes=32 → all 32 probe dimensions flipped (slowest, highest recall)
+        // numProbes=1  → exact primary segment only (fastest, lowest recall)
+        // numProbes=8+ → primary segment + top uncertain 1-bit and 2-bit neighbor segment IDs
 
         float margins[P3_NUM_PROBES];
         uint32_t qMask = BitDB::compute_probe_bitmask_and_margins(queryVec.data(), margins);
@@ -386,27 +431,35 @@ public:
                 }
             }
 
-            // Fallback for remaining slots if empty segments were skipped
+            // Fallback for remaining probe slots: rank unvisited segments by geometric centroid proximity in R^384
             if (segsToSearch.size() < numProbes) {
-                uint32_t baseSeg = segsToSearch[0];
-                vector<pair<int, uint32_t>> otherSegs;
+                struct SegGeoRank {
+                    float score_bound;
+                    uint32_t seg_id;
+                };
+                vector<SegGeoRank> otherSegs;
                 for (uint32_t s = 0; s < NUM_SEGMENTS; ++s) {
-                    if (s != baseSeg && (segDir[s].chunk_count > 0 || segDir[s].ext_chain_head > 0)) {
+                    if (segDir[s].chunk_count > 0 || segDir[s].ext_chain_head > 0) {
                         if (std::find(segsToSearch.begin(), segsToSearch.end(), s) == segsToSearch.end()) {
-                            int dist = BitDB::hamming_distance_32(baseSeg, s);
-                            otherSegs.push_back({dist, s});
+                            float s_q_dot_c = 0.0f;
+                            for (uint32_t d = 0; d < DIMS; ++d) {
+                                s_q_dot_c += (static_cast<float>(queryVec[d]) / 127.0f) * segDir[s].centroid[d];
+                            }
+                            float s_bound = s_q_dot_c + (query_len / 127.0f) * segDir[s].max_radius;
+                            otherSegs.push_back({s_bound, s});
                         }
                     }
                 }
-                std::sort(otherSegs.begin(), otherSegs.end());
-                for (const auto& p : otherSegs) {
+                std::sort(otherSegs.begin(), otherSegs.end(),
+                    [](const SegGeoRank& a, const SegGeoRank& b) { return a.score_bound > b.score_bound; });
+                for (const auto& item : otherSegs) {
                     if (segsToSearch.size() >= numProbes) break;
-                    segsToSearch.push_back(p.second);
+                    segsToSearch.push_back(item.seg_id);
                 }
             }
         }
 
-        cout << "[Search] Probing " << segsToSearch.size() << " segment(s) (numProbes=" << numProbes << "): [";
+        cout << "[Search] Probing " << segsToSearch.size() << " segment partition(s) (numProbes=" << numProbes << " segment IDs): [";
         for (size_t s_i = 0; s_i < segsToSearch.size(); ++s_i) {
             cout << (s_i > 0 ? ", " : "") << segsToSearch[s_i];
         }
@@ -428,12 +481,6 @@ public:
         uint32_t totalCandidates = 0;
         uint64_t totalBytesRead = 0;
 
-        float query_len = 0.0f;
-        for (int d = 0; d < DIMS; ++d) {
-            query_len += static_cast<float>(queryVec[d]) * static_cast<float>(queryVec[d]);
-        }
-        query_len = sqrt(query_len);
-
         for (uint32_t segId : segsToSearch) {
             const SegEntry& seg = segDir[segId];
             if (seg.chunk_count == 0 && seg.ext_chain_head == 0) continue;
@@ -454,26 +501,16 @@ public:
             }
 
             for (const auto& node : segExtents) {
-                // Evaluate WAND Bound: (q · C) + ||q|| * R
+                // Exact Cauchy-Schwarz WAND Bound: MaxScore(q, E) = (q · C) + ||q|| * R
+                // Mathematically rigorous upper bound on maximum possible inner product in extent.
                 float q_dot_c = 0.0f;
                 for (int d = 0; d < DIMS; ++d) {
                     q_dot_c += static_cast<float>(queryVec[d]) * node.centroid[d];
                 }
-                // Auto-adjusting WAND bound for production
-                // We adapt the aggressiveness multiplier based on the query's cosine similarity to the centroid.
-                float centroid_len_sq = 0.0f;
-                for (int d = 0; d < DIMS; ++d) centroid_len_sq += node.centroid[d] * node.centroid[d];
-                float centroid_len = sqrt(centroid_len_sq);
                 
-                // Calculate normalized cosine similarity [-1.0, 1.0]
-                float cos_sim = (query_len * centroid_len > 0.0f) ? (q_dot_c / (query_len * centroid_len)) : 0.0f;
-                
-                // If highly similar (dense region), we are conservative (alpha ~ 1.0)
-                // If distant (fringe region), we prune aggressively (alpha drops to 0.3)
-                float alpha = std::min(1.0f, std::max(0.3f, cos_sim));
-                
-                float max_score_bound = q_dot_c + query_len * (node.max_radius * alpha);
-                // Safe Early-Exit Pruning
+                float max_score_bound = q_dot_c + query_len * node.max_radius;
+
+                // Safe Early-Exit Pruning (Zero I/O if bound cannot exceed current minHeap threshold)
                 if (minHeap.size() == static_cast<size_t>(topK) && max_score_bound < static_cast<float>(minHeap.top().score)) {
                     totalCandidates += node.chunk_count; // Tally bypassed candidates for telemetry
                     continue;
@@ -483,22 +520,46 @@ public:
                 ExtentHeader hdr;
                 uint8_t extent_codes[EXTENT_CAPACITY][BitDB::BINARY_CODE_BYTES];
 
+                // ── Extent Integrity Validation ──
+                chunkIn.seekg(0, ios::end);
+                uint64_t fileSize = static_cast<uint64_t>(chunkIn.tellg());
+                uint64_t extentEnd = node.chunk_store_offset + EXTENT_BYTES;
+                if (extentEnd > fileSize) {
+                    cerr << "[Search] WARNING: Corrupt extent at offset " << node.chunk_store_offset
+                         << " extends beyond file size (" << fileSize << " bytes). Skipping.\n";
+                    totalCandidates += node.chunk_count;
+                    continue;
+                }
+
                 chunkIn.seekg(static_cast<streamoff>(node.chunk_store_offset), ios::beg);
-                chunkIn.read(reinterpret_cast<char*>(&hdr), sizeof(hdr));
-                chunkIn.read(reinterpret_cast<char*>(extent_codes), hdr.record_count * BitDB::BINARY_CODE_BYTES);
-                totalBytesRead += sizeof(hdr) + (hdr.record_count * BitDB::BINARY_CODE_BYTES);
+                if (!chunkIn.read(reinterpret_cast<char*>(&hdr), sizeof(hdr)) || chunkIn.gcount() != sizeof(hdr)) {
+                    cerr << "[Search] WARNING: Failed to read extent header at offset "
+                         << node.chunk_store_offset << ". Skipping.\n";
+                    totalCandidates += node.chunk_count;
+                    continue;
+                }
+
+                // Guard against corrupt record_count causing buffer overflow into extent_codes.
+                if (hdr.record_count == 0) continue;
+                if (hdr.record_count > EXTENT_CAPACITY) {
+                    cerr << "[Search] WARNING: Corrupt extent header at offset " << node.chunk_store_offset
+                         << ": record_count=" << hdr.record_count
+                         << " exceeds EXTENT_CAPACITY (" << EXTENT_CAPACITY << "). Skipping.\n";
+                    totalCandidates += node.chunk_count;
+                    continue;
+                }
+
+                size_t codes_bytes = hdr.record_count * BitDB::BINARY_CODE_BYTES;
+                if (!chunkIn.read(reinterpret_cast<char*>(extent_codes), codes_bytes) || static_cast<size_t>(chunkIn.gcount()) != codes_bytes) {
+                    cerr << "[Search] WARNING: Failed to read binary codes at offset "
+                         << node.chunk_store_offset << ". Skipping.\n";
+                    totalCandidates += node.chunk_count;
+                    continue;
+                }
+                totalBytesRead += sizeof(hdr) + codes_bytes;
                 totalCandidates += hdr.record_count;
 
-                if (hdr.record_count == 0) continue;
-
                 // ── Stage 1: ADC pre-sort for I/O optimisation ONLY ──
-                // We compute an ADC score for every record in this extent to decide
-                // whether to use a bulk sequential read or scattered per-record seeks.
-                // IMPORTANT: the ADC score does NOT filter out any records — all
-                // hdr.record_count records proceed to the int8 exact-scoring stage.
-                // Eliminating candidates based on ADC alone would be unsafe because
-                // binary quantisation introduces approximation error that can invert
-                // the ranking of the true nearest neighbour.
                 struct CandScore {
                     uint32_t idx;
                     int32_t  adc_score;
@@ -508,15 +569,10 @@ public:
                 for (uint32_t i = 0; i < hdr.record_count; ++i) {
                     allCands.push_back({i, BitDB::adc_score(queryVec.data(), extent_codes[i])});
                 }
-                // Sort by ADC score descending — highest ADC first.
-                // This orders later I/O reads to access likely-high-scoring embeddings
-                // first so the heap threshold rises quickly (better heap pruning).
                 std::sort(allCands.begin(), allCands.end(),
                     [](const CandScore& a, const CandScore& b) { return a.adc_score > b.adc_score; });
 
                 // ── I/O Crossover Heuristic ──
-                // If the extent has more than CROSSOVER_THRESHOLD records, a single
-                // sequential bulk read of the remainder is cheaper than N scattered seeks.
                 constexpr size_t CROSSOVER_THRESHOLD = 40;
 
                 if (hdr.record_count > CROSSOVER_THRESHOLD) {
@@ -525,7 +581,11 @@ public:
                     size_t remaining_bytes = EXTENT_BYTES - STAGE1_BYTES;
                     vector<char> bulk_buf(remaining_bytes);
                     chunkIn.seekg(static_cast<streamoff>(bulk_offset), ios::beg);
-                    chunkIn.read(bulk_buf.data(), remaining_bytes);
+                    if (!chunkIn.read(bulk_buf.data(), remaining_bytes) || static_cast<size_t>(chunkIn.gcount()) != remaining_bytes) {
+                        cerr << "[Search] WARNING: Incomplete read of bulk extent payload at offset "
+                             << bulk_offset << ". Skipping extent.\n";
+                        continue;
+                    }
                     totalBytesRead += remaining_bytes;
 
                     const int8_t (*embeddings)[DIMS] = reinterpret_cast<const int8_t(*)[DIMS]>(bulk_buf.data());
@@ -558,9 +618,13 @@ public:
                         uint64_t meta_offset = node.chunk_store_offset + STAGE1_BYTES + EMBEDDINGS_BYTES + (uint64_t(idx) * sizeof(ChunkRecordMeta));
 
                         chunkIn.seekg(static_cast<streamoff>(emb_offset), ios::beg);
-                        chunkIn.read(reinterpret_cast<char*>(emb), DIMS);
+                        if (!chunkIn.read(reinterpret_cast<char*>(emb), DIMS) || chunkIn.gcount() != DIMS) {
+                            continue;
+                        }
                         chunkIn.seekg(static_cast<streamoff>(meta_offset), ios::beg);
-                        chunkIn.read(reinterpret_cast<char*>(&meta), sizeof(meta));
+                        if (!chunkIn.read(reinterpret_cast<char*>(&meta), sizeof(meta)) || chunkIn.gcount() != sizeof(meta)) {
+                            continue;
+                        }
                         totalBytesRead += DIMS + sizeof(ChunkRecordMeta);
 
                         if (tombstonedDocs.count(meta.doc_id)) continue;
@@ -599,16 +663,21 @@ public:
         ifstream textIn(textFile, ios::binary);
         for (const auto& hit : topHits) {
             FinalResult fr;
-            fr.score   = hit.score;
-            fr.doc_id  = hit.doc_id;
-            fr.page_num = hit.page_num;
+            fr.score      = hit.score;
+            fr.cosine_sim = query_len > 1e-6f ? std::clamp(static_cast<float>(hit.score) / (query_len * 127.0f), -1.0f, 1.0f) : 0.0f;
+            fr.doc_id     = hit.doc_id;
+            fr.page_num   = hit.page_num;
             auto it = docFilenames.find(hit.doc_id);
             fr.filename = (it != docFilenames.end()) ? it->second : "unknown.pdf";
 
             if (textIn && hit.text_length > 0) {
                 textIn.seekg(static_cast<streamoff>(hit.text_offset), ios::beg);
                 fr.passage.resize(hit.text_length, '\0');
-                textIn.read(&fr.passage[0], hit.text_length);
+                if (textIn.read(&fr.passage[0], hit.text_length)) {
+                    fr.passage.resize(static_cast<size_t>(textIn.gcount()));
+                } else {
+                    fr.passage.clear();
+                }
             }
             results.push_back(fr);
         }
@@ -627,7 +696,7 @@ public:
         for (size_t i = 0; i < results.size(); ++i) {
             const auto& r = results[i];
             cout << "  +-- Rank " << (i + 1) << " -----------------------------------------\n";
-            cout << "  |  Score   : " << r.score << "\n";
+            cout << "  |  Score   : " << r.score << " (Cosine Sim: " << fixed << setprecision(4) << r.cosine_sim << ")\n";
             cout << "  |  File    : " << r.filename << "\n";
             cout << "  |  Page    : " << r.page_num << "\n";
             string snippet = r.passage;
@@ -642,7 +711,7 @@ public:
 
         cout << "  +-- LATENCY & I/O PROFILE ----------------------------+\n";
         cout << "  |  Query Embedding : " << fixed << setprecision(2) << embedMs << " ms\n";
-        cout << "  |  Segments Probed : " << segsToSearch.size() << " (numProbes=" << numProbes << ")\n";
+        cout << "  |  Segments Probed : " << segsToSearch.size() << " (numProbes=" << numProbes << " segment IDs)\n";
         cout << "  |  Records Scored  : " << totalScored << " / " << totalCandidates << " candidates in probed extents\n";
         cout << "  |  SSD Extent Scan : " << diskMs << " ms\n";
         cout << "  |  Bulk I/O Read   : " << (totalBytesRead / 1024.0) << " KB\n";
@@ -686,8 +755,10 @@ int main(int argc, char* argv[]) {
             cout << "  --list, -l, --files List all documents and files stored in the database\n";
             cout << "  --all, -a           Include tombstoned/deleted files when listing\n";
             cout << "  --interactive, -i   Launch in persistent REPL mode\n";
-            cout << "  --probes N          Number of adjacent segments to probe (default 4)\n";
-            cout << "                      Higher probes = better accuracy but higher latency.\n\n";
+            cout << "  --probes N          Number of partition segment IDs to probe (default 4)\n";
+            cout << "                      Specifies count of Voronoi segment IDs (0..255) to search\n";
+            cout << "                      via margin ranking of the 8 segment hyperplane bits.\n";
+            cout << "                      (Note: specifies number of segment IDs, not 32 signature dimensions)\n\n";
             cout << "REPL COMMANDS (Interactive Mode Only):\n";
             cout << "  list, files, ls     List all documents stored in the database\n";
             cout << "  list --all          List all documents including deleted/tombstoned ones\n";

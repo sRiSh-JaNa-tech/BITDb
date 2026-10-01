@@ -3,9 +3,9 @@
   "scored_simd": 128,
   "bypassed_cs": 230,
   "latency_metrics": {
-    "embed": 95.0,
-    "disk": 1.66,
-    "fetch": 0.4,
+    "embed": 41.99,
+    "disk": 2.17,
+    "fetch": 9.26,
     "segs_probed": 4
   }
 }

@@ -150,12 +150,11 @@ int main(int argc, char* argv[]) {
                 int ret = system(cmd.c_str());
                 if (ret == 0) {
                     cout << "[Watchdog] Database sync completed successfully.\n\n";
+                    current_snapshot = new_snapshot;
                 } else {
                     cerr << "[Watchdog] Engine exited with code " << ret << "\n\n";
                 }
             }
-
-            current_snapshot = new_snapshot;
         }
     }
 

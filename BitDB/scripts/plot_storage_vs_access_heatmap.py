@@ -37,22 +37,22 @@ def load_segment_storage_sizes():
             stored_chunks[seg_id] = count
     return stored_chunks
 
-def get_or_run_workload_snapshots(checkpoints=[30, 40, 100, 150]):
+def get_or_run_workload_snapshots(checkpoints=[50, 100, 175, 250]):
     """Loads snapshots from stress_test_segments or executes the stress test."""
-    from stress_test_segments import load_segment_catalog, generate_test_prompts, run_stress_test
+    from stress_test_segments import load_segment_catalog, load_test_prompts, run_stress_test
     
     seg_info = load_segment_catalog()
-    prompts = generate_test_prompts(150)
+    prompts = load_test_prompts(250)
     query_logs, checkpoint_snapshots = run_stress_test(prompts, checkpoints=checkpoints)
     return checkpoint_snapshots, query_logs
 
 def generate_heatmaps(stored_chunks, checkpoint_snapshots, output_dir=OUTPUT_DIR):
     """
     Plots a 4-panel 2D Heatmap (Graph 12) for each set of prompts:
-    - 30 Prompts
-    - 40 Prompts
+    - 50 Prompts
     - 100 Prompts
-    - 150 Prompts
+    - 175 Prompts
+    - 250 Prompts
     """
     os.makedirs(output_dir, exist_ok=True)
     checkpoints = sorted(checkpoint_snapshots.keys())
@@ -73,8 +73,11 @@ def generate_heatmaps(stored_chunks, checkpoint_snapshots, output_dir=OUTPUT_DIR
     access_bin_configs = {
         30:  ([0, 1, 2, 3, 5, 10], ["0 hits", "1 hit", "2 hits", "3-4 hits", "5+ hits"]),
         40:  ([0, 1, 2, 4, 7, 12], ["0 hits", "1 hit", "2-3 hits", "4-6 hits", "7+ hits"]),
+        50:  ([0, 1, 2, 4, 7, 15], ["0 hits", "1 hit", "2-3 hits", "4-6 hits", "7+ hits"]),
         100: ([0, 1, 3, 6, 10, 20], ["0 hits", "1-2 hits", "3-5 hits", "6-9 hits", "10+ hits"]),
-        150: ([0, 1, 4, 8, 14, 30], ["0 hits", "1-3 hits", "4-7 hits", "8-13 hits", "14+ hits"])
+        150: ([0, 1, 4, 8, 14, 30], ["0 hits", "1-3 hits", "4-7 hits", "8-13 hits", "14+ hits"]),
+        175: ([0, 1, 4, 9, 16, 35], ["0 hits", "1-3 hits", "4-8 hits", "9-15 hits", "16+ hits"]),
+        250: ([0, 1, 5, 12, 22, 50], ["0 hits", "1-4 hits", "5-11 hits", "12-21 hits", "22+ hits"])
     }
 
     subplot_positions = [(0, 0), (0, 1), (1, 0), (1, 1)]
@@ -84,7 +87,15 @@ def generate_heatmaps(stored_chunks, checkpoint_snapshots, output_dir=OUTPUT_DIR
         ax = axes[r, c]
 
         hits = np.array(checkpoint_snapshots[cp])
-        acc_edges, acc_labels = access_bin_configs[cp]
+        if cp in access_bin_configs:
+            acc_edges, acc_labels = access_bin_configs[cp]
+        else:
+            q_max = int(max(np.max(hits), 10))
+            q1 = max(2, int(q_max * 0.15))
+            q2 = max(q1 + 1, int(q_max * 0.35))
+            q3 = max(q2 + 1, int(q_max * 0.60))
+            acc_edges = [0, 1, q1, q2, q3, q_max + 1]
+            acc_labels = ["0 hits", "1 hit", f"2-{q1-1} hits", f"{q1}-{q2-1} hits", f"{q2}+ hits"]
         num_y_bins = len(acc_labels)
 
         # Build 2D matrix: shape (num_y_bins, num_x_bins)

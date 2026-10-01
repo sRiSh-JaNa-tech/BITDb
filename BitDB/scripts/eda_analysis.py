@@ -1,7 +1,11 @@
 import os
+import sys
 import struct
 import subprocess
 import re
+import json
+import shutil
+import time
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
@@ -193,9 +197,6 @@ def plot_chunk_sizes(lengths):
 
 def plot_workload_scaling(scaling_data=None):
     if scaling_data is None:
-        import json
-        import os
-        import shutil
         json_path = os.path.join(OUTPUT_DIR, "benchmark_data.json")
         if not os.path.exists(json_path):
             for fallback in ["latest", "baseline_uncalibrated"]:
@@ -219,7 +220,7 @@ def plot_workload_scaling(scaling_data=None):
     extents = [d["extents"] for d in scaling_data]
 
     fig, axes = plt.subplots(2, 2, figsize=(16, 11))
-    fig.suptitle("BitDB Prototype-4: Pure Workload Scaling & System Telemetry (10 to 150 Prompts)", fontsize=18, fontweight='bold', y=0.98)
+    fig.suptitle(f"BitDB Prototype-4: Pure Workload Scaling & System Telemetry ({min(prompts)} to {max(prompts)} Prompts)", fontsize=18, fontweight='bold', y=0.98)
 
     # 1. Cumulative Execution Time (Top-Left)
     ax1 = axes[0, 0]
@@ -239,7 +240,9 @@ def plot_workload_scaling(scaling_data=None):
     color_lat = '#2ca02c'
     color_qps = '#d62728'
 
-    bars = ax2.bar(prompts, avg_lats, width=7, color=color_lat, alpha=0.8, label="Mean Latency (ms)")
+    step_diffs = [prompts[i+1] - prompts[i] for i in range(len(prompts)-1)] if len(prompts) > 1 else [25]
+    bar_width = max(5.0, min(step_diffs) * 0.48)
+    bars = ax2.bar(prompts, avg_lats, width=bar_width, color=color_lat, alpha=0.8, label="Mean Latency (ms)")
     ax2.set_xlabel("Number of Prompts / Queries", fontsize=11)
     ax2.set_ylabel("Mean Latency per Query (ms)", color=color_lat, fontsize=11, fontweight='bold')
     ax2.tick_params(axis='y', labelcolor=color_lat)
@@ -250,7 +253,7 @@ def plot_workload_scaling(scaling_data=None):
     ax2_twin.plot(prompts, qps_vals, marker='s', linewidth=2.5, color=color_qps, label="Throughput (QPS)")
     ax2_twin.set_ylabel("Throughput (Queries / Second)", color=color_qps, fontsize=11, fontweight='bold')
     ax2_twin.tick_params(axis='y', labelcolor=color_qps)
-    ax2_twin.set_ylim(0, 100)
+    ax2_twin.set_ylim(0, max(100.0, max(qps_vals) * 1.25))
     ax2_twin.grid(False)
 
     for b in bars:
@@ -272,7 +275,7 @@ def plot_workload_scaling(scaling_data=None):
     ax3.set_title("3. BitDB Runtime Memory Footprint (Resident Set Size)", fontsize=13, fontweight='bold', pad=10)
     ax3.set_xlabel("Number of Prompts / Queries", fontsize=11)
     ax3.set_ylabel("Process Resident Memory (MB)", fontsize=11)
-    ax3.set_ylim(650, 1020)
+    ax3.set_ylim(min(rams_mb) * 0.85, max(rams_mb) * 1.15)
     ax3.set_xticks(prompts)
     ax3.legend(loc='lower right', frameon=True, facecolor='white', framealpha=0.9)
     ax3.text(0.50, 0.28, "Zero Memory Leak\nPlateaus at ~897 MB", transform=ax3.transAxes,
@@ -613,10 +616,6 @@ def parse_args():
     return parser.parse_args()
 
 def main():
-    import shutil
-    import time
-    import json
-
     global OUTPUT_DIR
     args = parse_args()
     base_eda = os.path.join(BASE_DIR, "eda_output")
@@ -678,8 +677,37 @@ def main():
     chunk_lengths = parse_chunk_sizes()
     plot_chunk_sizes(chunk_lengths)
 
-    # 3. Workload Scaling & Resource Utilization
-    plot_workload_scaling()
+    # 3. Workload Stress Test & Scaling Analysis (250 Prompts)
+    stress_query_logs = None
+    stress_snapshots = None
+    stress_seg_info = None
+    stress_stored_chunks = None
+
+    try:
+        from plot_storage_vs_access_heatmap import load_segment_storage_sizes, get_or_run_workload_snapshots, generate_heatmaps
+        from stress_test_segments import plot_stress_test_analysis, load_segment_catalog, generate_scaling_telemetry
+        stress_stored_chunks = load_segment_storage_sizes()
+        stress_seg_info = load_segment_catalog()
+        stress_snapshots, stress_query_logs = get_or_run_workload_snapshots([50, 100, 175, 250])
+
+        scaling_data = generate_scaling_telemetry(stress_query_logs, steps=[25, 50, 75, 100, 150, 200, 250])
+        bench_json_path = os.path.join(OUTPUT_DIR, "benchmark_data.json")
+        with open(bench_json_path, "w") as bf:
+            json.dump(scaling_data, bf, indent=2)
+
+        # Mirror benchmark_data.json to latest so it's always accessible
+        latest_bench = os.path.join(base_eda, "latest", "benchmark_data.json")
+        try:
+            with open(latest_bench, "w") as lf:
+                json.dump(scaling_data, lf, indent=2)
+        except Exception:
+            pass
+
+        plot_workload_scaling(scaling_data)
+        print(" -> Saved 3_workload_scaling.png (under stress: 25 to 250 prompts)")
+    except Exception as e:
+        print(f"    [Warning] Failed to generate workload scaling under stress: {e}")
+        plot_workload_scaling()
 
     # 4 & 5. Live Telemetry
     metrics = run_sample_query("SSD approximate nearest neighbor vector search")
@@ -715,12 +743,14 @@ def main():
     try:
         from plot_storage_vs_access_heatmap import load_segment_storage_sizes, get_or_run_workload_snapshots, generate_heatmaps
         from stress_test_segments import plot_stress_test_analysis, load_segment_catalog
-        stored_chunks = load_segment_storage_sizes()
-        seg_info = load_segment_catalog()
-        checkpoint_snapshots, query_logs = get_or_run_workload_snapshots([30, 40, 100, 150])
-        plot_stress_test_analysis(query_logs, checkpoint_snapshots, seg_info, OUTPUT_DIR)
+        if stress_query_logs is None or stress_snapshots is None:
+            stress_stored_chunks = load_segment_storage_sizes()
+            stress_seg_info = load_segment_catalog()
+            stress_snapshots, stress_query_logs = get_or_run_workload_snapshots([50, 100, 175, 250])
+
+        plot_stress_test_analysis(stress_query_logs, stress_snapshots, stress_seg_info, OUTPUT_DIR)
         print(" -> Saved 11_query_segment_access_distribution.png")
-        generate_heatmaps(stored_chunks, checkpoint_snapshots, OUTPUT_DIR)
+        generate_heatmaps(stress_stored_chunks, stress_snapshots, OUTPUT_DIR)
         print(" -> Saved 12_storage_vs_query_access_heatmap.png")
     except Exception as e:
         print(f"    [Warning] Failed to generate stress test heatmaps: {e}")

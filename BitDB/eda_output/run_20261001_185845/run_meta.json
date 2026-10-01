@@ -1,7 +1,7 @@
 {
-  "run_name": "run_20260929_003220",
-  "created_at": "2026-09-29 00:33:07",
-  "total_vectors": 10018,
+  "run_name": "run_20261001_185845",
+  "created_at": "2026-10-01 19:01:49",
+  "total_vectors": 11470,
   "files_count": 16,
   "files_generated": [
     "10_uncalibrated_hyperplane_variance.png",

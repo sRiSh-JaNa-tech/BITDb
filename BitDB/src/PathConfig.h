@@ -75,6 +75,42 @@ public:
         return getDataStorageDir() / "mih_table.bin";
     }
 
+    static fs::path getManifestFile() {
+        return getDataStorageDir() / "manifest.bin";
+    }
+
+#pragma pack(push, 1)
+struct StorageManifest {
+    uint32_t magic;               // 0x4244424Du ("BDBM" - BitDB Manifest)
+    uint32_t version;             // 4
+    uint64_t generation_id;       // Monotonically increasing generation number
+    uint64_t commit_timestamp_ns; // Unix nanoseconds / epoch timestamp
+    uint32_t num_documents;       // Total document entries
+    uint32_t active_documents;    // Non-deleted document entries
+    uint32_t total_extents;       // Extents in segment chains
+    uint32_t checksum;            // Integrity checksum over header fields
+
+    static constexpr uint32_t MANIFEST_MAGIC = 0x4244424Du;
+    static constexpr uint32_t MANIFEST_VERSION = 4;
+
+    static uint32_t compute_checksum(const StorageManifest& m) {
+        uint32_t c = m.magic ^ m.version;
+        c = c * 31 + static_cast<uint32_t>(m.generation_id & 0xFFFFFFFF);
+        c = c * 31 + static_cast<uint32_t>(m.generation_id >> 32);
+        c = c * 31 + static_cast<uint32_t>(m.commit_timestamp_ns & 0xFFFFFFFF);
+        c = c * 31 + static_cast<uint32_t>(m.commit_timestamp_ns >> 32);
+        c = c * 31 + m.num_documents;
+        c = c * 31 + m.active_documents;
+        c = c * 31 + m.total_extents;
+        return c;
+    }
+
+    bool is_valid() const {
+        return (magic == MANIFEST_MAGIC && version == MANIFEST_VERSION && checksum == compute_checksum(*this));
+    }
+};
+#pragma pack(pop)
+
     // Resolves virtual environment site-packages directory
     static fs::path getVenvSitePackagesDir() {
         fs::path root = getProjectRoot();

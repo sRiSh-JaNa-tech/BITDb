@@ -278,7 +278,23 @@ The table below contrasts the memory and storage requirements of Prototype-4 aga
 
 ## 9. Binary File Formats & Crash-Safe Ingestion
 
-All files in `Prototype-4/DataStorage/` are versioned with magic `0x42444234` (`"BDB4"`). Ingestion uses an atomic rename workflow: every file is written completely to a `.tmp` file and then renamed into place with `std::filesystem::rename`, ensuring index integrity even if ingestion is terminated mid-run.
+All files in `Prototype-4/DataStorage/` are versioned with magic `0x42444234` (`"BDB4"`), and coordinated through `manifest.bin` (`magic=0x4244424D` `"BDBM"`, version 4). Ingestion uses an atomic multi-file transactional commit workflow:
+1. Every index and payload file (`chunk_store.bin`, `segment_dir.bin`, `segment_extents.bin`, `mih_table.bin`, `doc_catalog.bin`, `pdf_text.bin`) is written to `.tmp`.
+2. All `.tmp` file buffers are explicitly flushed and closed to ensure durability.
+3. Payload and index files are renamed into place.
+4. A new `StorageManifest` with monotonically incrementing `generation_id`, document/extent counts, and CRC32 checksum is written to `manifest.bin.tmp`, flushed, and atomically renamed to `manifest.bin`. The database generation is considered committed only when `manifest.bin` is updated.
+
+### 0. `manifest.bin` (Storage Generation Manifest)
+- **Header** (64 bytes):
+  - `magic` (4B = `0x4244424D`, `"BDBM"`)
+  - `version` (4B = 4)
+  - `generation_id` (8B uint64_t)
+  - `commit_timestamp_ns` (8B uint64_t)
+  - `num_documents` (4B uint32_t)
+  - `active_documents` (4B uint32_t)
+  - `total_extents` (4B uint32_t)
+  - `reserved[6]` (24B uint32_t array)
+  - `checksum` (4B CRC32)
 
 ### 1. `chunk_store.bin` (Physical Extents)
 Contains contiguous 131,072-byte `ExtentBlock` structures:
@@ -352,7 +368,7 @@ Prototype-4 includes a standalone C++ mathematical invariant test binary ([`src/
 .\run_tests.bat
 ```
 
-### Complete Invariant Test Suite (11/11 PASS):
+### 18-Test Comprehensive Invariant & Production Test Suite (18/18 PASS):
 1. **Physical Layout**: Verifies `sizeof(ExtentBlock) == 131072` (128 KB), 512-byte header, 28-byte chunk metadata, section offsets, and page alignment.
 2. **MIH Decompositions**: Verifies 4-way substring slicing and asserts all 8 single-bit flips per byte yield Hamming distance strictly equal to 1.
 3. **AVX2 Popcount Correctness**: Compares `_mm256_shuffle_epi8` Harley-Seal implementation against scalar reference across 500 pseudo-random vectors and single-bit flips.
@@ -364,6 +380,13 @@ Prototype-4 includes a standalone C++ mathematical invariant test binary ([`src/
 9. **Halton Probes Geometry & Diversity**: Validates 32-probe $\times$ 384-dimension geometry, non-zero L2 norms, unit normalization, and pairwise angular diversity ($\text{cosine similarity} < 0.98$).
 10. **PathConfig Invariants**: Asserts runtime path resolution for project root, `DataStorage/`, and `ingestor/` directories.
 11. **Signature Routing & Margin Invariants**: Asserts 32-bit LSH signature masking into valid segment range $[0, 255]$, Hamming distance properties, and absolute margin computation without NaN.
+12. **Storage Manifest Invariants**: Validates transactional `manifest.bin` header validation, CRC32 checksum calculation and verification, and corruption rejection.
+13. **Exact WAND vs Unsafe Alpha**: Proves that any empirical multiplier $\alpha < 1.0$ violates the mathematical bound and can falsely prune the global nearest neighbor, whereas exact $\alpha = 1.0$ guarantees safety.
+14. **Calibrated Centroid Routing**: Asserts that hyperplane projections apply data-calibrated centroid subtraction $(x/127 - C)$ before projection.
+15. **Modified PDF Reindexing**: Validates detection of file size and timestamp modifications in catalog and auto-tombstoning/reindexing.
+16. **Watchdog Failure State Retention**: Asserts that watchdog snapshots are retained on indexing failures to guarantee automatic retry.
+17. **Partial Read & Header Corruption Guards**: Validates bounds checking on `record_count <= EXTENT_CAPACITY`, file length limits, and `gcount()` validation.
+18. **Fallback Segment Ranking Geometry**: Asserts that unvisited fallback segments are ranked by true Cauchy-Schwarz score bounds in $\mathbb{R}^{384}$ rather than integer segment ID XOR.
 
 ---
 
@@ -380,7 +403,7 @@ Prototype-4 includes a standalone C++ mathematical invariant test binary ([`src/
 4. `build\HaltonProbes.exe`: Native C++ Halton probe vector generator.
 5. `build\print_catalog.exe`: Document catalog inspection tool.
 6. `build\print_segment_dir.exe`: Segment distribution and balance audit tool.
-7. `build\test_suite.exe`: 11-test mathematical invariant verification suite.
+7. `build\test_suite.exe`: 18-test mathematical invariant and production verification suite.
 
 ### Automated End-to-End Test Suite
 Run the 5-stage automated test runner:

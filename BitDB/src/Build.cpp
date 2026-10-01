@@ -146,7 +146,9 @@ struct DocEntry {
     uint64_t chunk_store_start;    //   8
     uint32_t chunk_count;          //   4
     uint32_t is_deleted;           //   4 — 0 = active, 1 = tombstoned
-    char     filename[232];        // 232 — null-terminated PDF filename
+    uint64_t file_size;            //   8
+    uint64_t last_write_time;      //   8
+    char     filename[216];        // 216 — null-terminated PDF filename
 };
 #pragma pack(pop)
 static_assert(sizeof(DocEntry) == 256, "DocEntry must be 256 bytes");
@@ -387,12 +389,25 @@ int main(int argc, char* argv[]) {
     const string extFile   = PathConfig::getSegmentExtentsFile().string();
     const string catFile   = PathConfig::getDocCatalogFile().string();
     const string mihFile   = PathConfig::getMihTableFile().string();
+    const string manifestFile = PathConfig::getManifestFile().string();
+
+    uint64_t current_generation_id = 0;
+    if (fs::exists(manifestFile)) {
+        ifstream manIn(manifestFile, ios::binary);
+        if (manIn) {
+            PathConfig::StorageManifest man;
+            if (manIn.read(reinterpret_cast<char*>(&man), sizeof(man)) && man.is_valid()) {
+                current_generation_id = man.generation_id;
+            }
+        }
+    }
 
     cout << "==================================================\n";
     cout << "  BitDB Prototype-4 - Advanced Columnar Extent Builder\n";
     cout << "==================================================\n";
     cout << "  Ingestor   : " << pdfDir << "\n";
     cout << "  DataStorage: " << binDir << "\n";
+    cout << "  Generation : " << current_generation_id << "\n";
 
     // ── Handle Document Deletion (--delete <docId>) ──
     if (deleteDocId >= 0) {
@@ -432,11 +447,12 @@ int main(int argc, char* argv[]) {
 
         atomic_commit_file(tmpCat, catFile);
         cout << "  DocId " << deleteDocId << " tombstoned successfully (Active docs: " << active << ").\n";
-        return 0;
+        forceCompact = true;
     }
 
     // ── Load Existing State ──
-    unordered_set<string> alreadyIndexed;
+    struct FileState { uint64_t size; uint64_t last_write; };
+    map<string, FileState> alreadyIndexed;
     vector<DocEntry> catalog;
     uint32_t nextDocId = 0;
     SegEntry segDir[NUM_SEGMENTS] = {};
@@ -454,7 +470,7 @@ int main(int argc, char* argv[]) {
             catIn.read(reinterpret_cast<char*>(catalog.data()), hdr.num_docs * sizeof(DocEntry));
             for (const auto& de : catalog) {
                 if (!de.is_deleted) {
-                    alreadyIndexed.insert(string(de.filename));
+                    alreadyIndexed[string(de.filename)] = {de.file_size, de.last_write_time};
                 }
                 nextDocId = max(nextDocId, de.doc_id + 1);
             }
@@ -518,12 +534,38 @@ int main(int argc, char* argv[]) {
     unordered_set<string> physicalPdfs;
     
     for (const auto& p : pdfFiles) {
+        std::error_code ec;
+        uint64_t size = fs::file_size(p, ec);
+        auto ftime = fs::last_write_time(p, ec);
+        uint64_t modTime = static_cast<uint64_t>(ftime.time_since_epoch().count());
+
         string relPath = fs::relative(p, pdfDir).generic_string();
         string filename = p.filename().string();
         physicalPdfs.insert(relPath);
         physicalPdfs.insert(filename);
         
-        if (forceRebuild || (!alreadyIndexed.count(relPath) && !alreadyIndexed.count(filename))) {
+        bool needsIndexing = true;
+        if (!forceRebuild) {
+            auto it = alreadyIndexed.find(relPath);
+            if (it == alreadyIndexed.end()) it = alreadyIndexed.find(filename);
+            
+            if (it != alreadyIndexed.end()) {
+                if (it->second.size == size && it->second.last_write == modTime) {
+                    needsIndexing = false;
+                } else {
+                    cout << "\n[!] Auto-Sync: Detected modified file '" << relPath << "'. Marking for reindexing.\n";
+                    // Tombstone the old version
+                    for (auto& de : catalog) {
+                        if (!de.is_deleted && (string(de.filename) == relPath || string(de.filename) == filename)) {
+                            de.is_deleted = 1;
+                            forceCompact = true; // Needs compaction
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (needsIndexing) {
             pendingPdfs.push_back(p);
         }
     }
@@ -666,12 +708,19 @@ int main(int argc, char* argv[]) {
             }
         }
 
+        std::error_code ec;
+        uint64_t fSize = fs::file_size(pdfPath, ec);
+        auto fTime = fs::last_write_time(pdfPath, ec);
+        uint64_t lTime = static_cast<uint64_t>(fTime.time_since_epoch().count());
+
         DocEntry de = {};
         de.doc_id            = docId;
         de.page_count        = static_cast<uint32_t>(pages.size());
         de.chunk_store_start = 0; // will be updated
         de.chunk_count       = docChunkCount;
         de.is_deleted        = 0;
+        de.file_size         = fSize;
+        de.last_write_time   = lTime;
         string storeName = (relPath.size() < sizeof(de.filename)) ? relPath : basename;
         strncpy(de.filename, storeName.c_str(), sizeof(de.filename) - 1);
         de.filename[sizeof(de.filename) - 1] = '\0';
@@ -711,36 +760,52 @@ int main(int argc, char* argv[]) {
         if (indexExists && !forceRebuild) {
             ifstream chunkIn(chunkFile, ios::binary);
             if (chunkIn) {
-                ExtentBlock block;
-                while (chunkIn.read(reinterpret_cast<char*>(&block), sizeof(block))) {
-                    for (uint32_t j = 0; j < block.header.record_count; ++j) {
-                        RawRecord rec = {};
-                        memcpy(rec.binary_code, block.binary_codes[j], BitDB::BINARY_CODE_BYTES);
-                        memcpy(rec.embedding, block.embeddings[j], DIMS);
-                        rec.text_offset = block.metadata[j].text_offset;
-                        rec.text_length = block.metadata[j].text_length;
-                        rec.doc_id = block.metadata[j].doc_id;
-                        rec.page_num = block.metadata[j].page_num;
-                        rec.chunk_idx_in_page = block.metadata[j].chunk_idx_in_page;
-                        rec.signature = block.metadata[j].signature;
-                        rec.segment_id = block.header.extent_id;
+                for (uint32_t i = 0; i < NUM_SEGMENTS; ++i) {
+                    uint32_t count = segDir[i].chunk_count;
+                    if (count == 0 && segDir[i].ext_chain_head == 0) continue;
 
-                        // Filter tombstoned documents
-                        bool isTombstoned = false;
-                        for (const auto& de : catalog) {
-                            if (de.doc_id == rec.doc_id && de.is_deleted) {
-                                isTombstoned = true;
-                                break;
+                    vector<uint64_t> offsets;
+                    if (count > 0) offsets.push_back(segDir[i].chunk_store_offset);
+                    uint32_t extIdx = segDir[i].ext_chain_head;
+                    while (extIdx > 0 && extIdx <= extents.size()) {
+                        offsets.push_back(extents[extIdx - 1].chunk_store_offset);
+                        extIdx = extents[extIdx - 1].next_extent_idx;
+                    }
+
+                    for (uint64_t offset : offsets) {
+                        chunkIn.seekg(offset, ios::beg);
+                        ExtentBlock block;
+                        if (chunkIn.read(reinterpret_cast<char*>(&block), sizeof(block))) {
+                            for (uint32_t j = 0; j < block.header.record_count; ++j) {
+                                RawRecord rec = {};
+                                memcpy(rec.binary_code, block.binary_codes[j], BitDB::BINARY_CODE_BYTES);
+                                memcpy(rec.embedding, block.embeddings[j], DIMS);
+                                rec.text_offset = block.metadata[j].text_offset;
+                                rec.text_length = block.metadata[j].text_length;
+                                rec.doc_id = block.metadata[j].doc_id;
+                                rec.page_num = block.metadata[j].page_num;
+                                rec.chunk_idx_in_page = block.metadata[j].chunk_idx_in_page;
+                                rec.signature = block.metadata[j].signature;
+                                rec.segment_id = block.header.extent_id;
+
+                                // Filter tombstoned documents
+                                bool isTombstoned = false;
+                                for (const auto& de : catalog) {
+                                    if (de.doc_id == rec.doc_id && de.is_deleted) {
+                                        isTombstoned = true;
+                                        break;
+                                    }
+                                }
+                                if (!isTombstoned) {
+                                    uint32_t sig = BitDB::compute_probe_bitmask(rec.embedding);
+                                    rec.signature = sig;
+                                    rec.segment_id = BitDB::signature_to_segment(sig);
+                                    for (int b = 0; b < 32; b++) {
+                                        if ((sig >> b) & 1) global_bit_tally[b]++;
+                                    }
+                                    allRecords.push_back(rec);
+                                }
                             }
-                        }
-                        if (!isTombstoned) {
-                            uint32_t sig = BitDB::compute_probe_bitmask(rec.embedding);
-                            rec.signature = sig;
-                            rec.segment_id = BitDB::signature_to_segment(sig);
-                            for (int b = 0; b < 32; b++) {
-                                if ((sig >> b) & 1) global_bit_tally[b]++;
-                            }
-                            allRecords.push_back(rec);
                         }
                     }
                 }
@@ -793,33 +858,31 @@ int main(int argc, char* argv[]) {
             write_extent_blocks(curSeg, curSegRecords, chunkOut, segDir, extents, mih_tables);
         }
 
+        chunkOut.flush();
         chunkOut.close();
-        atomic_commit_file(tmpChunk, chunkFile);
 
         for (const auto& de : newDocs) catalog.push_back(de);
     }
 
-    // ── Atomic Commit of mih_table.bin ──
+    // ── Prepare and Flush all Data Files ──
     string tmpMih = mihFile + ".tmp";
     ofstream mihOut(tmpMih, ios::binary | ios::trunc);
     if (mihOut) {
         mihOut.write(reinterpret_cast<const char*>(mih_tables), sizeof(mih_tables));
+        mihOut.flush();
         mihOut.close();
-        atomic_commit_file(tmpMih, mihFile);
     }
 
-    // ── Atomic Commit of segment_extents.bin ──
     string tmpExt = extFile + ".tmp";
     ofstream extOut(tmpExt, ios::binary | ios::trunc);
     if (extOut) {
         if (!extents.empty()) {
             extOut.write(reinterpret_cast<const char*>(extents.data()), extents.size() * sizeof(ExtentNode));
         }
+        extOut.flush();
         extOut.close();
-        atomic_commit_file(tmpExt, extFile);
     }
 
-    // ── Atomic Commit of segment_dir.bin ──
     string tmpSeg = segFile + ".tmp";
     ofstream segOut(tmpSeg, ios::binary | ios::trunc);
     if (!segOut) {
@@ -829,10 +892,9 @@ int main(int argc, char* argv[]) {
     SegDirHeader segHdr = {MAGIC, VERSION, NUM_SEGMENTS, 0};
     segOut.write(reinterpret_cast<const char*>(&segHdr), sizeof(segHdr));
     segOut.write(reinterpret_cast<const char*>(segDir), sizeof(segDir));
+    segOut.flush();
     segOut.close();
-    atomic_commit_file(tmpSeg, segFile);
 
-    // ── Atomic Commit of doc_catalog.bin ──
     string tmpCat = catFile + ".tmp";
     ofstream catOut(tmpCat, ios::binary | ios::trunc);
     if (!catOut) {
@@ -844,16 +906,48 @@ int main(int argc, char* argv[]) {
     CatalogHeader catHdr = {static_cast<uint32_t>(catalog.size()), activeCount};
     catOut.write(reinterpret_cast<const char*>(&catHdr), sizeof(catHdr));
     catOut.write(reinterpret_cast<const char*>(catalog.data()), catalog.size() * sizeof(DocEntry));
+    catOut.flush();
     catOut.close();
-    atomic_commit_file(tmpCat, catFile);
 
-    // ── Atomic Commit of pdf_text.bin (final step) ──
-    // Close is implicit since textOut went out of scope; now rename .tmp -> final.
-    atomic_commit_file(tmpTextFile, textFile);
+    // ── Prepare New Manifest (Increment Generation) ──
+    PathConfig::StorageManifest newManifest = {};
+    newManifest.magic = PathConfig::StorageManifest::MANIFEST_MAGIC;
+    newManifest.version = PathConfig::StorageManifest::MANIFEST_VERSION;
+    newManifest.generation_id = current_generation_id + 1;
+    newManifest.commit_timestamp_ns = static_cast<uint64_t>(
+        chrono::duration_cast<chrono::nanoseconds>(chrono::system_clock::now().time_since_epoch()).count()
+    );
+    newManifest.num_documents = static_cast<uint32_t>(catalog.size());
+    newManifest.active_documents = activeCount;
+    newManifest.total_extents = static_cast<uint32_t>(extents.size());
+    newManifest.checksum = PathConfig::StorageManifest::compute_checksum(newManifest);
+
+    string tmpManifest = manifestFile + ".tmp";
+    ofstream manOut(tmpManifest, ios::binary | ios::trunc);
+    if (!manOut) {
+        cerr << "FATAL: Cannot open " << tmpManifest << "\n";
+        return 1;
+    }
+    manOut.write(reinterpret_cast<const char*>(&newManifest), sizeof(newManifest));
+    manOut.flush();
+    manOut.close();
+
+    // ── Transactional Commit Sequence ──
+    // Step 1: Make all payload and directory files durable at their destination paths
+    string tmpChunk = chunkFile + ".tmp";
+    if (fs::exists(tmpChunk))   atomic_commit_file(tmpChunk, chunkFile);
+    if (fs::exists(tmpMih))     atomic_commit_file(tmpMih, mihFile);
+    if (fs::exists(tmpExt))     atomic_commit_file(tmpExt, extFile);
+    if (fs::exists(tmpSeg))     atomic_commit_file(tmpSeg, segFile);
+    if (fs::exists(tmpCat))     atomic_commit_file(tmpCat, catFile);
+    if (fs::exists(tmpTextFile)) atomic_commit_file(tmpTextFile, textFile);
+
+    // Step 2: Commit the manifest as the single atomic commit point of generation N+1
+    atomic_commit_file(tmpManifest, manifestFile);
 
     // ── Summary & Diagnostics ──
     cout << "\n==================================================\n";
-    cout << "  BUILD & INGESTION COMPLETE\n";
+    cout << "  BUILD & INGESTION COMPLETE (Generation " << newManifest.generation_id << ")\n";
     cout << "==================================================\n";
     cout << "  Total Documents   : " << catalog.size() << " (" << activeCount << " active)\n";
     cout << "  Extents in Chains : " << extents.size() << "\n";

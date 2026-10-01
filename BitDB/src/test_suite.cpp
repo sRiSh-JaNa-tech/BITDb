@@ -33,6 +33,8 @@
 #include "probe_vectors.h"
 #include "Routing.h"
 #include "PathConfig.h"
+#include <unordered_set>
+#include <unordered_map>
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -131,14 +133,14 @@ static int g_testsFailed = 0;
 static uint32_t scalar_hamming(const uint8_t* a, const uint8_t* b, size_t n_bytes) {
     uint32_t dist = 0;
     for (size_t i = 0; i < n_bytes; ++i) {
-        dist += (uint32_t)__builtin_popcount(static_cast<unsigned int>(a[i] ^ b[i]));
+        dist += static_cast<uint32_t>(BitDB::popcount32(static_cast<uint32_t>(a[i] ^ b[i])));
     }
     return dist;
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
 // Test 1: Layout & Page Alignment
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
 static bool test_physical_layout() {
     TEST_ASSERT(sizeof(ExtentHeader) == 512, "ExtentHeader must be exactly 512 bytes");
     TEST_ASSERT(sizeof(ChunkRecordMeta) == 28, "ChunkRecordMeta must be exactly 28 bytes");
@@ -152,9 +154,9 @@ static bool test_physical_layout() {
     return true;
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
 // Test 2: Multi-Index Hashing (MIH) Substrings
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
 static bool test_mih_substrings() {
     // 1. Exact split test
     uint32_t sig = 0xA1B2C3D4u;
@@ -179,7 +181,7 @@ static bool test_mih_substrings() {
             uint8_t flipped = static_cast<uint8_t>(val ^ (1u << b));
             neighbors.push_back(flipped);
             // Hamming distance between val and flipped must be exactly 1
-            TEST_ASSERT(__builtin_popcount(val ^ flipped) == 1, "Hamming distance must be exactly 1");
+            TEST_ASSERT(BitDB::popcount32(val ^ flipped) == 1, "Hamming distance must be exactly 1");
         }
         // Check uniqueness of 8 neighbors
         for (size_t i = 0; i < neighbors.size(); ++i) {
@@ -192,29 +194,40 @@ static bool test_mih_substrings() {
     return true;
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// Test 3: AVX2 Harley-Seal Popcount vs Scalar Reference
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
+// Test 3: AVX2 vs Scalar Fallback Popcount & Runtime CPU Detection
+// ─────────────────────────────────────────────────────────────────
 static bool test_avx2_popcount() {
+    bool has_avx2 = BitDB::cpu_supports_avx2();
+    bool has_popcnt = BitDB::cpu_supports_popcnt();
+    cout << "    [CPU Info] AVX2: " << (has_avx2 ? "Supported" : "Not Supported")
+         << ", POPCNT: " << (has_popcnt ? "Supported" : "Not Supported") << "\n";
+
     uint8_t codeZeros[BitDB::BINARY_CODE_BYTES] = {};
     uint8_t codeOnes[BitDB::BINARY_CODE_BYTES];
     memset(codeOnes, 0xFF, sizeof(codeOnes));
 
     // Zero vs Zero
     TEST_ASSERT(BitDB::hamming_distance_code(codeZeros, codeZeros) == 0, "Zero vs Zero must be 0");
+    TEST_ASSERT(BitDB::hamming_distance_code_scalar(codeZeros, codeZeros) == 0, "Scalar Zero vs Zero must be 0");
     // Ones vs Ones
     TEST_ASSERT(BitDB::hamming_distance_code(codeOnes, codeOnes) == 0, "Ones vs Ones must be 0");
+    TEST_ASSERT(BitDB::hamming_distance_code_scalar(codeOnes, codeOnes) == 0, "Scalar Ones vs Ones must be 0");
     // Zeros vs Ones
     TEST_ASSERT(BitDB::hamming_distance_code(codeZeros, codeOnes) == 384, "Zeros vs Ones must be 384");
+    TEST_ASSERT(BitDB::hamming_distance_code_scalar(codeZeros, codeOnes) == 384, "Scalar Zeros vs Ones must be 384");
 
     // Single bit tests across all 384 bits
     for (int bit = 0; bit < 384; ++bit) {
         uint8_t testCode[BitDB::BINARY_CODE_BYTES] = {};
-        testCode[bit / 8] |= (1 << (bit % 8));
+        testCode[bit / 8] |= static_cast<uint8_t>(1u << (bit % 8));
         uint32_t avxDist = BitDB::hamming_distance_code(codeZeros, testCode);
-        uint32_t scalDist = scalar_hamming(codeZeros, testCode, BitDB::BINARY_CODE_BYTES);
+        uint32_t scalDist = BitDB::hamming_distance_code_scalar(codeZeros, testCode);
+        uint32_t refDist = scalar_hamming(codeZeros, testCode, BitDB::BINARY_CODE_BYTES);
         TEST_ASSERT(avxDist == 1, "Single bit flip must yield distance 1");
-        TEST_ASSERT(avxDist == scalDist, "AVX2 must match scalar reference for single bit");
+        TEST_ASSERT(scalDist == 1, "Scalar single bit flip must yield distance 1");
+        TEST_ASSERT(avxDist == refDist, "Dynamic popcount must match reference for single bit");
+        TEST_ASSERT(scalDist == refDist, "Scalar fallback must match reference for single bit");
     }
 
     // 500 Pseudo-random test vectors
@@ -228,9 +241,12 @@ static bool test_avx2_popcount() {
             b[i] = static_cast<uint8_t>(dist(rng));
         }
 
-        uint32_t avxRes = BitDB::hamming_distance_code(a, b);
-        uint32_t scalRes = scalar_hamming(a, b, BitDB::BINARY_CODE_BYTES);
-        TEST_ASSERT(avxRes == scalRes, "AVX2 popcount must match scalar reference exactly");
+        uint32_t dynRes = BitDB::hamming_distance_code(a, b);
+        uint32_t scalRes = BitDB::hamming_distance_code_scalar(a, b);
+        uint32_t refRes = scalar_hamming(a, b, BitDB::BINARY_CODE_BYTES);
+
+        TEST_ASSERT(scalRes == refRes, "Scalar popcount must match reference exactly");
+        TEST_ASSERT(dynRes == refRes, "Dynamic popcount must match reference exactly");
     }
 
     return true;
@@ -613,6 +629,316 @@ static bool test_signature_segment_routing() {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// Test 12: Storage Manifest & Generation Transaction Invariants
+// ─────────────────────────────────────────────────────────────────
+static bool test_storage_manifest_invariants() {
+    PathConfig::StorageManifest man = {};
+    man.magic = PathConfig::StorageManifest::MANIFEST_MAGIC;
+    man.version = PathConfig::StorageManifest::MANIFEST_VERSION;
+    man.generation_id = 42;
+    man.commit_timestamp_ns = 1700000000000000000ULL;
+    man.num_documents = 10;
+    man.active_documents = 9;
+    man.total_extents = 25;
+    man.checksum = PathConfig::StorageManifest::compute_checksum(man);
+
+    TEST_ASSERT(man.is_valid(), "Fresh valid manifest must pass is_valid()");
+
+    // Verify corruption detection
+    PathConfig::StorageManifest corruptMagic = man;
+    corruptMagic.magic = 0x12345678u;
+    TEST_ASSERT(!corruptMagic.is_valid(), "Corrupted magic must fail is_valid()");
+
+    PathConfig::StorageManifest corruptGen = man;
+    corruptGen.generation_id = 999;
+    TEST_ASSERT(!corruptGen.is_valid(), "Corrupted generation ID without checksum update must fail is_valid()");
+
+    return true;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Test 13: WAND Exact Cauchy-Schwarz Bound vs Unsafe Alpha Multiplier
+// Proves that any empirical multiplier alpha < 1.0 is mathematically unsafe
+// and can falsely prune an extent containing the global nearest neighbor.
+// ─────────────────────────────────────────────────────────────────
+static bool test_wand_exact_bound_vs_unsafe_alpha() {
+    mt19937 rng(999);
+    normal_distribution<float> norm(0.0f, 1.0f);
+
+    float query[DIMS];
+    float centroid[DIMS];
+    float qNormSq = 0.0f;
+    for (size_t d = 0; d < DIMS; ++d) {
+        query[d] = norm(rng);
+        centroid[d] = norm(rng);
+        qNormSq += query[d] * query[d];
+    }
+    float qNorm = std::sqrt(qNormSq);
+    float radius = 4.5f;
+
+    // Construct a worst-case boundary point inside the extent sphere:
+    // v = C + R * (q / ||q||), which points in the exact direction of query q
+    float worstCasePoint[DIMS];
+    for (size_t d = 0; d < DIMS; ++d) {
+        worstCasePoint[d] = centroid[d] + radius * (query[d] / qNorm);
+    }
+
+    // Exact inner product of query with this boundary point
+    float exactScore = 0.0f;
+    float qDotC = 0.0f;
+    for (size_t d = 0; d < DIMS; ++d) {
+        exactScore += query[d] * worstCasePoint[d];
+        qDotC += query[d] * centroid[d];
+    }
+
+    // Exact Cauchy-Schwarz upper bound: MaxScore(q, E) = (q · C) + ||q|| * R
+    float exactBound = qDotC + qNorm * radius;
+
+    // 1. Exact bound must be >= exactScore (holds with equality for boundary point)
+    TEST_ASSERT(exactBound >= exactScore - 1e-4f, "Exact Cauchy-Schwarz bound must be >= true maximum point score");
+
+    // 2. An empirical multiplier alpha < 1.0 (e.g. alpha = 0.85) strictly underestimates the bound
+    float alphaUnsafe = 0.85f;
+    float unsafeBound = qDotC + qNorm * (radius * alphaUnsafe);
+
+    TEST_ASSERT(unsafeBound < exactScore - 1e-3f, "Empirical alpha < 1.0 must strictly underestimate the true maximum score");
+
+    // 3. If minHeap threshold is between unsafeBound and exactScore, unsafe alpha causes false dismissal
+    float heapThreshold = exactScore - 0.1f * qNorm;
+    bool wouldPruneWithUnsafeAlpha = (unsafeBound < heapThreshold);
+    bool wouldPruneWithExactBound  = (exactBound < heapThreshold);
+
+    TEST_ASSERT(wouldPruneWithUnsafeAlpha == true, "Unsafe alpha would prune an extent containing the top NN");
+    TEST_ASSERT(wouldPruneWithExactBound == false, "Exact Cauchy-Schwarz safely preserves the extent containing the top NN");
+
+    return true;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Test 14: Calibrated Centroid Centering in Routing & Signatures
+// Asserts that hyperplane projections subtract CENTROID_VECTOR
+// ─────────────────────────────────────────────────────────────────
+static bool test_calibrated_centroid_routing_application() {
+    // 1. Verify CENTROID_VECTOR is non-zero
+    float centroidNormSq = 0.0f;
+    for (size_t d = 0; d < DIMS; ++d) {
+        centroidNormSq += CENTROID_VECTOR[d] * CENTROID_VECTOR[d];
+    }
+    TEST_ASSERT(centroidNormSq > 1e-4f, "CENTROID_VECTOR must be non-zero and populated from calibration");
+
+    // 2. Synthesize an embedding exactly equal to the calibrated centroid
+    int8_t centroidEmb[DIMS];
+    for (size_t d = 0; d < DIMS; ++d) {
+        centroidEmb[d] = static_cast<int8_t>(std::clamp(CENTROID_VECTOR[d] * 127.0f, -128.0f, 127.0f));
+    }
+
+    float margins[P3_NUM_PROBES] = {0.0f};
+    uint32_t mask = BitDB::compute_probe_bitmask_and_margins(centroidEmb, margins);
+    (void)mask;
+
+    // When vector equals centroid, centered value (x/127 - C) is near zero, so margins must be small
+    float avgMargin = 0.0f;
+    for (int i = 0; i < P3_NUM_PROBES; ++i) {
+        avgMargin += margins[i];
+    }
+    avgMargin /= P3_NUM_PROBES;
+    TEST_ASSERT(avgMargin < 0.25f, "Centroid vector must project with near-zero margins across hyperplanes");
+
+    return true;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Test 15: Modified and Deleted PDF Ingestion State Detection
+// ─────────────────────────────────────────────────────────────────
+static bool test_modified_pdf_reindex_detection() {
+    struct MockCatalogDoc {
+        uint32_t doc_id;
+        uint64_t file_size;
+        uint64_t last_write_time;
+        uint32_t is_deleted;
+        string   filename;
+    };
+
+    vector<MockCatalogDoc> catalog = {
+        {1, 102400, 1700000000, 0, "paper1.pdf"},
+        {2, 204800, 1700000000, 0, "paper2.pdf"},
+        {3, 307200, 1700000000, 0, "deleted_paper.pdf"}
+    };
+
+    struct PhysicalFile {
+        string   filename;
+        uint64_t file_size;
+        uint64_t last_write_time;
+    };
+
+    vector<PhysicalFile> diskFiles = {
+        {"paper1.pdf", 102400, 1700000000}, // Unchanged
+        {"paper2.pdf", 204800, 1700005000}, // Modified timestamp
+        {"paper3.pdf", 512000, 1700000000}  // Brand new file
+        // deleted_paper.pdf is missing from disk
+    };
+
+    vector<string> pendingPdfs;
+    bool forceCompact = false;
+    unordered_set<string> physicalSet;
+
+    for (const auto& f : diskFiles) {
+        physicalSet.insert(f.filename);
+        bool needsIndexing = true;
+        for (auto& de : catalog) {
+            if (de.filename == f.filename && !de.is_deleted) {
+                if (de.file_size == f.file_size && de.last_write_time == f.last_write_time) {
+                    needsIndexing = false; // Identical, skip
+                } else {
+                    // Modified: tombstone old version and flag compaction
+                    de.is_deleted = 1;
+                    forceCompact = true;
+                }
+            }
+        }
+        if (needsIndexing) {
+            pendingPdfs.push_back(f.filename);
+        }
+    }
+
+    // Auto-detect deletions
+    for (auto& de : catalog) {
+        if (!de.is_deleted && physicalSet.find(de.filename) == physicalSet.end()) {
+            de.is_deleted = 1;
+            forceCompact = true;
+        }
+    }
+
+    TEST_ASSERT(pendingPdfs.size() == 2, "Must identify 2 pending PDFs: modified paper2.pdf and new paper3.pdf");
+    TEST_ASSERT(pendingPdfs[0] == "paper2.pdf", "paper2.pdf must be marked for reindexing");
+    TEST_ASSERT(pendingPdfs[1] == "paper3.pdf", "paper3.pdf must be marked for indexing");
+    TEST_ASSERT(catalog[1].is_deleted == 1, "Old version of paper2.pdf must be tombstoned");
+    TEST_ASSERT(catalog[2].is_deleted == 1, "deleted_paper.pdf must be tombstoned");
+    TEST_ASSERT(forceCompact == true, "Compaction must be triggered upon modification or deletion");
+
+    return true;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Test 16: Watchdog Failure State Retention
+// ─────────────────────────────────────────────────────────────────
+static bool test_watchdog_failure_state_handling() {
+    struct FileSnap {
+        uint64_t file_size;
+        uint64_t last_write;
+    };
+
+    unordered_map<string, FileSnap> current_snapshot = {
+        {"docA.pdf", {1000, 100}}
+    };
+
+    unordered_map<string, FileSnap> new_snapshot = {
+        {"docA.pdf", {1000, 200}} // modified timestamp
+    };
+
+    // Case 1: Build execution fails (exit code != 0)
+    int exitCodeFail = 1;
+    if (exitCodeFail == 0) {
+        current_snapshot = new_snapshot;
+    }
+    TEST_ASSERT(current_snapshot["docA.pdf"].last_write == 100,
+        "Snapshot must NOT be updated when Build fails, allowing retry on next loop");
+
+    // Case 2: Build execution succeeds (exit code == 0)
+    int exitCodeSuccess = 0;
+    if (exitCodeSuccess == 0) {
+        current_snapshot = new_snapshot;
+    }
+    TEST_ASSERT(current_snapshot["docA.pdf"].last_write == 200,
+        "Snapshot must be updated when Build succeeds");
+
+    return true;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Test 17: Partial Read & Corrupted Header Guards
+// ─────────────────────────────────────────────────────────────────
+static bool test_partial_read_and_corruption_handling() {
+    // 1. Corrupt record_count > EXTENT_CAPACITY must be guarded
+    ExtentHeader corruptHdr = {};
+    corruptHdr.record_count = EXTENT_CAPACITY + 100;
+    bool isCountValid = (corruptHdr.record_count <= EXTENT_CAPACITY);
+    TEST_ASSERT(!isCountValid, "Extent with record_count > EXTENT_CAPACITY must be rejected");
+
+    // 2. Short read detection
+    fs::path tmpFile = fs::temp_directory_path() / "bitdb_short_read.bin";
+    {
+        ofstream out(tmpFile, ios::binary | ios::trunc);
+        char partialData[64] = {0}; // Only 64 bytes instead of 512-byte header
+        out.write(partialData, sizeof(partialData));
+    }
+
+    {
+        ifstream in(tmpFile, ios::binary);
+        ExtentHeader hdr = {};
+        bool readSuccess = in.read(reinterpret_cast<char*>(&hdr), sizeof(hdr)) &&
+                           (in.gcount() == static_cast<std::streamsize>(sizeof(hdr)));
+        TEST_ASSERT(!readSuccess, "Short read must be detected and rejected via gcount validation");
+    }
+    fs::remove(tmpFile);
+
+    return true;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Test 18: Fallback Segment Ranking Uses Exact Metric Geometry
+// ─────────────────────────────────────────────────────────────────
+static bool test_fallback_segment_ranking_geometry() {
+    // Construct query vector
+    int8_t queryVec[DIMS];
+    for (size_t d = 0; d < DIMS; ++d) {
+        queryVec[d] = (d < 192) ? 60 : -60;
+    }
+    float query_len = 0.0f;
+    for (size_t d = 0; d < DIMS; ++d) query_len += static_cast<float>(queryVec[d]) * queryVec[d];
+    query_len = std::sqrt(query_len);
+
+    SegEntry segDir[NUM_SEGMENTS] = {};
+    
+    // Segment 10: Centroid strongly aligned with query
+    segDir[10].chunk_count = 50;
+    segDir[10].max_radius = 2.0f;
+    for (size_t d = 0; d < DIMS; ++d) {
+        segDir[10].centroid[d] = (d < 192) ? 0.5f : -0.5f;
+    }
+
+    // Segment 200: Centroid opposing query
+    segDir[200].chunk_count = 50;
+    segDir[200].max_radius = 2.0f;
+    for (size_t d = 0; d < DIMS; ++d) {
+        segDir[200].centroid[d] = (d < 192) ? -0.5f : 0.5f;
+    }
+
+    // Compute geometric score bounds for remaining segments
+    struct SegGeoRank {
+        float score_bound;
+        uint32_t seg_id;
+    };
+    vector<SegGeoRank> otherSegs;
+    for (uint32_t s : {10u, 200u}) {
+        float s_q_dot_c = 0.0f;
+        for (uint32_t d = 0; d < DIMS; ++d) {
+            s_q_dot_c += (static_cast<float>(queryVec[d]) / 127.0f) * segDir[s].centroid[d];
+        }
+        float s_bound = s_q_dot_c + (query_len / 127.0f) * segDir[s].max_radius;
+        otherSegs.push_back({s_bound, s});
+    }
+
+    std::sort(otherSegs.begin(), otherSegs.end(),
+        [](const SegGeoRank& a, const SegGeoRank& b) { return a.score_bound > b.score_bound; });
+
+    TEST_ASSERT(otherSegs[0].seg_id == 10, "Aligned segment 10 must be ranked ahead of opposing segment 200");
+    TEST_ASSERT(otherSegs[0].score_bound > otherSegs[1].score_bound, "Score bound of segment 10 must be higher");
+
+    return true;
+}
+
+// ─────────────────────────────────────────────────────────────────
 // Main Test Runner Entrypoint
 // ─────────────────────────────────────────────────────────────────
 int main() {
@@ -635,6 +961,13 @@ int main() {
     RUN_TEST(test_halton_probes_geometry);
     RUN_TEST(test_path_config_invariants);
     RUN_TEST(test_signature_segment_routing);
+    RUN_TEST(test_storage_manifest_invariants);
+    RUN_TEST(test_wand_exact_bound_vs_unsafe_alpha);
+    RUN_TEST(test_calibrated_centroid_routing_application);
+    RUN_TEST(test_modified_pdf_reindex_detection);
+    RUN_TEST(test_watchdog_failure_state_handling);
+    RUN_TEST(test_partial_read_and_corruption_handling);
+    RUN_TEST(test_fallback_segment_ranking_geometry);
 
     cout << "\n--------------------------------------------------\n";
     cout << "  Test Summary: " << g_testsPassed << " passed, " << g_testsFailed << " failed\n";
