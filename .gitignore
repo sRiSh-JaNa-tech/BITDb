@@ -43,6 +43,10 @@ BinStorage/*.bin
 *.cl_cache
 *.blob
 
+# Research Papers Collection (Local Only)
+research_papers/
+**/research_papers/
+
 # Editor & IDE Files
 .vscode/
 .idea/

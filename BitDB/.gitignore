@@ -28,6 +28,9 @@ models/**/model_cache/
 *.cl_cache
 *.blob
 
+# Research Papers Collection (Local Only)
+research_papers/
+
 # Editor & OS Files
 .vscode/
 .DS_Store
